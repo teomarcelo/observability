@@ -1,0 +1,195 @@
+import type { ModalContent } from './types';
+
+export const modals: Record<string, ModalContent> = {
+  deflection: {
+    tabLabel: 'Effectiveness',
+    title: 'Deflection Rate',
+    rows: [
+      { label: 'Definition', value: 'The percentage of sessions where the AI agent fully resolved the customer\'s issue without requiring transfer to a human agent.' },
+      { label: 'Formula', value: '(Sessions resolved by agent / Total sessions) × 100' },
+      { label: 'Current', value: '38% (Service Agent) | 52% (Employee Agent)' },
+      { label: 'Benchmark', value: 'Industry average: 35-45% for service agents' },
+      { label: 'Trend', value: 'Improving — up 2.1 percentage points over prior period' },
+    ],
+    useCase: 'A high deflection rate means fewer cases reach human agents, reducing cost per interaction. Monitor this alongside quality scores to ensure deflection isn\'t coming at the cost of resolution quality.',
+    action: 'If deflection is low, check: (1) Are intents being classified correctly? (2) Does the knowledge base cover common queries? (3) Are escalation thresholds too aggressive?',
+  },
+  escalation: {
+    tabLabel: 'Effectiveness',
+    title: 'Escalation Rate',
+    rows: [
+      { label: 'Definition', value: 'The percentage of sessions where the AI agent transferred the conversation to a human agent.' },
+      { label: 'Formula', value: '(Sessions escalated / Total sessions) × 100' },
+      { label: 'Current', value: '14% (Service Agent) | 8% (Employee Agent)' },
+      { label: 'Benchmark', value: 'Target: below 20% for well-tuned agents' },
+      { label: 'Trend', value: 'Improving — down 1.2 percentage points over prior period' },
+    ],
+    useCase: 'Some escalation is healthy — complex issues should reach humans. But high escalation rates may indicate the agent lacks coverage for common intents or the confidence thresholds need tuning.',
+    action: 'Review the Performance Insights → Intents breakdown to identify which intents drive the most escalations. Consider adding knowledge articles or training topics for those areas.',
+  },
+  abandonment: {
+    tabLabel: 'Effectiveness',
+    title: 'Abandonment Rate',
+    rows: [
+      { label: 'Definition', value: 'The percentage of sessions where the customer left without resolution or escalation.' },
+      { label: 'Formula', value: '(Sessions abandoned / Total sessions) × 100' },
+      { label: 'Current', value: '42% (Service Agent) | 28% (Employee Agent)' },
+      { label: 'Benchmark', value: 'Target: below 30% — current SA rate is elevated' },
+      { label: 'Trend', value: 'Worsening — up 4.6 percentage points. Investigate root cause.' },
+    ],
+    useCase: 'High abandonment suggests the agent isn\'t providing value quickly enough. Users leave when they feel the agent can\'t help them — either due to slow responses, irrelevant answers, or confusing flows.',
+    action: 'Check: (1) Response latency in the Health tab. (2) First-message relevance in Session transcripts. (3) Whether users are hitting dead ends on specific intents.',
+  },
+  engagement: {
+    tabLabel: 'Effectiveness',
+    title: 'Engagement Rate',
+    rows: [
+      { label: 'Definition', value: 'The percentage of sessions where the user actively interacted beyond the initial message.' },
+      { label: 'Formula', value: '(Sessions with 2+ user messages / Total sessions) × 100' },
+      { label: 'Current', value: '71% (Service Agent) | 84% (Employee Agent)' },
+      { label: 'Benchmark', value: 'Healthy range: 65-85%' },
+      { label: 'Trend', value: 'Improving — up 3.2 percentage points' },
+    ],
+    useCase: 'Engagement measures whether users find the agent worth continuing to interact with. Low engagement + high abandonment = users are testing the agent and leaving immediately.',
+  },
+  success: {
+    tabLabel: 'Effectiveness',
+    title: 'Success Rate',
+    rows: [
+      { label: 'Definition', value: 'The percentage of sessions that achieved the user\'s stated goal as determined by the Goal Completion scorer.' },
+      { label: 'Formula', value: '(Sessions with goal_completed=true / Total sessions) × 100' },
+      { label: 'Current', value: '22% (Service Agent) | 46% (Employee Agent)' },
+      { label: 'Benchmark', value: 'Target: above 40% — SA rate needs attention' },
+      { label: 'Trend', value: 'Declining — down 5.1 percentage points. Priority item.' },
+    ],
+    useCase: 'Success rate is the ultimate outcome metric. Unlike deflection (which counts non-escalation), success rate verifies the user actually achieved their goal.',
+    action: 'Low success rate with high engagement suggests the agent is trying but failing. Review Quality by Intent in Optimization → Insights to identify which intents have the lowest success.',
+  },
+  'total-sessions': {
+    tabLabel: 'Usage',
+    title: 'Total Sessions',
+    rows: [
+      { label: 'Definition', value: 'The total number of conversations initiated with the agent during the selected timeframe.' },
+      { label: 'Current', value: '4,218 sessions in the last 30 days' },
+      { label: 'Daily Avg', value: '~141 sessions per day' },
+      { label: 'Peak', value: '312 sessions on 5/6 (Monday)' },
+    ],
+    useCase: 'Total sessions indicates adoption and demand. Track alongside time-of-day patterns to plan capacity and identify peak loads.',
+  },
+  'avg-quality': {
+    tabLabel: 'Quality',
+    title: 'Average Quality Score',
+    rows: [
+      { label: 'Definition', value: 'The mean quality score across all evaluated sessions, on a 1-5 scale.' },
+      { label: 'Scale', value: '5 = Excellent, 4 = Good, 3 = Acceptable, 2 = Poor, 1 = Very Poor' },
+      { label: 'Current', value: '3.6 average across all agents' },
+      { label: 'Distribution', value: '45% High (4+), 37% Medium (3-4), 18% Low (<3)' },
+    ],
+    useCase: 'Quality scores are determined by automated scorers that evaluate response relevance, accuracy, helpfulness, and safety. A score below 3.0 should trigger immediate investigation.',
+  },
+  'avg-latency': {
+    tabLabel: 'Health',
+    title: 'Average Latency',
+    rows: [
+      { label: 'Definition', value: 'The average time between a user message and the agent\'s response.' },
+      { label: 'Current', value: '1.8 seconds' },
+      { label: 'Target', value: 'Under 2.0 seconds for text, under 1.0 seconds for voice' },
+      { label: 'Components', value: 'LLM inference: ~1.2s, Action execution: ~0.4s, Network: ~0.2s' },
+    ],
+    useCase: 'Latency directly impacts user satisfaction and abandonment. If latency spikes, check the Health tab for error rates and timeout patterns that may indicate infrastructure issues.',
+  },
+  'total-sessions-insight': {
+    tabLabel: 'Insights',
+    title: 'Total Sessions (Insights View)',
+    rows: [
+      { label: 'Definition', value: 'Aggregate session count used in the Optimization Insights dashboard for quality analysis.' },
+      { label: 'Scope', value: 'Includes all sessions from all agents within the selected filters' },
+      { label: 'Breakdown', value: 'Service Agent: 2,847 | Employee Agent: 1,371' },
+    ],
+    useCase: 'Use this metric alongside quality scores to identify agents handling high volume with low quality — these are optimization priorities.',
+  },
+  'avg-latency-insight': {
+    tabLabel: 'Insights',
+    title: 'Average Agent Latency (Insights View)',
+    rows: [
+      { label: 'Definition', value: 'Mean response time across all agents and sessions in the filtered view.' },
+      { label: 'Current', value: '1.8s (Medium)' },
+      { label: 'By Agent', value: 'Pronto: 1.4s | HelloWorld: 2.1s | Merchant: 2.8s' },
+    ],
+    useCase: 'Medium latency badge indicates the value is within acceptable range but could be improved. High latency often correlates with lower quality scores.',
+  },
+  'avg-quality-insight': {
+    tabLabel: 'Insights',
+    title: 'Average Quality Score (Insights View)',
+    rows: [
+      { label: 'Definition', value: 'Mean quality score across all evaluated sessions in the filtered view.' },
+      { label: 'Current', value: '3.6 (High)' },
+      { label: 'Distribution', value: 'High: 45%, Medium: 30%, Low: 18%, Very Low: 7%' },
+    ],
+    useCase: 'The "High" badge indicates overall system health is good. Drill into individual subagents and intents using the cards below to find specific areas needing improvement.',
+  },
+  'quality-by-subagent': {
+    tabLabel: 'Insights',
+    title: 'Quality by Subagent',
+    rows: [
+      { label: 'Definition', value: 'Distribution of quality scores broken down by subagent, showing which components contribute most to overall quality.' },
+      { label: 'Scoring Method', value: 'Each session is evaluated by configured scorers; the subagent score is the mean across all sessions that invoked that subagent.' },
+      { label: 'Scale', value: 'High (4.0–5.0), Medium (3.0–3.9), Low (2.0–2.9), Very Low (<2.0)' },
+    ],
+    useCase: 'Use this chart to identify which subagents are dragging down your overall quality. A subagent with high session volume and low score is your top optimization target.',
+    action: 'Click into the rankings tables to see the best and worst performers. Consider rewriting prompts, updating knowledge bases, or adjusting action configurations for low-scoring subagents.',
+  },
+  'quality-by-intent': {
+    tabLabel: 'Insights',
+    title: 'Quality by Intent',
+    rows: [
+      { label: 'Definition', value: 'Distribution of quality scores broken down by detected user intent, showing which use cases perform best.' },
+      { label: 'Scoring Method', value: 'Intent is classified per session; quality is the mean score of all sessions with that intent.' },
+      { label: 'Coverage', value: 'Only intents with 10+ sessions in the timeframe are shown.' },
+    ],
+    useCase: 'Intent-level quality reveals which customer needs are well-served vs. poorly handled. Unlike subagent quality, this shows the user\'s perspective — what they asked for, not which component answered.',
+    action: 'Low-quality intents may need: (1) better knowledge articles, (2) new or updated subagent routing, (3) additional training data, or (4) escalation path adjustments.',
+  },
+  'top-subagents': {
+    tabLabel: 'Insights',
+    title: 'Top Ranking Subagents',
+    rows: [
+      { label: 'Definition', value: 'Subagents ranked by average quality score, showing the highest performers.' },
+      { label: 'Metric', value: 'Average Quality Score across all evaluated sessions that invoked this subagent.' },
+      { label: 'Minimum Volume', value: 'At least 50 sessions required to appear in rankings.' },
+    ],
+    useCase: 'Top-ranking subagents represent your best practices. Study what makes them successful — prompt design, knowledge coverage, action reliability — and apply those patterns to lower performers.',
+  },
+  'bottom-subagents': {
+    tabLabel: 'Insights',
+    title: 'Bottom Ranking Subagents',
+    rows: [
+      { label: 'Definition', value: 'Subagents ranked by average quality score, showing the lowest performers requiring attention.' },
+      { label: 'Metric', value: 'Average Quality Score across all evaluated sessions that invoked this subagent.' },
+      { label: 'Impact', value: 'Low-scoring subagents with high volume have the most impact on overall quality.' },
+    ],
+    useCase: 'These are your immediate optimization targets. Focus on the subagent with the highest session count first — improving it will have the largest impact on the overall quality score.',
+    action: 'Review session transcripts for these subagents in Sessions & Intents. Look for patterns: wrong actions called, incomplete knowledge retrieval, or poor prompt handling.',
+  },
+  'top-intents': {
+    tabLabel: 'Insights',
+    title: 'Top Ranking Intents',
+    rows: [
+      { label: 'Definition', value: 'User intents ranked by average quality score, showing which use cases are best served.' },
+      { label: 'Metric', value: 'Average Quality Score across all sessions classified with this intent.' },
+      { label: 'Volume', value: 'Session count indicates how frequently users ask about this topic.' },
+    ],
+    useCase: 'High-quality intents show where your agent excels. If these are also high-volume intents, your agent is well-optimized for the most common user needs.',
+  },
+  'bottom-intents': {
+    tabLabel: 'Insights',
+    title: 'Bottom Ranking Intents',
+    rows: [
+      { label: 'Definition', value: 'User intents ranked by average quality score, showing which use cases need improvement.' },
+      { label: 'Metric', value: 'Average Quality Score across all sessions classified with this intent.' },
+      { label: 'Impact', value: 'These intents represent user needs that your agent is failing to address well.' },
+    ],
+    useCase: 'Low-ranking intents reveal gaps in your agent\'s capabilities. If users frequently ask about these topics (high session count), addressing them should be a priority.',
+    action: 'Consider: (1) Adding dedicated knowledge articles, (2) Creating new subagents specialized for these intents, (3) Adjusting escalation rules to hand off gracefully when quality can\'t be guaranteed.',
+  },
+};

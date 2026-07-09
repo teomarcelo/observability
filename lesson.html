@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentforce Observability — Instructor Reference</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #1a1a1a;
+      background: #eef1f6;
+      padding: 40px 20px;
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.10);
+    }
+
+    /* ── Header ── */
+    .doc-header {
+      background: #032D60;
+      color: white;
+      padding: 40px 52px 32px;
+    }
+    .doc-header .eyebrow {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #7EC8E3;
+      margin-bottom: 10px;
+    }
+    .doc-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .doc-header .subtitle {
+      font-size: 13.5px;
+      color: #a8c8e8;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: #F3F6FB;
+      border-bottom: 1px solid #dde5f0;
+      padding: 18px 52px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+    }
+    .toc-item {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0070D2;
+      text-decoration: none;
+    }
+    .toc-item:hover { text-decoration: underline; }
+
+    /* ── Chapter header ── */
+    .chapter {
+      background: #f0f4fa;
+      border-top: 3px solid #0070D2;
+      padding: 18px 52px;
+      margin-top: 0;
+    }
+    .chapter .ch-number {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #0070D2;
+      margin-bottom: 4px;
+    }
+    .chapter h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #032D60;
+    }
+    .chapter .ch-desc {
+      font-size: 13px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    /* ── Body wrapper ── */
+    .section-body { padding: 32px 52px; }
+
+    /* ── Intro callout ── */
+    .intro-callout {
+      background: #F3F6FB;
+      border-left: 4px solid #0070D2;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 28px;
+    }
+    .intro-callout strong { color: #032D60; }
+
+    /* ── Topic block ── */
+    .topic {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #ebebeb;
+    }
+    .topic:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .topic-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .topic h3 { font-size: 16px; font-weight: 700; color: #032D60; }
+    .topic .tagline {
+      font-size: 12.5px;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    /* badge */
+    .badge {
+      flex-shrink: 0;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 20px;
+    }
+    .b-on      { background: #d4edda; color: #155724; }
+    .b-off     { background: #f0f0f0; color: #666; }
+    .b-retired { background: #fff3cd; color: #856404; }
+    .b-auto    { background: #cfe2ff; color: #084298; }
+    .b-dev     { background: #e2d9f3; color: #432874; }
+
+    /* rows */
+    .rows { display: grid; gap: 8px; margin-bottom: 12px; }
+    .row { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: start; }
+    .rl {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px;
+      text-transform: uppercase; color: #0070D2; padding-top: 2px;
+    }
+    .rv { font-size: 13px; color: #2a2a2a; }
+
+    /* use case */
+    .uc {
+      background: #f4f8ff;
+      border: 1px solid #c8daef;
+      border-radius: 6px;
+      padding: 12px 15px;
+    }
+    .uc-lbl {
+      font-size: 9.5px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: #0070D2; margin-bottom: 5px;
+    }
+    .uc p { font-size: 12.5px; color: #2a2a2a; }
+
+    /* note */
+    .note {
+      background: #fffbeb;
+      border: 1px solid #f0d070;
+      border-radius: 6px;
+      padding: 11px 14px;
+      font-size: 12.5px;
+      color: #5a4a00;
+      margin-top: 10px;
+    }
+
+    /* nested card */
+    .nested {
+      margin-top: 16px;
+      padding: 16px 18px;
+      background: #fafafa;
+      border: 1px solid #e4e4e4;
+      border-radius: 6px;
+    }
+    .nested h4 { font-size: 14px; font-weight: 700; color: #032D60; }
+    .nested .tagline { font-size: 12px; color: #666; font-style: italic; margin-bottom: 10px; }
+    .nested .uc { background: white; }
+
+    /* ── Metric grid ── */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .metric-card {
+      border: 1px solid #dde5f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: #f9fbff;
+    }
+    .metric-card .m-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #032D60;
+      line-height: 1.1;
+    }
+    .metric-card .m-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0070D2;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-top: 4px;
+    }
+    .metric-card .m-desc {
+      font-size: 11.5px;
+      color: #555;
+      margin-top: 5px;
+    }
+    .metric-card.warn  { border-color: #f5c6cb; background: #fff5f5; }
+    .metric-card.warn .m-value { color: #c0392b; }
+    .metric-card.good  { border-color: #b8dfc8; background: #f3fdf6; }
+    .metric-card.good .m-value { color: #1a7a40; }
+    .metric-card.neutral { border-color: #dde5f0; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 12px 0; }
+    th {
+      background: #032D60; color: white;
+      padding: 8px 12px; text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; color: #2a2a2a; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f8f9fc; }
+    .score-vlow { color: #c0392b; font-weight: 700; }
+    .score-med  { color: #e67e22; font-weight: 700; }
+    .score-high { color: #1a7a40; font-weight: 700; }
+
+    /* ── Action items ── */
+    .action-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .action-list li {
+      font-size: 12.5px;
+      padding: 9px 14px;
+      background: #f4f8ff;
+      border-left: 3px solid #0070D2;
+      border-radius: 0 5px 5px 0;
+      color: #2a2a2a;
+    }
+    .action-list li strong { color: #032D60; }
+
+    /* ── Story banner ── */
+    .story-banner {
+      background: #032D60;
+      color: white;
+      border-radius: 7px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .story-banner .sb-lbl {
+      font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: #7EC8E3; margin-bottom: 5px;
+    }
+
+    /* ── Comparison table wrapper ── */
+    .comparison-note {
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* ── Big picture summary ── */
+    .summary {
+      margin: 36px 0 0;
+      background: #032D60;
+      border-radius: 8px;
+      padding: 26px 30px;
+      color: white;
+    }
+    .summary .sum-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #7EC8E3; margin-bottom: 16px;
+    }
+    .sum-grid { display: grid; gap: 9px; }
+    .sum-row { display: grid; grid-template-columns: 200px 1fr; gap: 14px; align-items: start; }
+    .sum-row .sl { font-size: 13px; font-weight: 600; color: #7EC8E3; }
+    .sum-row .sv { font-size: 13px; color: #ccdff5; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: #dde5f0; margin: 0 52px; }
+
+    @media print {
+      body { background: white; padding: 0; font-size: 12px; }
+      .page { box-shadow: none; border-radius: 0; }
+      .chapter { page-break-before: always; }
+      .chapter:first-of-type { page-break-before: avoid; }
+      .topic, .nested, .metric-grid, .story-banner { page-break-inside: avoid; }
+      .summary { page-break-inside: avoid; }
+      .toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <div class="doc-header">
+    <div class="eyebrow">Salesforce Agentforce — Instructor Reference Guide</div>
+    <h1>Agentforce Observability:<br>From Setup to Analytics</h1>
+    <div class="subtitle">Covers: Setup Toggles · Feature Comparison · Overview · Quality · Optimization · Service Agent Tabs · Tagging</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TOC
+  ═══════════════════════════════════════════ -->
+  <div class="toc">
+    <a class="toc-item" href="#ch1">1. Setup Toggles</a>
+    <a class="toc-item" href="#ch2">2. Feature Comparison</a>
+    <a class="toc-item" href="#ch3">3. Overview Tab</a>
+    <a class="toc-item" href="#ch4">4. Quality Tab</a>
+    <a class="toc-item" href="#ch5">5. Optimization Insights</a>
+    <a class="toc-item" href="#ch6">6. Service Agent Analytics</a>
+    <a class="toc-item" href="#ch7">7. Tagging &amp; Intent Tags</a>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 1 — SETUP TOGGLES
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch1">
+    <div class="ch-number">Chapter 1</div>
+    <h2>Setup — Observability Toggles</h2>
+    <div class="ch-desc">Setup → Einstein &amp; AI → Agentforce Observability — master controls for every layer of visibility</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this screen is:</strong> The master control panel for observability across all Agentforce agents and Einstein AI features. Each toggle activates a distinct layer of visibility — from raw audit logs to real-time health alerts. Layers are cumulative: enabling a higher-level toggle often auto-enables the ones below it.
+    </div>
+
+    <!-- Audit and Feedback -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-off">Off</span>
+        <h3>Audit and Feedback</h3>
+      </div>
+      <div class="tagline">"Collect and store Einstein generative AI audit and feedback data for analysis and reporting."</div>
+      <div class="rows">
+        <div class="row"><div class="rl">What it is</div><div class="rv">Activates collection and storage of every Einstein AI interaction — what was asked, what was returned, and any feedback users gave on response quality.</div></div>
+        <div class="row"><div class="rl">Purpose</div><div class="rv">Creates a permanent, queryable paper trail of AI activity in the org — the foundation for compliance and quality investigation.</div></div>
+        <div class="row"><div class="rl">Why it matters</div><div class="rv">Without this on, you have zero record of what the AI did. With it on, you can investigate complaints, prove compliance, and identify patterns in poor outputs.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">Real-World Use Case</div>
+        <p>A customer escalates: "the AI gave me wrong information last Tuesday." With Audit on, you pull that exact session and see precisely what prompt was sent and what the model returned.</p>
+      </div>
+
+      <!-- RAG nested -->
+      <div class="nested">
+        <div class="topic-title-row">
+          <span class="badge b-off">Off — Nested</span>
+          <h4>Knowledge / RAG Quality Data and Metrics</h4>
+        </div>
+        <div class="tagline">"Monitor retrievers to track run-time performance, view trends, and identify opportunities to improve results."</div>
+        <div class="rows">
+          <div class="row"><div class="rl">What it is</div><div class="rv">Monitoring layer specifically for the <strong>retrieval-augmented generation (RAG)</strong> pipeline — the step where the agent searches Knowledge articles before generating a response.</div></div>
+          <div class="row"><div class="rl">Why it matters</div><div class="rv">RAG quality is the #1 variable in agent answer quality. Most "hallucinations" are actually retrieval failures — the model answered confidently using the wrong article.</div></div>
+        </div>
+        <div class="uc">
+          <div class="uc-lbl">Real-World Use Case</div>
+          <p>Agent answers keep being slightly off. RAG Metrics reveal the retriever ranks a stale 2021 Knowledge article above the updated 2025 version. Fix the article metadata — fix the answers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt Builder Retired -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-retired">Retired — Summer '26</span>
+        <h3>Prompt Builder Usage and Feedback Metrics</h3>
+      </div>
+      <div class="tagline">"Prompt Performance Metrics retired in Summer '26 and can't be re-enabled."</div>
+      <div class="rows">
+        <div class="row"><div class="rl">What it was</div><div class="rv">Tracked performance of prompts built in Prompt Builder — which prompts performed well, which generated poor outputs, and usage volume over time.</div></div>
+      </div>
+      <div class="note">
+        <strong>Instructor note — tombstone:</strong> This feature is gone as of Summer '26 and cannot be re-enabled. Point it out explicitly — students will encounter it in older orgs and outdated documentation. Its presence is a reminder that the platform evolves fast and feature availability is release-dependent.
+      </div>
+    </div>
+
+    <!-- Session Tracing -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">On</span>
+        <h3>Agentforce Session Tracing</h3>
+      </div>
+      <div class="tagline">"Capture and store detailed interaction data for all agents — reasoning engine executions, actions, prompt/gateway inputs and outputs, error messages, and agent responses."</div>
+      <div class="rows">
+        <div class="row"><div class="rl">What it is</div><div class="rv">The <strong>master toggle</strong> for Agentforce observability. Captures the complete lifecycle of every agent session — reasoning steps, actions taken, prompt inputs/outputs, error messages, and final responses.</div></div>
+        <div class="row"><div class="rl">Purpose</div><div class="rv">Gives you a full "replay" of what any agent did from start to finish, including every decision the reasoning engine made. Provisions the Session Tracing Data Model (STDM) in Data Cloud — the foundation all other analytics depend on.</div></div>
+        <div class="row"><div class="rl">Why it matters</div><div class="rv">Without this, agents are a black box. Required to unlock Agent Analytics, Agent Optimization, and Agent Health Monitoring. Enabling it automatically turns on Agent Optimization.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">Real-World Use Case</div>
+        <p>An agent escalated a case it should have resolved. Session Tracing lets you replay the exact reasoning step that triggered the escalation — was it a missing topic, a misconfigured action, or a bad retrieval result?</p>
+      </div>
+
+      <!-- Platform Tracing nested -->
+      <div class="nested">
+        <div class="topic-title-row">
+          <span class="badge b-dev">Off — Developer Tool</span>
+          <h4>Agent Platform Tracing</h4>
+        </div>
+        <div class="tagline">"Deep insights into every Platform Action — Flow, Apex — within an agent's workflow. Data stored in Data Cloud."</div>
+        <div class="rows">
+          <div class="row"><div class="rl">What it is</div><div class="rv">Captures OpenTelemetry-based spans for every instrumented service in an agent transaction: planner steps, LLM calls, knowledge references, Prompt Builder templates, Flow executions, and Apex invocations. ~2-minute SLA to Data Cloud.</div></div>
+          <div class="row"><div class="rl">Key distinction</div><div class="rv">Session Tracing = what the agent <em>decided</em>. Platform Tracing = what the platform <em>did</em> in response — exact durations, execution paths, errors. This is the engineer's tool for finding bottlenecks.</div></div>
+          <div class="row"><div class="rl">Requirements</div><div class="rv">Data Cloud provisioned + PlatformObservability org permission + Access Agentforce Optimization permission set. GA as of April 2026.</div></div>
+        </div>
+        <div class="uc">
+          <div class="uc-lbl">Real-World Use Case</div>
+          <p>Agent responses take 8 seconds. Platform Tracing shows the Apex action it called took 7.2 of those seconds. The AI reasoning was fast — the bottleneck was entirely in custom code.</p>
+        </div>
+      </div>
+
+      <!-- Agent Optimization nested -->
+      <div class="nested">
+        <div class="topic-title-row">
+          <span class="badge b-auto">On — Auto-Enabled</span>
+          <h4>Agent Optimization</h4>
+        </div>
+        <div class="tagline">"Identify gaps in agent performance — categorizes user interactions by intent to spot trends and understand user needs at scale."</div>
+        <div class="rows">
+          <div class="row"><div class="rl">What it is</div><div class="rv">AI-powered analysis layer that categorizes interactions by <strong>user intent</strong> at scale. Powers the Insights, Sessions &amp; Intents, and Health Monitoring views in Agentforce Studio.</div></div>
+          <div class="row"><div class="rl">New metrics</div><div class="rv">Spring '26 additions: User Feedback (Positive/Negative), Task Resolution Rate, Instruction Adherence Rate, Average Toxicity Score, Session Outcome (abandonment/deflection), and Custom Scorers (Beta).</div></div>
+          <div class="row"><div class="rl">Auto-on</div><div class="rv">Turns on automatically when Session Tracing is enabled — it cannot function without the session data Session Tracing captures.</div></div>
+        </div>
+        <div class="uc">
+          <div class="uc-lbl">Real-World Use Case</div>
+          <p>5,000 sessions this week. Optimization flags 340 show users re-asking the same question in different ways — a clear signal the agent isn't resolving the intent on first try. Now you know exactly which topic to fix.</p>
+        </div>
+      </div>
+
+      <!-- Health Monitoring nested -->
+      <div class="nested">
+        <div class="topic-title-row">
+          <span class="badge b-off">Off — Nested</span>
+          <h4>Agent Health Monitoring</h4>
+        </div>
+        <div class="tagline">"Track agent performance in near-real time with metrics, reporting, alerts, and trace logs."</div>
+        <div class="rows">
+          <div class="row"><div class="rl">What it is</div><div class="rv">Near-real-time performance tracking with configurable metrics, dashboards, alerts, and trace logs for all agents in the org.</div></div>
+          <div class="row"><div class="rl">Key distinction</div><div class="rv">The other features above are <strong>forensic</strong> — they tell you what happened. Health Monitoring is <strong>operational</strong> — it tells you what's happening right now and alerts before users notice.</div></div>
+        </div>
+        <div class="uc">
+          <div class="uc-lbl">Real-World Use Case</div>
+          <p>A bad deployment at 2am spikes agent error rates. Health Monitoring fires an alert before a single user calls in. The on-call team rolls back and most customers never notice.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 1 Summary -->
+    <div class="summary">
+      <div class="sum-title">Layered Observability Stack — One-Line View</div>
+      <div class="sum-grid">
+        <div class="sum-row"><div class="sl">Audit &amp; Feedback</div><div class="sv">What did the AI say? — Raw interaction capture &amp; user feedback</div></div>
+        <div class="sum-row"><div class="sl">RAG Quality Metrics</div><div class="sv">Did it retrieve the right knowledge? — Retriever performance monitoring</div></div>
+        <div class="sum-row"><div class="sl">Session Tracing</div><div class="sv">Why did the agent do that? — Full session replay with reasoning steps</div></div>
+        <div class="sum-row"><div class="sl">Platform Tracing</div><div class="sv">What did the platform do? — Flow/Apex execution timing &amp; errors (dev tool)</div></div>
+        <div class="sum-row"><div class="sl">Agent Optimization</div><div class="sv">What patterns exist across thousands of sessions? — AI-driven intent analysis</div></div>
+        <div class="sum-row"><div class="sl">Health Monitoring</div><div class="sv">Is something breaking right now? — Real-time alerting &amp; dashboards</div></div>
+      </div>
+    </div>
+
+  </div><!-- /section-body -->
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 2 — FEATURE COMPARISON
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch2">
+    <div class="ch-number">Chapter 2</div>
+    <h2>Feature Comparison &amp; Course Setup Flow</h2>
+    <div class="ch-desc">Understanding which feature does what — and why the course skips the legacy toggle</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>Why this matters:</strong> The Agentforce observability umbrella has four distinct features. Students often confuse them — especially because "Agent Analytics" is the name of both the old legacy feature and the new dashboard. Knowing the difference prevents setup mistakes in the org.
+    </div>
+
+    <!-- Comparison table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Purpose</th>
+          <th>Primary Audience</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Agent Analytics (Legacy)</strong></td>
+          <td>Original usage &amp; engagement data collection in Data Cloud</td>
+          <td>Admins / Analysts</td>
+          <td style="color:#c0392b; font-weight:700;">⚠ Retiring May 2026</td>
+        </tr>
+        <tr>
+          <td><strong>Agentforce Session Tracing</strong></td>
+          <td>Full session capture — provisions STDM in Data Cloud. Master toggle. Everything depends on this.</td>
+          <td>All roles</td>
+          <td style="color:#1a7a40; font-weight:700;">✅ GA — enable first</td>
+        </tr>
+        <tr>
+          <td><strong>Agent Platform Tracing</strong></td>
+          <td>Low-level OpenTelemetry spans for Flow, Apex, LLM calls. Pinpoints performance bottlenecks.</td>
+          <td>Developers</td>
+          <td style="color:#1a7a40; font-weight:700;">✅ GA (Apr 2026)</td>
+        </tr>
+        <tr>
+          <td><strong>Agent Optimization</strong></td>
+          <td>AI-powered intent analysis &amp; quality scoring. Auto-enabled with Session Tracing.</td>
+          <td>Admins / Analysts</td>
+          <td style="color:#1a7a40; font-weight:700;">✅ GA — auto-on</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="topic" style="margin-top: 24px;">
+      <h3 style="font-size:15px; color:#032D60; margin-bottom: 10px;">Course Setup Flow — Why It's Built This Way</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">Step 1</div><div class="rv"><strong>Set Up Your Instance</strong> — Enable Agentforce Session Tracing (starts capturing data). The legacy Agent Analytics toggle is intentionally skipped — this course teaches the new stack only.</div></div>
+        <div class="row"><div class="rl">Step 2</div><div class="rv"><strong>Exercise 1, Task 3</strong> — Install Tableau Next analytics app packages for Service Agent and Employee Agent. These are the pre-built dashboards that visualize the session data captured by Session Tracing.</div></div>
+        <div class="row"><div class="rl">The flow</div><div class="rv">Session Tracing captures the data → Data Cloud stores it via the STDM → Tableau Next dashboards surface it visually. Without the packages, there's nothing to view the data in.</div></div>
+      </div>
+      <div class="note">
+        <strong>Common student confusion:</strong> "Why don't we turn on Agent Analytics?" — Because the legacy toggle shares a name with the new experience but is a different feature entirely. This course only uses Session Tracing → STDM → Tableau Next. The legacy toggle is not part of that stack.
+      </div>
+    </div>
+
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 3 — OVERVIEW TAB
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch3">
+    <div class="ch-number">Chapter 3</div>
+    <h2>Agent Analytics Dashboard — Overview Tab</h2>
+    <div class="ch-desc">High-level health check: adoption, effectiveness, and customer behavior at a glance</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this tab answers:</strong> Are users actually engaging with the agent? Is it resolving issues or are people just leaving? This is the first tab an admin or analyst should check — it tells you whether the agent is working at a basic level before you go deeper.
+    </div>
+
+    <!-- Global Filters -->
+    <div class="topic">
+      <h3>Global Filters</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">Agent / Type</div><div class="rv">Filter by specific agent or use case. Use this to compare performance across multiple agents and identify which ones are underperforming.</div></div>
+        <div class="row"><div class="rl">Timeframe</div><div class="rv">Adjust the reporting window. Critical for measuring whether changes you made actually improved performance — always compare before vs. after.</div></div>
+        <div class="row"><div class="rl">Channel</div><div class="rv">Filter by Web, Mobile, Messaging, etc. Customer behavior differs significantly by channel — an agent that works well on web may struggle on mobile.</div></div>
+        <div class="row"><div class="rl">Subagent / Action</div><div class="rv">Filter by specific topic or workflow. Isolates performance for one part of the agent experience without noise from others.</div></div>
+      </div>
+    </div>
+
+    <!-- KPI Metrics -->
+    <div class="topic">
+      <h3>Performance Overview Metrics</h3>
+      <div class="tagline">These five metrics tell the core story of agent effectiveness.</div>
+
+      <div class="metric-grid">
+        <div class="metric-card good">
+          <div class="m-value">94.12%</div>
+          <div class="m-label">Engagement Rate</div>
+          <div class="m-desc">Users actively interacting with the agent. High = strong adoption and willingness to engage.</div>
+        </div>
+        <div class="metric-card good">
+          <div class="m-value">0%</div>
+          <div class="m-label">Escalation Rate</div>
+          <div class="m-desc">Conversations transferred to a human. 0% could mean strong automation — or a broken escalation path.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">0%</div>
+          <div class="m-label">Deflection Rate</div>
+          <div class="m-desc">Issues resolved without human involvement. 0% means no successful self-service resolutions.</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="m-value">73.53%</div>
+          <div class="m-label">Abandonment Rate</div>
+          <div class="m-desc">Users who left before resolution. High rate signals poor responses, confusion, or unmet expectations.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">—</div>
+          <div class="m-label">Avg. Time to Deflection</div>
+          <div class="m-desc">How fast the AI independently resolves issues. No value = no successful deflections occurred.</div>
+        </div>
+      </div>
+
+      <div class="story-banner">
+        <div class="sb-lbl">Reading the Story — What These Numbers Tell You Together</div>
+        High engagement (94%) + high abandonment (73%) + zero deflection = users are willing to try the agent, but it's not resolving their needs AND it's not routing them to a human either. They're engaging and then just leaving. The agent is broken in a very specific way: it's discoverable but not functional.
+      </div>
+
+      <ul class="action-list">
+        <li><strong>High abandonment →</strong> Drill into the Sessions tab to find the intents that led to abandonment. Build new topics to address the gaps.</li>
+        <li><strong>Low deflection →</strong> Topic instructions or actions may be too narrow — expand coverage so the agent can actually resolve requests.</li>
+        <li><strong>0% escalation + high abandonment →</strong> Users may want to escalate but can't. Review whether the escalation path is configured correctly.</li>
+        <li><strong>Fast deflection time →</strong> When the agent works, it works fast. Use that as a benchmark for what good looks like once you fix the gaps.</li>
+      </ul>
+    </div>
+
+    <!-- Agent Usage Overview -->
+    <div class="topic">
+      <h3>Agent Usage Overview</h3>
+      <div class="tagline">Bar chart showing session volume per agent — identifies most-used and highest-risk agents.</div>
+      <div class="rows">
+        <div class="row"><div class="rl">What it shows</div><div class="rv">Session counts broken out by agent. Helps identify which agents are getting the most traffic and which ones have disproportionate abandonment or escalation.</div></div>
+        <div class="row"><div class="rl">NOT_SET flag</div><div class="rv">Sessions appearing as "NOT_SET" (no agent name) signal a data quality issue — likely agents built on the wrong template, or Session Tracing wasn't active before those sessions ran.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">How to Use This</div>
+        <p>Sort by highest volume. Focus your optimization effort there first — fixing a high-traffic agent with low deflection has 10x the impact of fixing a low-traffic one. Investigate NOT_SET sessions by verifying agent template and confirming the Data Kit was fully deployed before sessions began.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 4 — QUALITY TAB
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch4">
+    <div class="ch-number">Chapter 4</div>
+    <h2>Agent Analytics Dashboard — Quality Tab</h2>
+    <div class="ch-desc">AI-generated quality scoring — evaluating response accuracy, relevance, and completeness by agent, topic, and intent</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this tab answers:</strong> When the agent responds, how good is the response? The Overview tab tells you whether the agent is working. The Quality tab tells you <em>how well</em> it's working when it does. These are different questions with different fixes.
+    </div>
+
+    <div class="topic">
+      <h3>Quality Score Scale</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">Scale</div><div class="rv">Quality scores use a <strong>1–5 scale</strong> generated by AI analysis of each interaction.</div></div>
+      </div>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Score Range</th><th>Rating</th><th>What It Suggests</th></tr></thead>
+        <tbody>
+          <tr><td>0 – 2</td><td class="score-vlow">Very Low</td><td>Responses are inaccurate, irrelevant, incomplete, or misaligned with user intent</td></tr>
+          <tr><td>2 – 3</td><td class="score-med">Low</td><td>Partially helpful but with significant gaps — prompts, grounding, or actions need work</td></tr>
+          <tr><td>3 – 4</td><td class="score-high">Good</td><td>Mostly relevant and accurate — targeted refinements will push it higher</td></tr>
+          <tr><td>4 – 5</td><td class="score-high">High</td><td>Strong response quality — consistent, accurate, and well-grounded</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Quality by Agent -->
+    <div class="topic">
+      <h3>Quality Overview — Scores by Agent</h3>
+      <div class="tagline">Example scores from a real org — used here as a teaching artifact.</div>
+      <table>
+        <thead><tr><th>Agent</th><th>Avg Quality Score</th><th>Rating</th><th>What It Means</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Demo_HelloWorld</td>
+            <td class="score-high">5.0</td>
+            <td class="score-high">High</td>
+            <td>Likely a scripted test — not a reliable production benchmark</td>
+          </tr>
+          <tr>
+            <td>Pronto_Service_Agent</td>
+            <td class="score-vlow">1.52</td>
+            <td class="score-vlow">Very Low</td>
+            <td>Real production agent — responses are consistently poor quality</td>
+          </tr>
+          <tr>
+            <td>NOT_SET</td>
+            <td class="score-vlow">1.0</td>
+            <td class="score-vlow">Very Low</td>
+            <td>Sessions not mapped to an agent — data quality issue to investigate</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;"><strong>Overall average: 1.66 / 5 — Very Low.</strong> This org has a widespread quality problem across all production agents. The "5" on HelloWorld is a scripted test, not a real signal.</div>
+    </div>
+
+    <!-- Data Explorer: Subagents -->
+    <div class="topic">
+      <h3>Data Explorer — Subagents (Topics)</h3>
+      <div class="tagline">Breaks down session count and quality score by topic — the most actionable view on this tab.</div>
+      <table>
+        <thead><tr><th>Subagent / Topic</th><th>Sessions</th><th>Quality Score</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Verify_Customers</td><td>45</td><td class="score-vlow">1.47 — Very Low</td><td><strong>Fix first</strong> — highest volume + lowest quality</td></tr>
+          <tr><td>NOT_SET</td><td>37</td><td class="score-vlow">1.0 — Very Low</td><td>Investigate routing &amp; Session Tracing setup</td></tr>
+          <tr><td>Order_Issues_Refunds</td><td>20</td><td class="score-vlow">1.2 — Very Low</td><td>Fix second — high impact on customer satisfaction</td></tr>
+          <tr><td>escalation</td><td>6</td><td class="score-med">3.67 — Medium</td><td>Agent performs best when handing off to a human</td></tr>
+          <tr><td>Support_Policies_and_Terms</td><td>1</td><td class="score-vlow">1.0 — Very Low</td><td>Low volume — fix after higher-traffic topics</td></tr>
+        </tbody>
+      </table>
+
+      <div class="story-banner" style="margin-top:14px;">
+        <div class="sb-lbl">The Story These Numbers Tell</div>
+        The agent scores highest when it escalates to a human (3.67) — not when it resolves on its own. Every self-service topic is Very Low. This means the agent is engaging users but can't actually help them. The escalation path is the only thing working. This is a grounding and instruction problem, not a structural one.
+      </div>
+
+      <ul class="action-list">
+        <li><strong>Very Low scores across topics →</strong> Review topic instructions and grounding data. The LLM may not have enough context to respond well — check Knowledge article coverage.</li>
+        <li><strong>High volume + low quality →</strong> Verify_Customers (45 sessions, 1.47) is the highest-ROI fix. Start there.</li>
+        <li><strong>Escalation scores highest →</strong> Consider routing more intents to a human until the agent is better trained. Don't hide the escalation path.</li>
+        <li><strong>NOT_SET subagents →</strong> 37 sessions with no topic name means missed routing. Check topic configuration and confirm Session Tracing was live before those sessions ran.</li>
+        <li><strong>Use Custom Scorers (Beta) →</strong> If the default AI scoring doesn't reflect your specific use case, define your own scoring criteria to get more relevant quality signals.</li>
+      </ul>
+    </div>
+
+    <!-- Data Explorer: Intents -->
+    <div class="topic">
+      <h3>Data Explorer — Intents Tab</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">What it is</div><div class="rv">Analyzes quality broken down by the specific customer intent — what the user was actually trying to accomplish.</div></div>
+        <div class="row"><div class="rl">Why it matters</div><div class="rv">Two users can use the same topic but have completely different intents. This tab tells you which specific requests are succeeding and which are failing — a level of precision the subagent view can't give you.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">How to Use This</div>
+        <p>Filter to your lowest-quality topics, then drill into Intents to find the specific requests causing failures. For each failing intent, check: Are the session traces showing a retrieval failure? A failed action? A misclassified request? Each root cause has a different fix.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 5 — OPTIMIZATION INSIGHTS
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch5">
+    <div class="ch-number">Chapter 5</div>
+    <h2>Optimization Insights Dashboard</h2>
+    <div class="ch-desc">Strategic view — latency, quality distribution by subagent and intent, top and bottom performers</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this dashboard answers:</strong> Where exactly is the agent failing — and which failures matter most? This is the prioritization view. It connects volume, quality, and latency so you know where to invest optimization effort first.
+    </div>
+
+    <!-- Top summary metrics -->
+    <div class="topic">
+      <h3>Top Summary Metrics</h3>
+      <div class="metric-grid">
+        <div class="metric-card neutral">
+          <div class="m-value">26</div>
+          <div class="m-label">Total Sessions</div>
+          <div class="m-desc">Overall interaction volume — context for all other metrics.</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="m-value">4.3s</div>
+          <div class="m-label">Avg. Agent Latency</div>
+          <div class="m-desc">Time for agent to respond. Higher latency increases abandonment and frustration.</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="m-value">Very Low</div>
+          <div class="m-label">Avg. Quality Score</div>
+          <div class="m-desc">Overall AI quality rating. "Very Low" = responses are inaccurate, incomplete, or misaligned.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quality by Subagent -->
+    <div class="topic">
+      <h3>Quality Distribution by Subagent</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">What it shows</div><div class="rv">A breakdown of how quality scores are distributed across subagents — not just averages, but how many interactions fell into each quality tier (Very Low / Low / Good / High).</div></div>
+        <div class="row"><div class="rl">What to look for</div><div class="rv">If nearly all interactions for a subagent cluster in "Very Low," it's a systemic problem — not an edge case. That subagent needs a full review, not a minor tweak.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">Example from This Org</div>
+        <p>Nearly all interactions fall into the "Very Low" category across all subagents — indicating a widespread quality issue, not isolated failures. The agent instructions, grounding, and retrieval configuration all need review together.</p>
+      </div>
+    </div>
+
+    <!-- Top/Bottom ranking -->
+    <div class="topic">
+      <h3>Top and Bottom Ranking Subagents</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">Top ranking</div><div class="rv">"No Data" — no subagent currently meets the threshold for positive ranking. This means there's no baseline to protect — every subagent needs work.</div></div>
+        <div class="row"><div class="rl">Bottom ranking</div><div class="rv">Verify_Customers, Order_Issues_Refunds, NOT_SET — all Very Low quality scores. These are your immediate priorities.</div></div>
+      </div>
+      <ul class="action-list">
+        <li><strong>Bottom rankers are the roadmap.</strong> Tackle in order of volume — highest sessions first, since that's where you'll have the most impact.</li>
+        <li><strong>For each bottom ranker:</strong> Review topic instructions → check Knowledge article coverage → verify action configurations → test in Agent Builder before re-deploying.</li>
+        <li><strong>No top rankers →</strong> Don't skip this. It tells you there's no "what good looks like" to model from. You're building from scratch.</li>
+      </ul>
+    </div>
+
+    <!-- Quality by Intent -->
+    <div class="topic">
+      <h3>Quality by Intent — Top and Bottom Ranking</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">What it shows</div><div class="rv">Quality distribution broken down by specific user intent — the most granular view of where the agent succeeds and fails.</div></div>
+        <div class="row"><div class="rl">Bottom example</div><div class="rv">"View All Cases" — Very Low quality. The intent may be returning incomplete responses, failing actions, or misunderstanding the request.</div></div>
+      </div>
+      <ul class="action-list">
+        <li><strong>For "View All Cases" →</strong> Pull session traces for that intent. Check: does the action return data? Is the response template complete? Is the intent being classified correctly?</li>
+        <li><strong>Most intents Very Low →</strong> This is usually a grounding problem. The agent doesn't have enough quality context in its Knowledge base to form good answers for most requests.</li>
+        <li><strong>Quality trending down over time →</strong> Correlate the drop with recent agent changes or new deployments. Use the time-series view to find the exact moment it degraded.</li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 6 — SERVICE AGENT ANALYTICS TABS
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch6">
+    <div class="ch-number">Chapter 6</div>
+    <h2>Analytics — Service Agent Deep Dive</h2>
+    <div class="ch-desc">Six tabs — Effectiveness, Usage, Quality, Health, Trust, Voice — each measuring a different dimension</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this section covers:</strong> The full Tableau Next Service Agent dashboard. Each tab measures a distinct dimension of agent performance. Together they give a 360° view — from customer engagement down to voice interaction quality. Know which tab answers which question.
+    </div>
+
+    <!-- Effectiveness -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 1</span>
+        <h3>Effectiveness Analytics</h3>
+      </div>
+      <div class="tagline">How successfully is the agent resolving and deflecting conversations?</div>
+      <div class="metric-grid">
+        <div class="metric-card good">
+          <div class="m-value">36.27%</div>
+          <div class="m-label">Deflection Rate</div>
+          <div class="m-desc">Resolved without a human. Higher = less support workload.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">18.95%</div>
+          <div class="m-label">Escalation Rate</div>
+          <div class="m-desc">Handed off to a human. Higher may indicate workflow or knowledge gaps.</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="m-value">41.83%</div>
+          <div class="m-label">Abandonment Rate</div>
+          <div class="m-desc">Left before resolution. High rates signal friction or poor experience.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">32.35%</div>
+          <div class="m-label">Engagement Rate</div>
+          <div class="m-desc">Meaningful customer interaction. Higher = stronger adoption and trust.</div>
+        </div>
+        <div class="metric-card warn">
+          <div class="m-value">13.01%</div>
+          <div class="m-label">Success Rate</div>
+          <div class="m-desc">Workflow or conversation completion. Low rates highlight optimization opportunities.</div>
+        </div>
+      </div>
+      <div class="uc" style="margin-top:14px;">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>The Effectiveness Trend Chart shows these metrics over time — use it to see whether changes you made to the agent improved outcomes. The Session Outcome chart shows how conversations resolve (abandoned / deflected / escalated / not set) — a high "not set" count means your outcome tracking isn't fully configured.</p>
+      </div>
+    </div>
+
+    <!-- Usage -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 2</span>
+        <h3>Usage Analytics</h3>
+      </div>
+      <div class="tagline">How often are users interacting, and are they coming back?</div>
+      <div class="metric-grid">
+        <div class="metric-card neutral">
+          <div class="m-value">306</div>
+          <div class="m-label">Unique Sessions</div>
+          <div class="m-desc">↓ 18.4% — may indicate declining usage over last 30 days.</div>
+        </div>
+        <div class="metric-card good">
+          <div class="m-value">1.78K</div>
+          <div class="m-label">Unique Interactions</div>
+          <div class="m-desc">Total user-AI exchanges. High volume = active engagement within sessions.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">5.85</div>
+          <div class="m-label">Avg. Interactions / Session</div>
+          <div class="m-desc">Depth of engagement per session. Higher = more meaningful conversations.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">1</div>
+          <div class="m-label">Unique Users</div>
+          <div class="m-desc">Individual users who interacted. Reflects adoption breadth.</div>
+        </div>
+      </div>
+      <div class="uc" style="margin-top:14px;">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>Use the Usage Trend Chart to identify adoption growth or decline. A drop in unique sessions after a deployment could mean users lost confidence in the agent. High avg. interactions/session combined with high abandonment means users are trying hard but not succeeding — a quality and content gap, not an adoption problem.</p>
+      </div>
+    </div>
+
+    <!-- Quality -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 3</span>
+        <h3>Quality Analytics</h3>
+      </div>
+      <div class="tagline">Are AI-generated responses accurate, relevant, and trustworthy?</div>
+      <div class="rows">
+        <div class="row"><div class="rl">Avg Quality Score</div><div class="rv">Overall AI response quality on a 1–5 scale. Lower scores indicate prompt, retrieval, or knowledge grounding gaps.</div></div>
+        <div class="row"><div class="rl">RAG Metrics</div><div class="rv">Measures how well the retrieval pipeline is grounding responses in enterprise data. Weak RAG = hallucinations or low-relevance answers even when the agent "seems" to respond.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>If Quality Score is low but Engagement is high, users are actively trying but getting bad answers. The fix is in the Knowledge base and prompt design — not the agent structure. Use the Data Explorer (Subagents and Intents tabs) to find the specific topics causing the lowest scores.</p>
+      </div>
+    </div>
+
+    <!-- Health -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 4</span>
+        <h3>Health Analytics</h3>
+      </div>
+      <div class="tagline">Is the agent stable, fast, and operationally reliable?</div>
+      <div class="metric-grid">
+        <div class="metric-card good">
+          <div class="m-value">0%</div>
+          <div class="m-label">Error Rate</div>
+          <div class="m-desc">How often interactions fail. 0% = stable workflows and reliable integrations.</div>
+        </div>
+        <div class="metric-card neutral">
+          <div class="m-value">279.8s</div>
+          <div class="m-label">Session Duration</div>
+          <div class="m-desc">Average session length. Longer may indicate deep engagement or complex unresolved issues.</div>
+        </div>
+        <div class="metric-card good">
+          <div class="m-value">0.07</div>
+          <div class="m-label">Interaction Latency</div>
+          <div class="m-desc">AI response speed. Lower = better user experience and lower abandonment risk.</div>
+        </div>
+      </div>
+      <div class="uc" style="margin-top:14px;">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>Use the Health Trend Chart to detect reliability issues after deployments. Long session duration paired with high abandonment = users are spending a lot of time with an agent that never helps them. That's a quality problem, not a performance problem.</p>
+      </div>
+    </div>
+
+    <!-- Trust -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 5</span>
+        <h3>Trust Analytics</h3>
+      </div>
+      <div class="tagline">Is the agent following its instructions and producing safe, compliant responses?</div>
+      <div class="rows">
+        <div class="row"><div class="rl">Instruction Adherence</div><div class="rv">How consistently the AI follows configured instructions and guardrails. Higher = more reliable and controlled behavior. A drop here after a prompt change is a red flag.</div></div>
+        <div class="row"><div class="rl">Toxicity Score</div><div class="rv">Measures potentially harmful or inappropriate responses. Lower scores improve trust, compliance, and user safety. Even a small uptick warrants immediate investigation.</div></div>
+      </div>
+      <div class="uc">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>Trust metrics are your governance layer. Monitor Instruction Adherence after any prompt update or Knowledge base change — if it drops, the agent may be ignoring guardrails. Use Toxicity Score to identify edge cases where the agent generates responses that violate your content policies before they reach large user volumes.</p>
+      </div>
+    </div>
+
+    <!-- Voice -->
+    <div class="topic">
+      <div class="topic-title-row">
+        <span class="badge b-on">Tab 6</span>
+        <h3>Voice Analytics</h3>
+      </div>
+      <div class="tagline">How smooth is the conversational experience in voice-based AI interactions?</div>
+      <div class="metric-grid">
+        <div class="metric-card good">
+          <div class="m-value">0%</div>
+          <div class="m-label">Interruption Rate</div>
+          <div class="m-desc">How often users interrupt the AI mid-response. 0% = smooth, natural interactions. Higher rates may indicate delays or inaccurate responses prompting user frustration.</div>
+        </div>
+      </div>
+      <div class="uc" style="margin-top:14px;">
+        <div class="uc-lbl">How to Apply This</div>
+        <p>Voice is a different UX contract — users expect near-instant responses and natural pacing. A rising interruption rate is often a latency problem, not a content problem. Cross-reference with the Health tab's Interaction Latency. If latency increases and interruption rate follows, the fix is performance optimization, not prompt rewriting.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="divider"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       CHAPTER 7 — TAGGING & INTENT TAGS
+  ═══════════════════════════════════════════ -->
+  <div class="chapter" id="ch7">
+    <div class="ch-number">Chapter 7</div>
+    <h2>Optimization — Tagging &amp; Intent Tags</h2>
+    <div class="ch-desc">How Agentforce surfaces patterns across thousands of sessions without you reading each one</div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="intro-callout">
+      <strong>What this covers:</strong> Tagging is the mechanism Agent Optimization uses to make sense of session volume at scale. Without tags, you have a list of transcripts. With tags, you have a map of what your users actually need — and where the agent is failing to deliver it.
+    </div>
+
+    <div class="topic">
+      <h3>How Tagging Works — The Flow</h3>
+      <div class="rows">
+        <div class="row"><div class="rl">Step 1</div><div class="rv">Each session is broken into <strong>moments</strong> — one per distinct user intent within the conversation.</div></div>
+        <div class="row"><div class="rl">Step 2</div><div class="rv">Each moment receives an <strong>Intent Tag</strong> — an AI-generated label describing what the user was trying to accomplish (e.g., "Reset Password", "Check Order Status", "Verify Account").</div></div>
+        <div class="row"><div class="rl">Step 3</div><div class="rv">Tags with enough volume are grouped into <strong>System Tag Clusters</strong> — cross-session patterns that reveal what users consistently ask about, regardless of how they phrase it.</div></div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <h3>Critical Rules — What Students Must Know</h3>
+      <table>
+        <thead><tr><th>Rule</th><th>Detail</th><th>Why It Matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Clusters are generated weekly</strong></td>
+            <td>Not real-time — batch process runs once per week</td>
+            <td>Don't expect instant results after enabling Session Tracing</td>
+          </tr>
+          <tr>
+            <td><strong>Minimum 50 moments required</strong></td>
+            <td>Clusters won't appear until 50+ moments exist</td>
+            <td>Low-traffic orgs may not see tags for weeks</td>
+          </tr>
+          <tr>
+            <td><strong>Minimum 30 days of data</strong></td>
+            <td>30-day window required before clusters generate</td>
+            <td>New orgs need patience — the system is learning</td>
+          </tr>
+          <tr>
+            <td><strong>10+ moments per cluster</strong></td>
+            <td>A cluster only gets a tag if 10+ moments are associated</td>
+            <td>Very rare intents won't surface as named clusters</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;">
+        <strong>Most common student/customer question:</strong> "Why don't I see any tags yet?" — Answer: You need enough volume (50+ moments) and enough time (weekly batch, 30-day minimum). Tags won't appear immediately after enabling Session Tracing. Set expectations with customers during implementation.
+      </div>
+    </div>
+
+    <div class="topic">
+      <h3>How to Use Tags Once They Appear</h3>
+      <ul class="action-list">
+        <li><strong>Find the highest-volume clusters →</strong> These are what your users care about most. If they don't have a mapped topic in the agent, build one.</li>
+        <li><strong>Find clusters with low quality scores →</strong> These are intents the agent is attempting but failing. The tag name tells you the intent; the quality score tells you how badly it's failing.</li>
+        <li><strong>Find clusters with no topic match →</strong> These are gaps — real user needs the agent can't currently address. Prioritize building topics for the highest-volume unmatched clusters.</li>
+        <li><strong>Track clusters over time →</strong> A cluster that grows week-over-week and stays Very Low quality is a compounding problem. Fix it before it becomes your top abandonment driver.</li>
+      </ul>
+    </div>
+
+    <!-- Final summary -->
+    <div class="summary">
+      <div class="sum-title">Full Observability Stack — End-to-End Reference</div>
+      <div class="sum-grid">
+        <div class="sum-row"><div class="sl">Setup Toggles</div><div class="sv">Turn on the right layers — Session Tracing is the master switch everything else depends on</div></div>
+        <div class="sum-row"><div class="sl">Overview Tab</div><div class="sv">Is the agent working? — Engagement, abandonment, deflection, escalation at a glance</div></div>
+        <div class="sum-row"><div class="sl">Quality Tab</div><div class="sv">How good are the responses? — AI-scored quality by agent, topic, and intent</div></div>
+        <div class="sum-row"><div class="sl">Optimization Insights</div><div class="sv">Where exactly is it failing? — Latency + quality + top/bottom performers for prioritization</div></div>
+        <div class="sum-row"><div class="sl">Effectiveness Tab</div><div class="sv">Is it deflecting, escalating, or abandoning? — Automation effectiveness over time</div></div>
+        <div class="sum-row"><div class="sl">Usage Tab</div><div class="sv">Who is using it and how much? — Adoption, session depth, engagement trends</div></div>
+        <div class="sum-row"><div class="sl">Health Tab</div><div class="sv">Is it operationally stable? — Error rate, latency, session duration</div></div>
+        <div class="sum-row"><div class="sl">Trust Tab</div><div class="sv">Is it safe and compliant? — Instruction adherence and toxicity monitoring</div></div>
+        <div class="sum-row"><div class="sl">Voice Tab</div><div class="sv">How smooth is the voice UX? — Interruption rate and conversational flow</div></div>
+        <div class="sum-row"><div class="sl">Intent Tags</div><div class="sv">What do users actually need? — AI-clustered patterns that reveal gaps and priorities</div></div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>

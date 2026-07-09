@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Netlify folder
+.netlify
+
+# Generated screenshot dumps
+screenshots/
+screenshots2/
+screenshots3/
+screenshots4/

@@ -1,0 +1,2662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agentforce Analytics - Instructor Reference</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;background:#f3f4f6;color:#1a1a1a;}
+
+/* ── App Shell ── */
+.app-shell{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.app-body{display:flex;flex:1;overflow:hidden;}
+.main-content{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* ── Sidebar ── */
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow-y:auto;transition:width .2s;}
+.sidebar.collapsed{width:0;overflow:hidden;}
+.sidebar-header{padding:18px 16px 10px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#032D60;border-bottom:1px solid #f0f0f0;}
+.nav-group{padding:6px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:#444;cursor:pointer;border-radius:0;transition:background .12s;user-select:none;border-left:3px solid transparent;}
+.nav-item:hover{background:#f4f7ff;color:#0070D2;}
+.nav-item.active{background:#e8f0fe;color:#0070D2;font-weight:700;border-left-color:#0070D2;}
+.nav-item .nav-icon{font-size:15px;flex-shrink:0;width:18px;text-align:center;}
+.nav-item .nav-chevron{margin-left:auto;font-size:11px;color:#aaa;transition:transform .2s;}
+.nav-item.expanded .nav-chevron{transform:rotate(180deg);}
+.nav-sub{overflow:hidden;max-height:0;transition:max-height .2s ease;}
+.nav-sub.open{max-height:200px;}
+.nav-sub-item{display:block;padding:7px 16px 7px 44px;font-size:12.5px;color:#555;cursor:pointer;transition:background .12s;border-left:3px solid transparent;}
+.nav-sub-item:hover{background:#f4f7ff;color:#0070D2;}
+.nav-sub-item.active{background:#e8f0fe;color:#0070D2;font-weight:700;border-left-color:#0070D2;}
+.nav-divider{height:1px;background:#f0f0f0;margin:4px 0;}
+.sidebar-footer{margin-top:auto;padding:14px 16px;border-top:1px solid #f0f0f0;}
+.sidebar-footer button{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#666;background:none;border:none;cursor:pointer;}
+.sidebar-footer button:hover{color:#0070D2;}
+.sidebar-badge{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:10px;background:#e8f0fe;color:#0070D2;margin-left:auto;}
+
+/* ── Page sections ── */
+.page-section{display:none;}
+.page-section.active{display:block;}
+
+/* ── Disclaimer ── */
+.disclaimer{background:#fffbeb;border-bottom:2px solid #f0c050;padding:10px 28px;font-size:12.5px;color:#5a4000;text-align:center;}
+.disclaimer strong{color:#3d2b00;}
+/* ── Analytics Header ── */
+.analytics-header{background:#fff;border-bottom:1px solid #e0e0e0;padding:12px 24px;display:flex;align-items:center;gap:20px;}
+.analytics-title{font-size:18px;font-weight:700;color:#032D60;}
+.agent-type-drop select{border:1px solid #ccc;border-radius:6px;padding:6px 28px 6px 12px;font-size:13px;font-weight:600;background:#fff;color:#0070D2;cursor:pointer;appearance:auto;}
+.analytics-help-btn{margin-left:auto;border:1px solid #0070D2;color:#0070D2;background:#fff;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.analytics-filter-bar{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 24px;display:flex;align-items:center;gap:20px;font-size:13px;color:#444;}
+.analytics-filter-bar label{font-weight:600;margin-right:4px;}
+/* ── Inner tab nav ── */
+.inner-tab-nav{background:#f4f6fb;border-bottom:1px solid #e0e0e0;padding:0 28px;display:flex;gap:0;}
+.inner-tab-nav button{padding:8px 18px;font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:#555;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.inner-tab-nav button:hover{color:#0070D2;}
+.inner-tab-nav button.active{color:#0070D2;border-bottom-color:#0070D2;font-weight:700;}
+/* ── Scorers table ── */
+.scorers-wrap{padding:24px 28px;}
+.scorers-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.scorers-header h2{font-size:22px;font-weight:800;color:#032D60;}
+.scorers-meta{font-size:12.5px;color:#666;margin-bottom:14px;}
+.scorers-search-bar{display:flex;justify-content:flex-end;margin-bottom:10px;}
+.scorers-search-bar input{border:1px solid #ccc;border-radius:20px;padding:5px 14px;font-size:12.5px;width:240px;}
+.scorers-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;}
+.scorers-table th{background:#f8f9fa;padding:10px 14px;text-align:left;font-weight:700;color:#444;border-bottom:1px solid #e0e0e0;white-space:nowrap;cursor:pointer;user-select:none;}
+.scorers-table th:hover{background:#edf0f5;}
+.scorers-table td{padding:11px 14px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle;}
+.scorers-table tr:last-child td{border-bottom:none;}
+.scorers-table tr:hover td{background:#f8faff;}
+.scorers-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;}
+.scorers-status .dot{width:8px;height:8px;border-radius:50%;background:#1a7a40;}
+.scorers-type-badge{display:inline-block;background:#f0f4ff;border:1px solid #c0cff0;border-radius:12px;padding:2px 10px;font-size:11.5px;color:#0070D2;font-weight:600;}
+
+/* ── Sessions & Intents page ── */
+.si-page{padding:0;}
+.si-topbar{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 24px;display:flex;align-items:center;height:52px;gap:12px;}
+.si-topbar .si-title{font-size:18px;font-weight:700;color:#032D60;display:flex;align-items:center;gap:6px;}
+.si-topbar .si-badge{width:18px;height:18px;border-radius:50%;background:#0070D2;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.si-help-btn{margin-left:auto;border:1px solid #0070D2;color:#0070D2;background:#fff;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.si-filters{background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 24px;display:flex;align-items:center;gap:20px;font-size:13px;color:#444;}
+.si-filters label{font-weight:600;}
+.si-filters select{border:1px solid #ccc;border-radius:4px;padding:4px 10px;font-size:12.5px;background:#fff;color:#222;}
+.si-tab-nav{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 24px;display:flex;gap:0;}
+.si-tab-nav button{padding:11px 18px;font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:#555;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.si-tab-nav button:hover{color:#0070D2;}
+.si-tab-nav button.active{color:#0070D2;border-bottom-color:#0070D2;font-weight:700;}
+.si-table-wrap{padding:16px 24px;}
+.si-table-info{font-size:12.5px;color:#555;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.si-search{border:1px solid #ccc;border-radius:20px;padding:5px 14px;font-size:12.5px;width:220px;}
+.si-table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;}
+.si-table th{background:#f8f9fa;padding:9px 12px;text-align:left;font-weight:700;color:#444;border-bottom:1px solid #e0e0e0;white-space:nowrap;cursor:pointer;user-select:none;}
+.si-table th:hover{background:#edf0f5;}
+.si-table th::after{content:" ↕";font-size:9px;color:#bbb;}
+.si-table td{padding:10px 12px;vertical-align:top;border-bottom:1px solid #f0f0f0;color:#333;line-height:1.4;}
+.si-table tr:last-child td{border-bottom:none;}
+.si-table tr:hover td{background:#f8faff;}
+.si-session-id{color:#0070D2;font-size:11.5px;font-weight:600;cursor:pointer;}
+.si-session-id:hover{text-decoration:underline;}
+.si-icon{display:inline-block;width:20px;height:20px;border-radius:4px;background:#e8d5f5;margin-top:4px;}
+.si-outcome{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;}
+.si-outcome .dot{width:9px;height:9px;border-radius:50%;}
+.si-tag{display:inline-block;background:#edf1f8;border:1px solid #d0d8e8;border-radius:4px;padding:2px 8px;font-size:11px;color:#2a2a2a;margin:2px 2px 2px 0;}
+.si-tag.escalation{background:#fde8e8;border-color:#f5c0c0;color:#a02020;}
+.si-quality{display:inline-block;border-radius:12px;padding:3px 10px;font-size:11.5px;font-weight:700;}
+.si-quality.high{background:#d4edda;color:#1a6b35;}
+.si-quality.medium{background:#fff3cd;color:#856404;}
+.si-quality.low{background:#ffe5cc;color:#7a4000;}
+.si-quality.very-low{background:#fde8e8;color:#a02020;}
+.si-reasoning{font-size:11.5px;color:#444;line-height:1.4;max-width:200px;}
+
+/* ── Insights page ── */
+.insights-page{padding:0;}
+.insights-filters{background:#fff;border-bottom:1px solid #e0e0e0;padding:12px 24px;display:flex;align-items:center;gap:20px;font-size:13px;}
+.insights-filters label{font-weight:600;color:#444;font-size:12px;}
+.insights-filters select{border:1px solid #ccc;border-radius:4px;padding:4px 12px;font-size:12.5px;background:#fff;}
+.insights-kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px 24px;}
+.insights-kpi{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:18px 20px;}
+.insights-kpi .kpi-label{font-size:13px;font-weight:700;color:#333;margin-bottom:8px;}
+.insights-kpi .kpi-value{font-size:32px;font-weight:800;color:#032D60;}
+.insights-kpi .kpi-badge{display:inline-block;border-radius:10px;padding:2px 10px;font-size:12px;font-weight:700;margin-right:8px;}
+.kpi-badge.medium{background:#fff3cd;color:#856404;}
+.kpi-badge.high{background:#d4edda;color:#1a6b35;}
+.insights-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0 24px 20px;}
+.insights-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:18px 20px;}
+.insights-card .card-title{font-size:13px;font-weight:700;color:#333;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.insights-card .card-title .info-icon{color:#aaa;font-size:12px;cursor:pointer;}
+.donut-wrap{position:relative;height:180px;display:flex;align-items:center;justify-content:center;}
+.donut-legend{margin-top:12px;display:flex;flex-direction:column;gap:5px;}
+.donut-legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#444;}
+.donut-legend-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.ranking-table{width:100%;font-size:12px;}
+.ranking-table th{font-size:11px;font-weight:700;color:#888;padding:0 0 8px;text-align:left;border-bottom:1px solid #f0f0f0;}
+.ranking-table th:not(:first-child){text-align:right;}
+.ranking-table td{padding:8px 0;border-bottom:1px solid #f8f8f8;vertical-align:middle;}
+.ranking-table td:not(:first-child){text-align:right;}
+.ranking-table .topic-name{color:#0070D2;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.ranking-table .topic-name:hover{text-decoration:underline;}
+.rank-icon{font-size:12px;color:#aaa;}
+.r-badge{display:inline-block;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:700;}
+.r-badge.high{background:#d4edda;color:#1a6b35;}
+.r-badge.medium{background:#fff3cd;color:#856404;}
+.r-badge.low{background:#ffe5cc;color:#7a4000;}
+.r-badge.very-low{background:#fde8e8;color:#a02020;}
+
+/* ── Performance Insights tab ── */
+.perf-page{padding:20px 24px;}
+.perf-breakdown-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.perf-breakdown-header h2{font-size:20px;font-weight:700;color:#1a1a1a;}
+.perf-view-btns{display:flex;border:2px solid #0070D2;border-radius:20px;overflow:hidden;}
+.perf-view-btns button{padding:5px 16px;font-size:12.5px;font-weight:600;border:none;cursor:pointer;background:#fff;color:#0070D2;transition:all .15s;}
+.perf-view-btns button.active{background:#0070D2;color:#fff;}
+.perf-filters{display:flex;gap:16px;margin-bottom:16px;align-items:center;font-size:12.5px;}
+.perf-filters label{font-weight:600;color:#555;}
+.perf-filters select{border:1px solid #ccc;border-radius:4px;padding:4px 10px;font-size:12.5px;background:#fff;}
+.perf-explore-box{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px 20px;}
+.perf-explore-box .explore-title{font-size:13px;color:#555;margin-bottom:12px;}
+.perf-subagent-filters{display:flex;justify-content:space-between;margin-bottom:14px;gap:20px;}
+.perf-subagent-filters>div label{display:block;font-size:11px;font-weight:700;color:#888;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;}
+.perf-subagent-filters select{border:1px solid #ccc;border-radius:4px;padding:5px 12px;font-size:12.5px;background:#fff;width:240px;}
+.perf-dual-chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #eee;border-radius:6px;overflow:hidden;}
+.perf-chart-col{padding:12px 16px;}
+.perf-chart-col:first-child{border-right:1px solid #eee;}
+.perf-chart-col .col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.perf-chart-col .col-title{font-size:11px;font-weight:700;color:#888;letter-spacing:0.5px;}
+.perf-chart-col .col-axis{font-size:10px;color:#aaa;text-align:center;margin-top:4px;}
+.perf-dual-inner{height:320px;position:relative;}
+/* ── Top bar ── */
+.topbar{background:#fff;border-bottom:1px solid #e0e0e0;padding:0 28px;display:flex;align-items:center;gap:20px;height:52px;}
+.topbar .title{font-size:20px;font-weight:700;color:#032D60;flex:1;}
+.btn-group{display:flex;border:1px solid #0070D2;border-radius:20px;overflow:hidden;}
+.btn-group button{padding:5px 16px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#fff;color:#0070D2;}
+.btn-group button.active{background:#0070D2;color:#fff;}
+/* ── EA specific ── */
+.ea-section{display:none;}
+.sa-section{display:block;}
+.horiz-charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+.horiz-chart-box{background:#fff;border:1px solid #e4e4e4;border-radius:8px;padding:16px;}
+.horiz-chart-box h4{font-size:13px;font-weight:700;color:#032D60;margin-bottom:12px;cursor:pointer;}
+.horiz-chart-box h4:hover{color:#0070D2;text-decoration:underline;}
+.horiz-chart-wrap{position:relative;height:220px;}
+
+/* ── Tab nav ── */
+.tab-nav{background:#fff;border-bottom:2px solid #e0e0e0;padding:0 28px;display:flex;gap:0;}
+.tab-nav button{padding:12px 20px;font-size:13.5px;font-weight:500;border:none;background:none;cursor:pointer;color:#555;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.tab-nav button:hover{color:#0070D2;}
+.tab-nav button.active{color:#0070D2;border-bottom-color:#0070D2;font-weight:700;}
+
+/* ── Main layout ── */
+.tab-panel{display:none;padding:24px 28px;}
+.tab-panel.active{display:block;}
+.panel-title{font-size:16px;font-weight:700;color:#032D60;margin-bottom:20px;}
+
+.panel-body{display:grid;grid-template-columns:260px 1fr;gap:20px;background:#fff;border-radius:8px;border:1px solid #e4e4e4;padding:20px;}
+
+/* ── Metric cards ── */
+.metrics{display:flex;flex-direction:column;gap:0;border-right:1px solid #eee;padding-right:20px;}
+.metric{padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;border-radius:6px;padding:10px 12px;transition:background .15s;}
+.metric:hover{background:#f0f6ff;}
+.metric:last-child{border-bottom:none;}
+.metric-label{font-size:12.5px;font-weight:600;color:#333;}
+.metric-value{font-size:26px;font-weight:800;color:#032D60;line-height:1.1;margin:3px 0;}
+.metric-delta{font-size:11.5px;}
+.delta-up{color:#c0392b;}
+.delta-down{color:#c0392b;}
+.delta-good{color:#1a7a40;}
+.metric-hint{font-size:10px;color:#999;margin-top:3px;font-style:italic;}
+
+/* ── Chart area ── */
+.chart-area{display:flex;flex-direction:column;gap:10px;}
+.chart-toggles{display:flex;gap:0;flex-wrap:wrap;}
+.chart-toggles button{padding:5px 14px;font-size:12px;font-weight:600;border:1px solid #ddd;background:#fff;color:#0070D2;cursor:pointer;transition:all .15s;}
+.chart-toggles button:first-child{border-radius:20px 0 0 20px;}
+.chart-toggles button:last-child{border-radius:0 20px 20px 0;}
+.chart-toggles button.active{background:#0070D2;color:#fff;border-color:#0070D2;}
+.chart-toggles button:not(:first-child){border-left:none;}
+.chart-title{font-size:11px;font-weight:700;color:#888;text-align:right;letter-spacing:0.5px;text-transform:uppercase;}
+.chart-wrap{position:relative;height:280px;}
+.chart-legend{font-size:11px;color:#555;display:flex;align-items:center;gap:6px;margin-top:4px;}
+.chart-legend .dot{width:10px;height:10px;border-radius:50%;background:#0070D2;display:inline-block;}
+
+/* ── Session Outcome section ── */
+.section-divider{margin:20px 0 0;background:#fff;border-radius:8px;border:1px solid #e4e4e4;padding:20px;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.section-header h3{font-size:15px;font-weight:700;color:#032D60;cursor:pointer;}
+.section-header h3:hover{color:#0070D2;text-decoration:underline;}
+.outcome-legend{display:flex;gap:16px;font-size:11.5px;color:#555;margin-top:8px;flex-wrap:wrap;}
+.outcome-legend span{display:flex;align-items:center;gap:5px;}
+.outcome-legend .swatch{width:12px;height:12px;border-radius:2px;display:inline-block;}
+
+/* ── Empty state ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;}
+.empty-state h3{font-size:18px;font-weight:700;color:#0070D2;margin-bottom:10px;}
+.empty-state p{font-size:13px;color:#555;max-width:480px;line-height:1.6;}
+.empty-state a{color:#0070D2;font-size:13px;font-weight:600;margin-top:12px;display:inline-block;cursor:pointer;}
+.empty-chart{height:200px;border:1px solid #eee;border-radius:6px;position:relative;margin:16px 0;}
+.empty-chart .zeroline{position:absolute;top:50%;left:0;right:0;border-top:1px solid #e0e0e0;}
+
+/* ── RAG toggle for quality ── */
+.rag-toggle{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px;color:#555;}
+.toggle-pill{display:flex;border:1px solid #0070D2;border-radius:20px;overflow:hidden;}
+.toggle-pill button{padding:4px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:#fff;color:#0070D2;}
+.toggle-pill button.active{background:#0070D2;color:#fff;}
+
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:10px;max-width:580px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal-header{background:#032D60;color:#fff;padding:20px 24px;border-radius:10px 10px 0 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.modal-header h2{font-size:17px;font-weight:700;line-height:1.3;}
+.modal-header .tab-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#7EC8E3;margin-bottom:6px;}
+.modal-close{background:none;border:none;color:white;font-size:22px;cursor:pointer;line-height:1;padding:0 0 0 16px;flex-shrink:0;}
+.modal-body{padding:22px 24px;}
+.modal-row{display:grid;grid-template-columns:100px 1fr;gap:8px 12px;margin-bottom:10px;align-items:start;}
+.modal-row-label{font-size:10.5px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;color:#0070D2;padding-top:2px;}
+.modal-row-value{font-size:13px;color:#2a2a2a;line-height:1.55;}
+.modal-uc{margin-top:14px;background:#f4f8ff;border:1px solid #c8daef;border-radius:6px;padding:13px 15px;}
+.modal-uc-label{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0070D2;margin-bottom:6px;}
+.modal-uc p{font-size:12.5px;color:#2a2a2a;line-height:1.55;}
+.modal-action{margin-top:10px;background:#fff8e1;border:1px solid #f0c050;border-radius:6px;padding:11px 14px;font-size:12.5px;color:#5a4000;}
+.modal-action strong{color:#3d2b00;}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+<div class="disclaimer"><strong>Instructor Reference Only:</strong> This dashboard uses simulated data for learning purposes only. All metrics, agent names, and scenarios are fictional and intended for instructor training.</div>
+
+<div class="app-body">
+
+<!-- ════════ SIDEBAR ════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">Observe &amp; Optimize</div>
+  <div class="nav-group">
+    <div class="nav-item active" id="nav-analytics" onclick="showPage('analytics')">
+      <span class="nav-icon">&#x1F4C8;</span>
+      <span>Analytics</span>
+    </div>
+    <div class="nav-item expanded" id="nav-optimization" onclick="toggleOptNav()">
+      <span class="nav-icon">&#x1F4C9;</span>
+      <span>Optimization</span>
+      <span class="nav-chevron">&#9650;</span>
+    </div>
+    <div class="nav-sub open" id="opt-sub">
+      <div class="nav-sub-item" id="nav-insights" onclick="showPage('insights')">Insights</div>
+      <div class="nav-sub-item" id="nav-sessions" onclick="showPage('sessions')">Sessions &amp; Intents</div>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" id="nav-scorers" onclick="showPage('scorers')">
+      <span class="nav-icon">&#x1F4CB;</span>
+      <span>Scorers</span>
+      <span class="sidebar-badge">Beta</span>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <button onclick="toggleSidebar()">&#x21A4; Collapse</button>
+  </div>
+</nav>
+
+<!-- ════════ MAIN CONTENT ════════ -->
+<div class="main-content">
+
+<!-- ────── ANALYTICS PAGE ────── -->
+<div class="page-section active" id="page-analytics">
+
+<!-- Shared analytics header (shown for both SA and EA) -->
+<div class="analytics-header">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:20px;">&#x1F4C8;</span>
+    <span class="analytics-title">Agent Analytics</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span style="font-size:13px;font-weight:600;color:#444;">Agent Type</span>
+    <div class="agent-type-drop">
+      <select onchange="switchDashboardDrop(this.value)" id="agent-type-select">
+        <option value="sa" selected>Service Agent</option>
+        <option value="ea">Employee Agent</option>
+      </select>
+    </div>
+  </div>
+  <button class="analytics-help-btn">&#x1F4CA; Agent Analytics Help</button>
+</div>
+<div class="analytics-filter-bar">
+  <span style="font-weight:600;font-size:13px;color:#555;">Filter by:</span>
+  <span><label>Agent:</label> <select style="border:1px solid #ccc;border-radius:4px;padding:4px 10px;font-size:12.5px;background:#fff;"><option>All</option><option>Pronto Service Agent</option><option>HelloWorld Agent</option></select></span>
+  <span><label>Timeframe:</label> <select style="border:1px solid #ccc;border-radius:4px;padding:4px 10px;font-size:12.5px;background:#fff;"><option>Last 30 Days</option><option>Last 7 Days</option><option>Last 90 Days</option></select></span>
+  <span><label>Channel:</label> <select style="border:1px solid #ccc;border-radius:4px;padding:4px 10px;font-size:12.5px;background:#fff;"><option>All</option><option>Messaging</option><option>Voice</option></select></span>
+</div>
+
+<!-- ════════════════════════════════
+     SERVICE AGENT SECTION
+════════════════════════════════ -->
+<div class="sa-section" id="sa-section">
+<div class="topbar">
+  <div class="title">Agent Performance Overview</div>
+  <div class="btn-group"><button class="active">Metric Cards</button><button>Table View</button></div>
+</div>
+<div class="tab-nav" id="sa-tab-nav">
+  <button class="active" onclick="switchTab('effectiveness',this)">Overview</button>
+  <button onclick="switchTab('perf-insights',this)">Performance Insights</button>
+</div>
+<!-- SA OVERVIEW subtab nav -->
+<div class="inner-tab-nav" id="sa-inner-nav">
+  <button class="active" data-panel="tab-effectiveness" onclick="switchInnerTab('sa','effectiveness',this)">Effectiveness</button>
+  <button data-panel="tab-usage" onclick="switchInnerTab('sa','usage',this)">Usage</button>
+  <button data-panel="tab-quality" onclick="switchInnerTab('sa','quality',this)">Quality</button>
+  <button data-panel="tab-health" onclick="switchInnerTab('sa','health',this)">Health</button>
+  <button data-panel="tab-trust" onclick="switchInnerTab('sa','trust',this)">Trust</button>
+  <button data-panel="tab-voice" onclick="switchInnerTab('sa','voice',this)">Voice</button>
+</div>
+
+<!-- ══════════════════════════════════
+     EFFECTIVENESS TAB
+══════════════════════════════════ -->
+<div class="tab-panel active" id="tab-effectiveness">
+  <div class="panel-title">Aggregated Effectiveness Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('deflection')">
+        <div class="metric-label">Deflection Rate</div>
+        <div class="metric-value">38%</div>
+        <div class="metric-delta delta-good">+2.1% (0.02 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('escalation')">
+        <div class="metric-label">Escalation Rate</div>
+        <div class="metric-value">14%</div>
+        <div class="metric-delta delta-good">-1.2% (0.01 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('abandonment')">
+        <div class="metric-label">Abandonment Rate</div>
+        <div class="metric-value">42%</div>
+        <div class="metric-delta delta-up">+4.6% (0.02 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('engagement')">
+        <div class="metric-label">Engagement Rate</div>
+        <div class="metric-value">71%</div>
+        <div class="metric-delta delta-good">+3.2% (0.03 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('success')">
+        <div class="metric-label">Success Rate</div>
+        <div class="metric-value">22%</div>
+        <div class="metric-delta delta-up">-5.1% (0.02 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="eff-toggles">
+        <button class="active" onclick="switchEffChart('Deflection Rate', this)">Deflection Rate</button>
+        <button onclick="switchEffChart('Escalation Rate', this)">Escalation Rate</button>
+        <button onclick="switchEffChart('Abandonment Rate', this)">Abandonment Rate</button>
+        <button onclick="switchEffChart('Engagement Rate', this)">Engagement Rate</button>
+        <button onclick="switchEffChart('Success Rate', this)">Success Rate</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="effChart"></canvas></div>
+      <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+    </div>
+  </div>
+
+  <!-- Session Outcome -->
+  <div class="section-divider">
+    <div class="section-header">
+      <h3 onclick="openModal('session-outcome')">Session Outcome ↗</h3>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="outcomeChart"></canvas></div>
+    <div class="outcome-legend">
+      <span><span class="swatch" style="background:#f4a261;"></span>Abandoned</span>
+      <span><span class="swatch" style="background:#2a9d8f;"></span>Deflected</span>
+      <span><span class="swatch" style="background:#e76f51;"></span>Escalated</span>
+      <span><span class="swatch" style="background:#457b9d;"></span>Not set</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     USAGE TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-usage">
+  <div class="panel-title">Aggregated Usage Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('unique-sessions')">
+        <div class="metric-label">Unique Sessions</div>
+        <div class="metric-value">284</div>
+        <div class="metric-delta delta-good">+8.3% (21) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('unique-interactions')">
+        <div class="metric-label">Unique Interactions</div>
+        <div class="metric-value">1.64K</div>
+        <div class="metric-delta delta-good">+5.2% (81) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('unique-users')">
+        <div class="metric-label">Unique Users</div>
+        <div class="metric-value">47</div>
+        <div class="metric-delta delta-good">+12.0% (5) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('avg-interactions')">
+        <div class="metric-label">Avg Interactions Per Session</div>
+        <div class="metric-value">5.8</div>
+        <div class="metric-delta delta-good">+0.2 (0.01) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="usage-toggles">
+        <button class="active" onclick="switchUsageChart('Unique Sessions', this)">Unique Sessions</button>
+        <button onclick="switchUsageChart('Unique Interactions', this)">Unique Interactions</button>
+        <button onclick="switchUsageChart('Unique Users', this)">Unique Users</button>
+        <button onclick="switchUsageChart('Avg Interactions / Session', this)">Average Interactions Per Session</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="usageChart"></canvas></div>
+      <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     QUALITY TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-quality">
+  <div class="panel-title">Aggregated Quality Metrics</div>
+  <div class="rag-toggle">
+    <span>View:</span>
+    <div class="toggle-pill">
+      <button class="active" onclick="switchQuality('empty', this)">RAG Not Enabled</button>
+      <button onclick="switchQuality('populated', this)">RAG Enabled (Example)</button>
+    </div>
+    <span style="font-size:11px;color:#888;font-style:italic;">Toggle to show students what it looks like when RAG is enabled</span>
+  </div>
+
+  <!-- Empty state -->
+  <div id="quality-empty">
+    <div class="panel-body" style="display:block;">
+      <div style="display:grid;grid-template-columns:260px 1fr;gap:20px;">
+        <div class="metrics">
+          <div class="metric" onclick="openModal('avg-quality-empty')">
+            <div class="metric-label">Average Quality Score</div>
+            <div class="metric-value" style="font-size:22px;color:#aaa;">&#8212;</div>
+            <div class="metric-hint">Click to learn more</div>
+          </div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-title">Timeframe</div>
+          <div class="empty-chart"><div class="zeroline"></div></div>
+          <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider">
+      <div class="empty-state">
+        <h3>RAG is not enabled</h3>
+        <p>RAG metrics require RAG to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.</p>
+        <a onclick="openModal('rag-not-enabled')">What is RAG and why does this matter? →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Populated state -->
+  <div id="quality-populated" style="display:none;">
+    <div class="panel-body">
+      <div class="metrics">
+        <div class="metric" onclick="openModal('avg-quality')">
+          <div class="metric-label">Average Quality Score</div>
+          <div class="metric-value" style="color:#c0392b;">2.3</div>
+          <div class="metric-delta delta-up">-0.4 vs. prior 30 days</div>
+          <div class="metric-hint">Scale: 1–5 · Click to learn more</div>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title">Timeframe</div>
+        <div class="chart-wrap"><canvas id="qualityChart"></canvas></div>
+        <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+      </div>
+    </div>
+    <div class="section-divider">
+      <div class="section-header">
+        <h3 onclick="openModal('rag-metrics')">RAG Metrics ↗</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:8px;">
+        <div class="metric" onclick="openModal('retrieval-precision')" style="border:1px solid #e4e4e4;border-radius:8px;padding:14px;">
+          <div class="metric-label">Retrieval Precision</div>
+          <div class="metric-value" style="font-size:22px;">61%</div>
+          <div class="metric-delta delta-up">-4.2% vs. prior 30 days</div>
+          <div class="metric-hint">Click to learn more</div>
+        </div>
+        <div class="metric" onclick="openModal('retrieval-coverage')" style="border:1px solid #e4e4e4;border-radius:8px;padding:14px;">
+          <div class="metric-label">Retrieval Coverage</div>
+          <div class="metric-value" style="font-size:22px;">74%</div>
+          <div class="metric-delta delta-good">+1.1% vs. prior 30 days</div>
+          <div class="metric-hint">Click to learn more</div>
+        </div>
+        <div class="metric" onclick="openModal('groundedness')" style="border:1px solid #e4e4e4;border-radius:8px;padding:14px;">
+          <div class="metric-label">Groundedness Score</div>
+          <div class="metric-value" style="font-size:22px;">68%</div>
+          <div class="metric-delta delta-up">-2.8% vs. prior 30 days</div>
+          <div class="metric-hint">Click to learn more</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     HEALTH TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-health">
+  <div class="panel-title">Aggregated Health Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('error-rate')">
+        <div class="metric-label">Error Rate</div>
+        <div class="metric-value" style="color:#c0392b;">2.3%</div>
+        <div class="metric-delta delta-up">+0.8 pp vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('session-duration')">
+        <div class="metric-label">Session Duration (seconds)</div>
+        <div class="metric-value">248</div>
+        <div class="metric-delta delta-up">-8.2% (22s) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('latency')">
+        <div class="metric-label">Agent Interaction Latency (sec)</div>
+        <div class="metric-value" style="color:#e67e22;">1.8</div>
+        <div class="metric-delta delta-up">+0.4s vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="health-toggles">
+        <button class="active" onclick="switchHealthChart('Error Rate', this)">Error Rate</button>
+        <button onclick="switchHealthChart('Session Duration', this)">Session Duration</button>
+        <button onclick="switchHealthChart('Agent Interaction Latency', this)">Agent Interaction Latency</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="healthChart"></canvas></div>
+      <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     TRUST TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-trust">
+  <div class="panel-title">Aggregated Trust Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('instruction-adherence')">
+        <div class="metric-label">Instruction Adherence Rate</div>
+        <div class="metric-value" style="font-size:22px;color:#aaa;">&#8212;</div>
+        <div style="font-size:11px;color:#999;margin-top:4px;">Insufficient data</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('toxicity')">
+        <div class="metric-label">Toxicity Score</div>
+        <div class="metric-value" style="font-size:22px;color:#aaa;">&#8212;</div>
+        <div style="font-size:11px;color:#999;margin-top:4px;">Insufficient data</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="trust-toggles">
+        <button class="active" onclick="switchTrustChart('Instruction Adherence Rate', this)">Instruction Adherence Rate</button>
+        <button onclick="switchTrustChart('Toxicity Score', this)">Toxicity Score</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="empty-chart" style="margin-top:10px;"><div class="zeroline"></div><p style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#bbb;">No data available for this period</p></div>
+      <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+    </div>
+  </div>
+  <div class="section-divider">
+    <div class="empty-state">
+      <h3 style="color:#555;font-size:15px;">Why are these metrics empty?</h3>
+      <p>Instruction Adherence and Toxicity Score require sufficient session volume and a minimum data window (30 days) before Agent Optimization can generate reliable scores. These will populate automatically once the threshold is met.</p>
+      <a onclick="openModal('trust-empty')">What should I do while waiting? →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     VOICE TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-voice">
+  <div class="panel-title">Aggregated Voice Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('interruption-rate')">
+        <div class="metric-label">Interruption Rate</div>
+        <div class="metric-value">0%</div>
+        <div class="metric-delta" style="color:#aaa;">0 pp vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="voiceChart"></canvas></div>
+      <div class="chart-legend"><span class="dot"></span> Acme_Service_Agent</div>
+    </div>
+  </div>
+  <div class="section-divider">
+    <div style="padding:10px 0;">
+      <p style="font-size:13px;color:#555;line-height:1.6;">A 0% interruption rate means voice interactions are flowing smoothly. Users are not cutting off the agent mid-response. This is a healthy baseline. <a onclick="openModal('interruption-rate')" style="color:#0070D2;cursor:pointer;font-weight:600;">Learn what to watch for as voice adoption grows →</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PERFORMANCE INSIGHTS TAB
+══════════════════════════════════ -->
+<div class="tab-panel" id="tab-perf-insights">
+  <div class="perf-page">
+    <div class="perf-breakdown-header">
+      <h2>Breakdowns</h2>
+      <div class="perf-view-btns">
+        <button class="active" onclick="switchPerfView('subagents',this)">Subagents</button>
+        <button onclick="switchPerfView('intents',this)">Intents</button>
+        <button onclick="switchPerfView('actions',this)">Actions</button>
+      </div>
+    </div>
+    <div class="perf-explore-box">
+      <div class="explore-title">Explore Subagents by Metric</div>
+      <div class="perf-subagent-filters">
+        <div>
+          <label>Select Subagent</label>
+          <select id="perf-subagent-select"><option>All</option><option>Order_Issues_Refunds</option><option>Verify_Customers</option><option>Storefront_Search</option><option>Support_Policies_and_Terms</option></select>
+        </div>
+        <div>
+          <label>Select Metric</label>
+          <select id="perf-metric-select"><option>Average Quality Score</option><option>Unique Sessions</option><option>Escalation Rate</option><option>Abandonment Rate</option></select>
+        </div>
+      </div>
+      <div class="perf-dual-chart-wrap">
+        <div class="perf-chart-col">
+          <div class="col-header"><span class="col-title">Agent Name &nbsp;&nbsp; Subagent</span></div>
+          <div class="perf-dual-inner"><canvas id="perfSessionsChart"></canvas></div>
+          <div class="col-axis">Unique Sessions</div>
+        </div>
+        <div class="perf-chart-col">
+          <div class="col-header"><span class="col-title">&nbsp;</span></div>
+          <div class="perf-dual-inner"><canvas id="perfQualityChart"></canvas></div>
+          <div class="col-axis">Average Quality Score</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /sa-section -->
+
+<!-- ════════════════════════════════
+     EMPLOYEE AGENT SECTION
+════════════════════════════════ -->
+<div class="ea-section" id="ea-section">
+<div class="topbar">
+  <div class="title">Agent Performance Overview</div>
+  <div class="btn-group"><button class="active">Metric Cards</button><button>Table View</button></div>
+</div>
+<div class="tab-nav" id="ea-tab-nav">
+  <button class="active" onclick="switchEaTopTab('ea-overview',this)">Overview</button>
+  <button onclick="switchEaTopTab('ea-perf',this)">Performance Insights</button>
+</div>
+<!-- EA OVERVIEW subtab nav -->
+<div class="inner-tab-nav" id="ea-inner-nav">
+  <button class="active" data-panel="ea-effectiveness" onclick="switchInnerTab('ea','ea-effectiveness',this)">Effectiveness</button>
+  <button data-panel="ea-usage" onclick="switchInnerTab('ea','ea-usage',this)">Usage</button>
+  <button data-panel="ea-satisfaction" onclick="switchInnerTab('ea','ea-satisfaction',this)">User Satisfaction</button>
+  <button data-panel="ea-quality" onclick="switchInnerTab('ea','ea-quality',this)">Quality</button>
+  <button data-panel="ea-health" onclick="switchInnerTab('ea','ea-health',this)">Health</button>
+  <button data-panel="ea-trust" onclick="switchInnerTab('ea','ea-trust',this)">Trust</button>
+</div>
+
+<!-- EA EFFECTIVENESS -->
+<div class="tab-panel active" id="ea-effectiveness">
+  <div class="panel-title">Aggregated Effectiveness Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('ea-engagement')">
+        <div class="metric-label">Engagement Rate</div>
+        <div class="metric-value">98%</div>
+        <div class="metric-delta delta-up">-1.1% (0.01 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-escalation')">
+        <div class="metric-label">Escalation Rate</div>
+        <div class="metric-value">0%</div>
+        <div class="metric-delta" style="color:#aaa;">0 pp vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-success')">
+        <div class="metric-label">Success Rate</div>
+        <div class="metric-value">55%</div>
+        <div class="metric-delta delta-up">-3.1% (0.02 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="ea-eff-toggles">
+        <button class="active" onclick="switchEaEffChart('Engagement Rate',this)">Engagement Rate</button>
+        <button onclick="switchEaEffChart('Escalation Rate',this)">Escalation Rate</button>
+        <button onclick="switchEaEffChart('Success Rate',this)">Success Rate</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="eaEffChart"></canvas></div>
+      <div class="chart-legend">
+        <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+        <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        <span class="dot" style="background:#1ABC9C;margin-left:10px;"></span> Service_Employee_Agent
+      </div>
+    </div>
+  </div>
+  <div class="horiz-charts">
+    <div class="horiz-chart-box">
+      <h4 onclick="openModal('ea-subagents-usage')">Subagents Usage (by Unique Sessions) ↗</h4>
+      <div class="horiz-chart-wrap"><canvas id="eaSubagentsChart"></canvas></div>
+    </div>
+    <div class="horiz-chart-box">
+      <h4 onclick="openModal('ea-actions-usage')">Actions Usage (by Unique Sessions) ↗</h4>
+      <div class="horiz-chart-wrap"><canvas id="eaActionsChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- EA USAGE -->
+<div class="tab-panel" id="ea-usage">
+  <div class="panel-title">Aggregated Usage Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('ea-unique-sessions')">
+        <div class="metric-label">Unique Sessions</div>
+        <div class="metric-value">275</div>
+        <div class="metric-delta delta-up">-3.8% (11) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-unique-interactions')">
+        <div class="metric-label">Unique Interactions</div>
+        <div class="metric-value">1.24K</div>
+        <div class="metric-delta delta-up">-2.1% (27) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-unique-users')">
+        <div class="metric-label">Unique Users</div>
+        <div class="metric-value">12</div>
+        <div class="metric-delta delta-up">-7.7% (1) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-avg-interactions')">
+        <div class="metric-label">Avg Interactions Per Session</div>
+        <div class="metric-value">4.51</div>
+        <div class="metric-delta delta-good">+1.8% (0.08) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-stickiness')">
+        <div class="metric-label">Stickiness Rate</div>
+        <div class="metric-value">54.89%</div>
+        <div class="metric-delta delta-good">+6.3% (0.03 pp) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="ea-usage-toggles">
+        <button class="active" onclick="switchEaUsageChart('Unique Sessions',this)">Unique Sessions</button>
+        <button onclick="switchEaUsageChart('Unique Interactions',this)">Unique Interactions</button>
+        <button onclick="switchEaUsageChart('Unique Users',this)">Unique Users</button>
+        <button onclick="switchEaUsageChart('Avg Interactions',this)">Avg Interactions</button>
+        <button onclick="switchEaUsageChart('Stickiness Rate',this)">Stickiness Rate</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="eaUsageChart"></canvas></div>
+      <div class="chart-legend">
+        <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+        <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        <span class="dot" style="background:#1ABC9C;margin-left:10px;"></span> Service_Employee_Agent
+      </div>
+    </div>
+  </div>
+  <div class="section-divider">
+    <div class="section-header">
+      <h3 onclick="openModal('ea-sessions-channel')">Unique Sessions by Channel ↗</h3>
+    </div>
+    <div class="chart-wrap" style="height:180px;"><canvas id="eaChannelChart"></canvas></div>
+    <div class="outcome-legend" style="margin-top:8px;">
+      <span><span class="swatch" style="background:#4472C4;"></span>API</span>
+      <span><span class="swatch" style="background:#9B59B6;"></span>LightningDesktopCopilot</span>
+      <span><span class="swatch" style="background:#1ABC9C;"></span>SCRT2 - EmbeddedMessaging</span>
+    </div>
+  </div>
+</div>
+
+<!-- EA USER SATISFACTION -->
+<div class="tab-panel" id="ea-satisfaction">
+  <div class="panel-title">Aggregated User Satisfaction Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('ea-positive-feedback')">
+        <div class="metric-label">Positive User Feedback</div>
+        <div class="metric-value" style="color:#aaa;font-size:22px;">0</div>
+        <div style="font-size:11px;color:#aaa;margin-top:4px;">0 vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-negative-feedback')">
+        <div class="metric-label">Negative User Feedback</div>
+        <div class="metric-value" style="color:#aaa;font-size:22px;">0</div>
+        <div style="font-size:11px;color:#aaa;margin-top:4px;">0 vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="ea-sat-toggles">
+        <button class="active" onclick="switchEaSatChart('Positive',this)">Positive User Feedback</button>
+        <button onclick="switchEaSatChart('Negative',this)">Negative User Feedback</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="eaSatChart"></canvas></div>
+      <div class="chart-legend">
+        <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+        <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        <span class="dot" style="background:#1ABC9C;margin-left:10px;"></span> Service_Employee_Agent
+      </div>
+    </div>
+  </div>
+  <div class="section-divider">
+    <div class="empty-state" style="padding:30px 20px;">
+      <h3 style="font-size:15px;color:#555;">Why is feedback at zero?</h3>
+      <p>User feedback requires the thumbs-up/thumbs-down widget to be active in the agent UI and for users to interact with it. In early deployments, zero feedback is common. <a onclick="openModal('ea-user-satisfaction')" style="color:#0070D2;cursor:pointer;font-weight:600;">What does this mean for a new deployment?</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- EA QUALITY -->
+<div class="tab-panel" id="ea-quality">
+  <div class="panel-title">Aggregated Quality Metrics</div>
+  <div class="rag-toggle" style="padding:16px 28px 0;">
+    <span>View:</span>
+    <div class="toggle-pill">
+      <button class="active" onclick="switchEaQuality('empty',this)">RAG Not Enabled</button>
+      <button onclick="switchEaQuality('populated',this)">RAG Enabled (Example)</button>
+    </div>
+    <span style="font-size:11px;color:#888;font-style:italic;">Toggle to show what it looks like when RAG is enabled</span>
+  </div>
+  <div id="ea-quality-empty" style="padding:0 28px 24px;">
+    <div class="panel-body" style="margin-top:16px;">
+      <div class="metrics">
+        <div class="metric" onclick="openModal('ea-avg-quality-empty')">
+          <div class="metric-label">Average Quality Score</div>
+          <div class="metric-value" style="font-size:22px;color:#aaa;">--</div>
+          <div class="metric-hint">Click to learn more</div>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title">Timeframe</div>
+        <div class="empty-chart"><div class="zeroline"></div></div>
+        <div class="chart-legend">
+          <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+          <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        </div>
+      </div>
+    </div>
+    <div class="section-divider" style="margin-top:16px;">
+      <div class="empty-state">
+        <h3>RAG is not enabled</h3>
+        <p>RAG metrics require RAG to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.</p>
+        <a onclick="openModal('ea-rag-not-enabled')">What is RAG and why does this matter for employee agents? </a>
+      </div>
+    </div>
+  </div>
+  <div id="ea-quality-populated" style="display:none;padding:0 28px 24px;">
+    <div class="panel-body" style="margin-top:16px;">
+      <div class="metrics">
+        <div class="metric" onclick="openModal('avg-quality')">
+          <div class="metric-label">Average Quality Score</div>
+          <div class="metric-value" style="color:#c0392b;">2.1</div>
+          <div class="metric-delta delta-up">-0.3 vs. prior 30 days</div>
+          <div class="metric-hint">Scale: 1-5. Click to learn more</div>
+        </div>
+      </div>
+      <div class="chart-area">
+        <div class="chart-title">Timeframe</div>
+        <div class="chart-wrap"><canvas id="eaQualityChart"></canvas></div>
+        <div class="chart-legend">
+          <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+          <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EA HEALTH -->
+<div class="tab-panel" id="ea-health">
+  <div class="panel-title">Aggregated Health Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('ea-error-rate')">
+        <div class="metric-label">Error Rate</div>
+        <div class="metric-value" style="color:#c0392b;">8.71%</div>
+        <div class="metric-delta delta-up">+13.7% (0.01 pp) vs. prior 30 days</div>
+        <div style="font-size:10px;background:#fdf0ef;color:#c0392b;padding:3px 6px;border-radius:4px;margin-top:4px;display:inline-block;font-weight:700;">HIGH - Needs Attention</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-session-duration')">
+        <div class="metric-label">Session Duration (seconds)</div>
+        <div class="metric-value">60.6</div>
+        <div class="metric-delta delta-up">-6.8% (4.4s) vs. prior 30 days</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('ea-latency')">
+        <div class="metric-label">Agent Interaction Latency (seconds)</div>
+        <div class="metric-value" style="color:#c0392b;">9.35</div>
+        <div class="metric-delta delta-good">-3.0% (0.29s) vs. prior 30 days</div>
+        <div style="font-size:10px;background:#fdf0ef;color:#c0392b;padding:3px 6px;border-radius:4px;margin-top:4px;display:inline-block;font-weight:700;">CRITICAL - Above 3s threshold</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="ea-health-toggles">
+        <button class="active" onclick="switchEaHealthChart('Error Rate',this)">Error Rate</button>
+        <button onclick="switchEaHealthChart('Session Duration',this)">Session Duration</button>
+        <button onclick="switchEaHealthChart('Latency',this)">Agent Interaction Latency</button>
+      </div>
+      <div class="chart-title">Timeframe</div>
+      <div class="chart-wrap"><canvas id="eaHealthChart"></canvas></div>
+      <div class="chart-legend">
+        <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+        <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+        <span class="dot" style="background:#1ABC9C;margin-left:10px;"></span> Service_Employee_Agent
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EA TRUST -->
+<div class="tab-panel" id="ea-trust">
+  <div class="panel-title">Aggregated Trust Metrics</div>
+  <div class="panel-body">
+    <div class="metrics">
+      <div class="metric" onclick="openModal('instruction-adherence')">
+        <div class="metric-label">Instruction Adherence Rate</div>
+        <div class="metric-value" style="font-size:22px;color:#aaa;">--</div>
+        <div style="font-size:11px;color:#999;margin-top:4px;">Insufficient data</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+      <div class="metric" onclick="openModal('toxicity')">
+        <div class="metric-label">Average Toxicity Score</div>
+        <div class="metric-value" style="font-size:22px;color:#aaa;">--</div>
+        <div style="font-size:11px;color:#999;margin-top:4px;">Insufficient data</div>
+        <div class="metric-hint">Click to learn more</div>
+      </div>
+    </div>
+    <div class="chart-area">
+      <div class="chart-toggles" id="ea-trust-toggles">
+        <button class="active">Instruction Adherence Rate</button>
+        <button>Average Toxicity Score</button>
+      </div>
+      <div class="empty-chart" style="margin-top:10px;"><div class="zeroline"></div><p style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#bbb;">No data available for this period</p></div>
+      <div class="chart-legend">
+        <span class="dot" style="background:#4472C4;"></span> HR_Employee_Agent
+        <span class="dot" style="background:#9B59B6;margin-left:10px;"></span> Sales_Employee_Agent1
+      </div>
+    </div>
+  </div>
+  <div class="section-divider">
+    <div class="empty-state" style="padding:30px 20px;">
+      <h3 style="font-size:15px;color:#555;">Why are these metrics empty?</h3>
+      <p>Instruction Adherence and Toxicity Score require 50 or more session moments and a minimum 30-day data window before Agent Optimization generates reliable scores. These populate automatically once thresholds are met.</p>
+      <a onclick="openModal('trust-empty')" style="color:#0070D2;cursor:pointer;font-weight:600;">What should I do while waiting?</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ea-section -->
+
+</div><!-- /page-analytics -->
+
+<!-- ────── SESSIONS & INTENTS PAGE ────── -->
+<div class="page-section" id="page-sessions">
+  <div class="si-page">
+    <div class="si-topbar">
+      <div class="si-title">
+        <span style="font-size:22px;">&#x1F4CB;</span> Sessions &amp; Intents
+        <div class="si-badge">&#x2139;</div>
+      </div>
+      <button class="si-help-btn">&#x1F4CA; Sessions &amp; Intents Help</button>
+    </div>
+    <div class="si-filters">
+      <span><label>Filter by:</label></span>
+      <span><label>Agent:</label> <select><option>Pronto Service Agent</option><option>HelloWorld Agent</option><option>RAG Agent</option></select></span>
+      <span><label>Timeframe:</label> <select><option>Last 7 Days</option><option>Last 30 Days</option><option>Last 90 Days</option></select></span>
+      <span><label>Channel:</label> <select><option>All</option><option>Messaging</option><option>Voice</option></select></span>
+      <span><label>Modality:</label> <select><option>All</option><option>Text</option><option>Voice</option></select></span>
+    </div>
+    <div class="si-tab-nav">
+      <button class="active" onclick="switchSiTab('processed',this)">Processed Sessions</button>
+      <button onclick="switchSiTab('unprocessed',this)">Unprocessed Sessions</button>
+    </div>
+
+    <!-- Processed -->
+    <div id="si-processed" class="si-table-wrap">
+      <div class="si-table-info">
+        <span>Total of 4 processed sessions</span>
+        <input class="si-search" placeholder="Search..." type="text"/>
+      </div>
+      <table class="si-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox"/></th>
+            <th>Session ID</th><th>Timestamp</th><th>Session Duration</th>
+            <th>Session Outcome</th><th>Custom Scorers</th><th>Intent Summary</th>
+            <th>Response Summary</th><th>Subagents</th><th>Actions</th>
+            <th>Intent Tag</th><th>Quality Score</th><th>Quality Score Reasoning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">47857a4e-3ba0-4d8b-89b5-f7425e2fab13</div><div class="si-icon"></div></td>
+            <td>06/03/2026, 08:47:16 AM</td><td>2 min, 35 sec</td>
+            <td><div class="si-outcome"><div class="dot" style="background:#e67e22;"></div>Abandoned</div></td>
+            <td></td>
+            <td><span style="color:#0070D2;font-size:12px;">I want to see all of my cases.</span></td>
+            <td style="font-size:11.5px;color:#444;">The agent did not provide any response to the user's request.</td>
+            <td><span class="si-tag">Order_Issues_Refunds</span><br><span class="si-tag">Verify_Customers</span></td>
+            <td><span class="si-tag">Get_Related_Cases</span><br><span class="si-tag">Verify_Code</span><br><span class="si-tag">Send_Email_with_Verification_Code</span></td>
+            <td></td>
+            <td><div class="si-quality very-low">Very Low</div></td>
+            <td class="si-reasoning">The agent did not respond to the user's request, leaving it completely unaddressed.</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">d0252e9d-69b1-4ba3-80fa-e06d504f2870</div><div class="si-icon"></div></td>
+            <td>06/03/2026, 08:34:39 AM</td><td>1 min, 12 sec</td>
+            <td><div class="si-outcome"><div class="dot" style="background:#e67e22;"></div>Abandoned</div></td>
+            <td></td>
+            <td><span style="color:#0070D2;font-size:12px;">I want to see all of my cases.</span></td>
+            <td style="font-size:11.5px;color:#444;">The agent did not provide any response to the user's request.</td>
+            <td><span class="si-tag">Verify_Customers</span></td>
+            <td><span class="si-tag">Verify_Code</span><br><span class="si-tag">Get_Related_Cases</span><br><span class="si-tag">Send_Email_with_Verification_Code</span></td>
+            <td></td>
+            <td><div class="si-quality very-low">Very Low</div></td>
+            <td class="si-reasoning">The agent did not respond to the user's request, leaving it completely unaddressed.</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">6d3d1ca0-aae2-473e-929e-95b9d2e7a902</div><div class="si-icon"></div></td>
+            <td>06/03/2026, 08:20:46 AM</td><td>39 sec</td>
+            <td><div class="si-outcome"><div class="dot" style="background:#e67e22;"></div>Abandoned</div></td>
+            <td></td>
+            <td><span style="color:#0070D2;font-size:12px;">I want to see all of my cases.</span></td>
+            <td style="font-size:11.5px;color:#444;">The agent did not provide any response to the user's request.</td>
+            <td><span class="si-tag">Verify_Customers</span></td>
+            <td><span class="si-tag">Send_Email_with_Verification_Code</span></td>
+            <td></td>
+            <td><div class="si-quality very-low">Very Low</div></td>
+            <td class="si-reasoning">The agent did not respond to the user's request, leaving it completely unaddressed.</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">019e8d9a-d99e-7962-a31a-6cfa103c9f40</div><div class="si-icon"></div></td>
+            <td>06/03/2026, 06:09:59 AM</td><td>2 min, 59 sec</td>
+            <td><div class="si-outcome"><div class="dot" style="background:#e67e22;"></div>Abandoned</div></td>
+            <td></td>
+            <td><span style="color:#0070D2;font-size:12px;">I want to see all of my cases.</span></td>
+            <td style="font-size:11.5px;color:#444;">The agent requested the user's email to retrieve case details. After receiving the email, the agent provided a detailed summary of all the user's cases, including their statuses and resolutions.</td>
+            <td><span class="si-tag">Order_Issues_Refunds</span></td>
+            <td><span class="si-tag">Get_Customer_Profile</span><br><span class="si-tag">Get_Related_Cases</span></td>
+            <td></td>
+            <td><div class="si-quality high">High</div></td>
+            <td class="si-reasoning">The agent fully addressed the user's request by providing a comprehensive list of cases and their details.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Unprocessed -->
+    <div id="si-unprocessed" class="si-table-wrap" style="display:none;">
+      <div class="si-table-info">
+        <span>Total of 2 unprocessed sessions</span>
+        <input class="si-search" placeholder="Search..." type="text"/>
+      </div>
+      <table class="si-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox"/></th>
+            <th>Session ID</th><th>Timestamp</th><th>Session Duration</th>
+            <th>Session Outcome</th><th>Custom Scorers</th>
+            <th>Initial User Messages</th><th>Initial Agent Responses</th>
+            <th>Subagents</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">57828036-85f7-4ca1-a761-c1116f669026</div><div class="si-icon"></div></td>
+            <td>06/10/2026, 09:46:59 AM</td><td>14 sec</td>
+            <td>Not set</td><td></td>
+            <td style="font-size:12px;color:#333;">"I need some help with info about a store"</td>
+            <td style="font-size:12px;color:#333;">"You want information about a specific store. Could you please share the name of the store or any details you have? This will help me find the most accurate information for you. You want information ab..."</td>
+            <td><span class="si-tag">Storefront_Search</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"/></td>
+            <td><div class="si-session-id">1ceff239-56c0-4e46-915b-6a5043ae5fb1</div><div class="si-icon"></div></td>
+            <td>06/10/2026, 09:45:23 AM</td><td>1 min, 13 sec</td>
+            <td>Not set</td><td></td>
+            <td style="font-size:12px;color:#333;">"Provide me information about the fusion bites restaurant<br>I need to speak to an agent"</td>
+            <td style="font-size:12px;color:#333;">"Fusion Bites is a trendy bistro known for bold global flavors, offering dishes like Korean BBQ tacos, Mediterranean flatbreads, and Thai-inspired salads. It's ideal for adventurous eaters seeking some..."</td>
+            <td><span class="si-tag escalation">escalation</span><br><span class="si-tag">Storefront_Search</span></td>
+            <td><span class="si-tag">Store_Search</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Subagents & Intents sub-table -->
+    <div style="padding:0 24px 24px;">
+      <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:#032D60;">
+              <span style="font-size:20px;">&#x1F4CB;</span> Subagents &amp; Intents
+            </div>
+            <div style="font-size:12px;color:#888;margin-top:2px;">Showing 3 subagents &amp; intents</div>
+          </div>
+          <input class="si-search" placeholder="Search..." type="text" style="width:180px;"/>
+        </div>
+        <table class="si-table" style="border:none;border-radius:0;">
+          <thead>
+            <tr>
+              <th style="width:40%;">Subagent</th>
+              <th>Intent Tag</th>
+              <th>Total Sessions</th>
+              <th>Average Quality Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="si-session-id">NOT_SET</span></td>
+              <td style="color:#888;">Untagged</td>
+              <td>5 sessions</td>
+              <td><div class="si-quality very-low">Very Low</div></td>
+            </tr>
+            <tr>
+              <td><span class="si-session-id">Order_Issues_Refunds</span></td>
+              <td style="color:#888;">Untagged</td>
+              <td>2 sessions</td>
+              <td><div class="si-quality low">Low</div></td>
+            </tr>
+            <tr>
+              <td><span class="si-session-id">Verify_Customers</span></td>
+              <td style="color:#888;">Untagged</td>
+              <td>3 sessions</td>
+              <td><div class="si-quality very-low">Very Low</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-sessions -->
+
+<!-- ────── INSIGHTS PAGE ────── -->
+<div class="page-section" id="page-insights">
+  <div class="insights-page">
+    <div class="si-topbar" style="border-bottom:1px solid #e0e0e0;">
+      <div class="si-title" style="font-size:16px;font-weight:700;color:#032D60;">Insights</div>
+    </div>
+    <div class="insights-filters">
+      <label>Select an Agent:</label>
+      <select><option>Car Rental Service Agent</option><option>Pronto Service Agent</option><option>HelloWorld Agent</option></select>
+      <label style="margin-left:16px;">Session Type</label>
+      <select><option>All Session Types</option><option>Processed Only</option></select>
+      <label style="margin-left:16px;">Date Range</label>
+      <select><option>Last 7 days</option><option>Last 30 days</option><option>Last 90 days</option></select>
+    </div>
+    <!-- KPI row -->
+    <div class="insights-kpi-row">
+      <div class="insights-kpi">
+        <div class="kpi-label">Total Sessions</div>
+        <div class="kpi-value">2,037</div>
+      </div>
+      <div class="insights-kpi">
+        <div class="kpi-label">Average Agent Latency &#x2139;</div>
+        <div class="kpi-value">3.61 sec</div>
+      </div>
+      <div class="insights-kpi">
+        <div class="kpi-label">Average Quality Score &#x2139;</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+          <span class="kpi-badge medium">Medium</span>
+          <span class="kpi-value" style="font-size:26px;">3.4</span>
+        </div>
+      </div>
+    </div>
+    <!-- Charts row -->
+    <div class="insights-row">
+      <!-- Average Topic Score donut -->
+      <div class="insights-card">
+        <div class="card-title">Average Topic Score &#x2139;</div>
+        <div class="donut-wrap"><canvas id="topicDonutChart"></canvas>
+          <div style="position:absolute;text-align:center;pointer-events:none;">
+            <div style="font-size:11px;color:#888;">Average</div>
+            <div style="font-size:22px;font-weight:800;color:#1a1a1a;">3.2</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#2ecc71;"></div>High</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#3498db;"></div>Medium</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#f39c12;"></div>Low</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#c0392b;"></div>Very Low</div>
+        </div>
+      </div>
+      <!-- Top Ranking Topics -->
+      <div class="insights-card">
+        <div class="card-title">Top Ranking Topics &#x2139; <span style="font-size:10px;color:#888;font-weight:400;">by Average Quality Score</span></div>
+        <table class="ranking-table">
+          <thead><tr><th>&#x21C5; Topic Name</th><th>Avg Quality Score</th><th>Total Sessions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>General FAQ</div></td><td><span class="r-badge high">High</span> 4.9</td><td>1,201</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>Order Managem...</div></td><td><span class="r-badge high">High</span> 4.8</td><td>306</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>Shipping &amp; Han...</div></td><td><span class="r-badge medium">Medium</span> 3.7</td><td>954</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Bottom Ranking Topics -->
+      <div class="insights-card">
+        <div class="card-title">Bottom Ranking Topics &#x2139; <span style="font-size:10px;color:#888;font-weight:400;">by Average Quality Score</span></div>
+        <table class="ranking-table">
+          <thead><tr><th>&#x21C5; Topic Name</th><th>Avg Quality Score</th><th>Total Sessions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>Product Informat...</div></td><td><span class="r-badge very-low">Very Low</span> 1.2</td><td>451</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>Account Assista...</div></td><td><span class="r-badge very-low">Very Low</span> 1.3</td><td>385</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span class="rank-icon">#</span>Technical Support</div></td><td><span class="r-badge low">Low</span> 2.1</td><td>1,402</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Intent row -->
+    <div class="insights-row">
+      <!-- Average Intent Score donut -->
+      <div class="insights-card">
+        <div class="card-title">Average Intent Score &#x2139;</div>
+        <div class="donut-wrap"><canvas id="intentDonutChart"></canvas>
+          <div style="position:absolute;text-align:center;pointer-events:none;">
+            <div style="font-size:11px;color:#888;">Average</div>
+            <div style="font-size:22px;font-weight:800;color:#1a1a1a;">4.1</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#2ecc71;"></div>High</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#3498db;"></div>Medium</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#f39c12;"></div>Low</div>
+          <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#c0392b;"></div>Very Low</div>
+        </div>
+      </div>
+      <!-- Top Ranking Intents -->
+      <div class="insights-card">
+        <div class="card-title">Top Ranking Intents &#x2139; <span style="font-size:10px;color:#888;font-weight:400;">by Average Quality Score</span></div>
+        <table class="ranking-table">
+          <thead><tr><th>&#x21C5; Intent Name</th><th>Avg Quality Score</th><th>Total Sessions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Cancellation Re...</div></td><td><span class="r-badge high">High</span> 4.4</td><td>928</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Unresolved</div></td><td><span class="r-badge high">High</span> 4.3</td><td>720</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Order Inquiry</div></td><td><span class="r-badge medium">Medium</span> 3.9</td><td>128</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Bottom Ranking Intents -->
+      <div class="insights-card">
+        <div class="card-title">Bottom Ranking Intents &#x2139; <span style="font-size:10px;color:#888;font-weight:400;">by Average Quality Score</span></div>
+        <table class="ranking-table">
+          <thead><tr><th>&#x21C5; Intent Name</th><th>Avg Quality Score</th><th>Total Sessions</th></tr></thead>
+          <tbody>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Payment Problem</div></td><td><span class="r-badge very-low">Very Low</span> 1.2</td><td>203</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Urgent Assistance</div></td><td><span class="r-badge very-low">Very Low</span> 1.5</td><td>92</td></tr>
+            <tr><td><div class="ranking-table topic-name"><span style="font-size:12px;">&#x1F4A0;</span>Return Request</div></td><td><span class="r-badge very-low">Very Low</span> 1.9</td><td>844</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-insights -->
+
+<!-- ────── SCORERS PAGE ────── -->
+<div class="page-section" id="page-scorers">
+  <div class="scorers-wrap">
+    <div class="scorers-header">
+      <span style="font-size:22px;">&#x1F4CB;</span>
+      <h2>Scorers</h2>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;background:#e8f0fe;color:#0070D2;border-radius:10px;margin-left:2px;">Beta</span>
+    </div>
+    <div class="scorers-meta">Showing 10 items &bull; Sorted by Name &bull; Standard scorers are automatically created for each agent you have deployed</div>
+    <div style="background:#f4f8ff;border:1px solid #c8daef;border-radius:8px;padding:14px 18px;margin-bottom:16px;font-size:12.5px;color:#2a3a5a;line-height:1.6;">
+      <strong style="color:#0070D2;">What are Scorers?</strong> Standard Scorers (Abandonment Score, Deflection Score) are automatically assigned to every deployed agent. They evaluate session outcomes using Salesforce-defined criteria. Custom Scorers let you define your own evaluation rubrics using natural language. Results appear in the Custom Scorers column of Sessions &amp; Intents.
+    </div>
+    <div class="scorers-search-bar"><input type="text" placeholder="Search..."/></div>
+    <table class="scorers-table">
+      <thead>
+        <tr>
+          <th>Name &#x2191;</th>
+          <th>Version</th>
+          <th>Description</th>
+          <th>Agent</th>
+          <th>Status</th>
+          <th>Sampled Data</th>
+          <th>Type</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Abandonment Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates whether...</td>
+          <td><span style="color:#0070D2;font-weight:600;">RAG Agent</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Abandonment Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates whether...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Pronto Service Ag...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Abandonment Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates whether...</td>
+          <td><span style="color:#0070D2;font-weight:600;">HelloWorld Agent</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Abandonment Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates whether...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Merchant Suppor...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Abandonment Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates whether...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Old Agentforce S...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Deflection Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates the degr...</td>
+          <td><span style="color:#0070D2;font-weight:600;">RAG Agent</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Deflection Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates the degr...</td>
+          <td><span style="color:#0070D2;font-weight:600;">HelloWorld Agent</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Deflection Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates the degr...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Merchant Suppor...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Deflection Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates the degr...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Pronto Service Ag...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;color:#032D60;">Deflection Score</td>
+          <td>1.0</td>
+          <td style="color:#555;font-size:12.5px;">Indicates the degr...</td>
+          <td><span style="color:#0070D2;font-weight:600;">Old Agentforce S...</span></td>
+          <td><div class="scorers-status"><div class="dot"></div> Active</div></td>
+          <td>100%</td>
+          <td><span class="scorers-type-badge">Standard</span></td>
+          <td><button style="border:none;background:none;color:#0070D2;cursor:pointer;font-size:16px;">&#x25BC;</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="background:#fff8e1;border:1px solid #f0c050;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#5a4000;margin-top:18px;">
+      <strong>Beta Notice:</strong> Scorers is in Beta. Results may not be available for all sessions and scoring criteria may evolve. Treat early scorer data as directional, not definitive, until the feature reaches GA.
+    </div>
+  </div>
+</div><!-- /page-scorers -->
+
+</div><!-- /main-content -->
+</div><!-- /app-body -->
+
+<!-- ══════════════════════════════════
+     MODAL
+══════════════════════════════════ -->
+<div class="modal-overlay" id="modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="tab-label" id="modal-tab-label"></div>
+        <h2 id="modal-title"></h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── Dates ──
+const DATES = ['05/10','05/11','05/12','05/13','05/14','05/15','05/16','05/17','05/18','05/19','05/20','05/21','05/22','05/23'];
+
+// ── Chart data ──
+const EFF_DATA = {
+  'Deflection Rate':  [22,33,28,30,17,50,28,50,42,31,60,25,27,18],
+  'Escalation Rate':  [10,14,12,18,8,16,20,12,14,10,18,14,16,12],
+  'Abandonment Rate': [55,48,60,44,70,36,58,38,46,52,30,58,50,62],
+  'Engagement Rate':  [68,74,70,76,65,80,72,78,74,70,82,68,72,66],
+  'Success Rate':     [18,24,20,26,14,32,20,28,22,18,34,18,24,16]
+};
+const USAGE_DATA = {
+  'Unique Sessions':            [9,12,7,10,12,10,7,10,12,13,10,12,11,9],
+  'Unique Interactions':        [52,70,41,58,70,58,41,58,70,76,58,70,64,52],
+  'Unique Users':               [3,5,2,4,5,4,2,4,5,6,4,5,4,3],
+  'Avg Interactions / Session': [5.8,5.8,5.9,5.8,5.8,5.8,5.9,5.8,5.8,5.8,5.8,5.8,5.8,5.8]
+};
+const HEALTH_DATA = {
+  'Error Rate':                  [0,0,1,0,2,0,3,1,0,2,4,1,0,2],
+  'Session Duration':            [260,248,255,242,268,238,252,244,260,250,232,256,248,240],
+  'Agent Interaction Latency':   [1.2,1.4,1.6,1.8,2.0,1.4,1.8,2.2,1.6,1.8,2.4,1.6,1.4,1.8]
+};
+const QUALITY_DATA = [1.8,2.0,1.6,2.2,1.4,2.4,1.8,2.6,2.0,2.2,2.8,2.0,2.2,1.8];
+const VOICE_DATA   = Array(14).fill(0);
+
+// Stacked bar data
+const OUTCOME_DATA = {
+  abandoned:  [4,7,4,6,4,3,4,7,3,6,7,6,7,8],
+  deflected:  [2,4,2,3,2,2,2,5,6,3,3,3,1,4],
+  escalated:  [3,1,1,1,5,1,2,3,2,1,3,3,2,0],
+  notset:     [0,0,0,0,0,1,0,0,0,0,0,0,0,0]
+};
+
+// ── Chart instances ──
+let effChart, usageChart, healthChart, qualityChart, voiceChart, outcomeChart;
+
+function makeLineChart(id, labels, data, label, color){
+  const ctx = document.getElementById(id).getContext('2d');
+  return new Chart(ctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[{label,data,borderColor:color||'#0070D2',backgroundColor:(color||'#0070D2')+'22',borderWidth:2,pointRadius:3,pointHoverRadius:5,tension:0.3,fill:true}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw}`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},color:'#888',maxRotation:45}},
+        y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#888'}}
+      }
+    }
+  });
+}
+
+function initCharts(){
+  effChart     = makeLineChart('effChart', DATES, EFF_DATA['Deflection Rate'], 'Deflection Rate');
+  usageChart   = makeLineChart('usageChart', DATES, USAGE_DATA['Unique Sessions'], 'Unique Sessions');
+  healthChart  = makeLineChart('healthChart', DATES, HEALTH_DATA['Error Rate'], 'Error Rate','#e74c3c');
+  qualityChart = makeLineChart('qualityChart', DATES, QUALITY_DATA, 'Avg Quality Score','#e67e22');
+  voiceChart   = makeLineChart('voiceChart', DATES, VOICE_DATA, 'Interruption Rate');
+
+  const octx = document.getElementById('outcomeChart').getContext('2d');
+  outcomeChart = new Chart(octx,{
+    type:'bar',
+    data:{
+      labels:DATES,
+      datasets:[
+        {label:'Abandoned', data:OUTCOME_DATA.abandoned, backgroundColor:'#f4a261'},
+        {label:'Deflected', data:OUTCOME_DATA.deflected, backgroundColor:'#2a9d8f'},
+        {label:'Escalated', data:OUTCOME_DATA.escalated, backgroundColor:'#e76f51'},
+        {label:'Not set',   data:OUTCOME_DATA.notset,    backgroundColor:'#457b9d'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{font:{size:10},color:'#888',maxRotation:45}},
+        y:{stacked:true,grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#888'}}
+      }
+    }
+  });
+}
+
+function updateChart(chart, newData){
+  chart.data.datasets[0].data = newData;
+  chart.update();
+}
+
+function switchEffChart(metric, btn){
+  document.querySelectorAll('#eff-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateChart(effChart, EFF_DATA[metric]);
+  effChart.data.datasets[0].label = metric;
+  effChart.update();
+}
+function switchUsageChart(metric, btn){
+  document.querySelectorAll('#usage-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateChart(usageChart, USAGE_DATA[metric]);
+}
+function switchHealthChart(metric, btn){
+  document.querySelectorAll('#health-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateChart(healthChart, HEALTH_DATA[metric]);
+  healthChart.data.datasets[0].borderColor = metric==='Error Rate'?'#e74c3c':'#0070D2';
+  healthChart.data.datasets[0].backgroundColor = metric==='Error Rate'?'#e74c3c22':'#0070D222';
+  healthChart.update();
+}
+function switchTrustChart(metric, btn){
+  document.querySelectorAll('#trust-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Dashboard switcher (dropdown) ──
+function switchDashboardDrop(which){
+  document.getElementById('sa-section').style.display = which==='sa'?'block':'none';
+  document.getElementById('ea-section').style.display = which==='ea'?'block':'none';
+  if(which==='ea') initEaCharts();
+}
+
+// ── SA top tab (Overview / Performance Insights) ──
+function switchTab(id, btn){
+  document.querySelectorAll('#sa-tab-nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  var isOverview = (id === 'effectiveness');
+  document.getElementById('sa-inner-nav').style.display = isOverview ? 'flex' : 'none';
+  // hide all SA tab panels
+  document.querySelectorAll('#sa-section .tab-panel').forEach(p=>p.classList.remove('active'));
+  if(isOverview){
+    // show whichever inner tab was last active
+    var activeInner = document.querySelector('#sa-inner-nav button.active');
+    var innerId = activeInner ? activeInner.getAttribute('data-panel') : 'tab-effectiveness';
+    if(!innerId) innerId = 'tab-effectiveness';
+    var el = document.getElementById(innerId);
+    if(el) el.classList.add('active');
+  } else {
+    document.getElementById('tab-'+id).classList.add('active');
+    if(id==='perf-insights') setTimeout(initPerfCharts, 60);
+  }
+  setTimeout(()=>{ Object.values({effChart,usageChart,healthChart,voiceChart,outcomeChart}).forEach(c=>{if(c)c.resize();}); },50);
+}
+
+// ── SA inner tab switching (Effectiveness/Usage/etc) ──
+function switchInnerTab(section, id, btn){
+  var navId = section==='sa' ? 'sa-inner-nav' : 'ea-inner-nav';
+  document.querySelectorAll('#'+navId+' button').forEach(b=>b.classList.remove('active'));
+  if(btn){ btn.classList.add('active'); btn.setAttribute('data-panel', (section==='sa'?'tab-':'') + id); }
+  if(section==='sa'){
+    document.querySelectorAll('#sa-section .tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tab-'+id).classList.add('active');
+    if(id==='quality' && !qualityChart){
+      setTimeout(()=>{ qualityChart = makeLineChart('qualityChart', DATES, QUALITY_DATA, 'Avg Quality Score','#e67e22'); },50);
+    }
+    setTimeout(()=>{ Object.values({effChart,usageChart,healthChart,voiceChart,outcomeChart}).forEach(c=>{if(c)c.resize();}); },50);
+  } else {
+    document.querySelectorAll('#ea-section .tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    setTimeout(()=>{
+      [eaEffChart,eaUsageChart,eaHealthChart,eaSatChart,eaChannelChart,eaSubagentsChart,eaActionsChart].forEach(c=>{if(c)c.resize();});
+    },50);
+  }
+}
+
+// ── SA Quality toggle ──
+function switchQuality(state, btn){
+  document.querySelectorAll('#sa-section .toggle-pill button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('quality-empty').style.display = state==='empty'?'block':'none';
+  document.getElementById('quality-populated').style.display = state==='populated'?'block':'none';
+  if(state==='populated' && !qualityChart){
+    setTimeout(()=>{ qualityChart = makeLineChart('qualityChart', DATES, QUALITY_DATA, 'Avg Quality Score','#e67e22'); },50);
+  }
+}
+
+// ── EA top tab (Overview / Performance Insights) ──
+function switchEaTopTab(id, btn){
+  document.querySelectorAll('#ea-tab-nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  var isOverview = (id === 'ea-overview');
+  document.getElementById('ea-inner-nav').style.display = isOverview ? 'flex' : 'none';
+  document.querySelectorAll('#ea-section .tab-panel').forEach(p=>p.classList.remove('active'));
+  if(isOverview){
+    var activeInner = document.querySelector('#ea-inner-nav button.active');
+    var innerId = activeInner ? activeInner.getAttribute('data-panel') : 'ea-effectiveness';
+    if(!innerId) innerId = 'ea-effectiveness';
+    var el = document.getElementById(innerId);
+    if(el) el.classList.add('active');
+  } else {
+    // Performance Insights for EA - reuse SA perf tab for now
+    document.getElementById('tab-perf-insights').classList.add('active');
+    setTimeout(initPerfCharts, 60);
+  }
+  setTimeout(()=>{
+    [eaEffChart,eaUsageChart,eaHealthChart,eaSatChart,eaChannelChart,eaSubagentsChart,eaActionsChart].forEach(c=>{if(c)c.resize();});
+  },50);
+}
+
+// ── EA Quality toggle ──
+function switchEaQuality(state, btn){
+  document.querySelectorAll('#ea-section .toggle-pill button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ea-quality-empty').style.display = state==='empty'?'block':'none';
+  document.getElementById('ea-quality-populated').style.display = state==='populated'?'block':'none';
+  if(state==='populated' && !eaQualityChart){
+    setTimeout(()=>{
+      eaQualityChart = makeLineChart('eaQualityChart', DATES, [1.6,1.8,1.4,2.0,1.3,2.2,1.6,2.4,1.8,2.0,2.5,1.8,2.0,1.6], 'Avg Quality','#e67e22');
+    },50);
+  }
+}
+
+// ── EA Chart data ──
+const EA_DATES = DATES;
+const EA_EFF_DATA = {
+  'Engagement Rate': {
+    HR:      [100,100,100,100,100,100,100,100,100,100,100,83,67,50],
+    Sales:   [100,100,100,100,100,100,100,100,100,100,100,100,100,100],
+    Service: [100,100,100,100,100,100,100,100,100,100,100,100,100,100]
+  },
+  'Escalation Rate': {
+    HR:      [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    Sales:   [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    Service: [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  },
+  'Success Rate': {
+    HR:      [60,55,62,58,54,66,58,64,60,56,68,56,58,52],
+    Sales:   [48,52,46,54,44,58,50,56,52,48,60,48,52,44],
+    Service: [55,58,52,60,50,64,56,62,58,54,66,54,56,50]
+  }
+};
+const EA_USAGE_DATA = {
+  'Unique Sessions':    {HR:[5,5,2,4,4,5,4,4,5,2,3,6,5,3],Sales:[4,5,1,4,5,4,2,4,5,2,4,6,7,2],Service:[3,3,1,2,3,3,2,3,4,2,2,4,3,1]},
+  'Unique Interactions':{HR:[22,23,9,18,18,23,18,18,23,9,14,28,23,14],Sales:[18,22,4,18,22,18,9,18,22,9,18,27,31,9],Service:[14,14,4,9,14,14,9,14,18,9,9,18,14,5]},
+  'Unique Users':       {HR:[2,2,1,2,2,2,1,2,2,1,2,3,2,1],Sales:[1,2,1,2,2,1,1,2,2,1,2,2,3,1],Service:[1,1,1,1,1,1,1,1,1,1,1,2,2,1]},
+  'Avg Interactions':   {HR:[4.4,4.6,4.5,4.5,4.5,4.6,4.5,4.5,4.6,4.5,4.7,4.7,4.6,4.7],Sales:[4.5,4.4,4.0,4.5,4.4,4.5,4.5,4.5,4.4,4.5,4.5,4.5,4.4,4.5],Service:[4.7,4.7,4.0,4.5,4.7,4.7,4.5,4.7,4.5,4.5,4.5,4.5,4.7,5.0]},
+  'Stickiness Rate':    {HR:[50,55,40,50,55,50,45,50,55,40,50,60,55,45],Sales:[40,50,30,50,50,40,40,50,50,40,50,55,60,40],Service:[45,45,30,40,45,45,40,45,40,40,40,50,50,35]}
+};
+const EA_HEALTH_DATA = {
+  'Error Rate':    {HR:[4,0,11,6,0,0,0,14,6,0,11,0,9,7],Sales:[0,22,0,0,9,24,38,0,33,25,0,33,0,22],Service:[0,0,0,0,4,13,14,0,11,0,0,0,18,18]},
+  'Session Duration':{HR:[65,62,58,60,64,61,59,63,60,62,58,64,61,59],Sales:[55,58,52,56,60,57,55,59,56,58,54,60,57,55],Service:[62,60,56,58,62,59,57,61,58,60,56,62,59,57]},
+  'Latency':       {HR:[8,9,10,9,8,10,9,11,9,10,8,10,9,10],Sales:[9,11,8,9,10,11,12,9,11,10,9,11,10,11],Service:[8,9,8,9,9,10,10,9,10,9,8,10,9,9]}
+};
+
+let eaEffChart,eaUsageChart,eaHealthChart,eaSatChart,eaChannelChart,eaSubagentsChart,eaActionsChart,eaQualityChart;
+let eaChartsInited = false;
+
+function makeMultiLineChart(id, labels, datasets){
+  const ctx = document.getElementById(id);
+  if(!ctx) return null;
+  return new Chart(ctx.getContext('2d'),{
+    type:'line',
+    data:{labels, datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},color:'#888',maxRotation:45}},
+        y:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#888'}}
+      }
+    }
+  });
+}
+
+function makeHorizBarChart(id, labels, data, colors){
+  const ctx = document.getElementById(id);
+  if(!ctx) return null;
+  return new Chart(ctx.getContext('2d'),{
+    type:'bar',
+    data:{labels, datasets:[{data, backgroundColor:colors, borderRadius:3}]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#888'}},y:{grid:{display:false},ticks:{font:{size:10},color:'#444'}}}
+    }
+  });
+}
+
+function initEaCharts(){
+  if(eaChartsInited) return;
+  eaChartsInited = true;
+
+  // EA Effectiveness multi-line
+  eaEffChart = makeMultiLineChart('eaEffChart', EA_DATES, [
+    {label:'HR',   data:EA_EFF_DATA['Engagement Rate'].HR,      borderColor:'#4472C4',backgroundColor:'#4472C422',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Sales',data:EA_EFF_DATA['Engagement Rate'].Sales,   borderColor:'#9B59B6',backgroundColor:'#9B59B622',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Svc',  data:EA_EFF_DATA['Engagement Rate'].Service, borderColor:'#1ABC9C',backgroundColor:'#1ABC9C22',borderWidth:2,pointRadius:3,tension:0.3,fill:false}
+  ]);
+
+  // EA Subagents horizontal bar
+  eaSubagentsChart = makeHorizBarChart('eaSubagentsChart',
+    ['Leave/PTO Mgmt','Sales Research','SLA Insights','Benefits/Coverage','EE Handbook','Acct Access'],
+    [99,88,72,50,34,33],
+    ['#4472C4','#9B59B6','#1ABC9C','#4472C4','#9B59B6','#1ABC9C']
+  );
+
+  // EA Actions horizontal bar
+  eaActionsChart = makeHorizBarChart('eaActionsChart',
+    ['Leave/PTO Mgmt','Sales Research','SLA Insights','Benefits/Coverage','EE Handbook','Acct Access'],
+    [96,88,72,49,27,20],
+    ['#4472C4','#9B59B6','#1ABC9C','#4472C4','#9B59B6','#1ABC9C']
+  );
+
+  // EA Usage multi-line
+  eaUsageChart = makeMultiLineChart('eaUsageChart', EA_DATES, [
+    {label:'HR',   data:EA_USAGE_DATA['Unique Sessions'].HR,      borderColor:'#4472C4',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Sales',data:EA_USAGE_DATA['Unique Sessions'].Sales,   borderColor:'#9B59B6',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Svc',  data:EA_USAGE_DATA['Unique Sessions'].Service, borderColor:'#1ABC9C',borderWidth:2,pointRadius:3,tension:0.3,fill:false}
+  ]);
+
+  // EA Channel bar
+  const cctx = document.getElementById('eaChannelChart');
+  if(cctx) eaChannelChart = new Chart(cctx.getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['05/10','05/11','05/13','05/16','05/20','05/22','05/23','05/24'],
+      datasets:[
+        {label:'API',data:[1,1,1,2,2,2,1,1],backgroundColor:'#4472C4'},
+        {label:'LightningDesktopCopilot',data:[0,0,0,0,0,0,0,0],backgroundColor:'#9B59B6'},
+        {label:'SCRT2-EmbeddedMessaging',data:[0,0,0,0,0,0,0,0],backgroundColor:'#1ABC9C'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10},color:'#888'}},y:{stacked:true,grid:{color:'#f0f0f0'},ticks:{font:{size:10},color:'#888'}}}}
+  });
+
+  // EA Satisfaction flat
+  eaSatChart = makeMultiLineChart('eaSatChart', EA_DATES, [
+    {label:'HR',   data:Array(14).fill(0), borderColor:'#4472C4',borderWidth:2,pointRadius:2,tension:0,fill:false},
+    {label:'Sales',data:Array(14).fill(0), borderColor:'#9B59B6',borderWidth:2,pointRadius:2,tension:0,fill:false},
+    {label:'Svc',  data:Array(14).fill(0), borderColor:'#1ABC9C',borderWidth:2,pointRadius:2,tension:0,fill:false}
+  ]);
+
+  // EA Health multi-line
+  eaHealthChart = makeMultiLineChart('eaHealthChart', EA_DATES, [
+    {label:'HR',   data:EA_HEALTH_DATA['Error Rate'].HR,    borderColor:'#4472C4',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Sales',data:EA_HEALTH_DATA['Error Rate'].Sales, borderColor:'#9B59B6',borderWidth:2,pointRadius:3,tension:0.3,fill:false},
+    {label:'Svc',  data:EA_HEALTH_DATA['Error Rate'].Service,borderColor:'#1ABC9C',borderWidth:2,pointRadius:3,tension:0.3,fill:false}
+  ]);
+}
+
+function switchEaEffChart(metric, btn){
+  document.querySelectorAll('#ea-eff-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = EA_EFF_DATA[metric];
+  eaEffChart.data.datasets[0].data = d.HR;
+  eaEffChart.data.datasets[1].data = d.Sales;
+  eaEffChart.data.datasets[2].data = d.Service;
+  eaEffChart.update();
+}
+function switchEaUsageChart(metric, btn){
+  document.querySelectorAll('#ea-usage-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = EA_USAGE_DATA[metric];
+  eaUsageChart.data.datasets[0].data = d.HR;
+  eaUsageChart.data.datasets[1].data = d.Sales;
+  eaUsageChart.data.datasets[2].data = d.Service;
+  eaUsageChart.update();
+}
+function switchEaHealthChart(metric, btn){
+  document.querySelectorAll('#ea-health-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = EA_HEALTH_DATA[metric];
+  eaHealthChart.data.datasets[0].data = d.HR;
+  eaHealthChart.data.datasets[1].data = d.Sales;
+  eaHealthChart.data.datasets[2].data = d.Service;
+  eaHealthChart.update();
+}
+function switchEaSatChart(metric, btn){
+  document.querySelectorAll('#ea-sat-toggles button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Modal ──
+const MODALS = {
+  'deflection':{
+    tab:'Effectiveness',
+    title:'Deflection Rate',
+    rows:[
+      ['Definition','The percentage of conversations the AI fully resolved without any human agent involvement. Per Salesforce Agentforce Analytics documentation, a session is counted as deflected when the user receives a satisfactory resolution directly from the agent.'],
+      ['Purpose','Primary measure of automation effectiveness and cost-saving impact. Higher deflection means fewer cases routed to human agents.'],
+      ['What it indicates','38% means roughly 1 in 3 sessions is fully self-served. Healthy range is typically 35 to 60 percent depending on topic complexity. This org is in a reasonable range.'],
+      ['Formula','Deflection Rate = Resolved Without Human / Total Sessions x 100']
+    ],
+    scenarios:[
+      '1. Deflection at 38% and rising after adding new billing topics: The new topics are working. The agent can now resolve a category it previously had no instructions for, and sessions that previously abandoned are now completing.',
+      '2. Deflection at 38% but Success Rate is only 22%: The agent is marking sessions as deflected without actually solving the problem. Review how "deflected" is defined in your agent configuration. Some sessions may be ending without a real resolution.',
+      '3. Deflection at 38% but abandonment is also high at 42%: Users who engage and stay get helped, but many leave before the agent can deflect. The deflection number looks acceptable but the full picture shows a broken experience for the majority.'
+    ],
+    action:'Below 30%? Audit your topic instructions and action coverage. The agent may be engaging but not resolving because it lacks the scope to complete requests.'
+  },
+  'escalation':{
+    tab:'Effectiveness',
+    title:'Escalation Rate',
+    rows:[
+      ['Definition','The percentage of conversations where the agent transferred the user to a live human agent. Per Salesforce documentation, escalation is triggered either by agent logic, a user request, or a configured fallback threshold.'],
+      ['Purpose','Measures how often the AI hands off to a person. Both very high and very low rates are worth investigating.'],
+      ['What it indicates','14% is moderate and healthy. 0% is a warning signal: it likely means the escalation path is misconfigured, not that the agent is resolving everything. Above 30% suggests the agent cannot handle its intended scope.'],
+      ['Formula','Escalation Rate = Escalated Sessions / Total Sessions x 100']
+    ],
+    scenarios:[
+      '1. Escalation at 0% with abandonment at 42%: Users want help but the agent is not offering a path to a human. They are giving up instead of escalating. Check that your escalation topic is properly configured and surfaced as an option.',
+      '2. Escalation spikes from 14% to 35% the day after a deployment: A new agent version broke something. Actions may be returning errors, causing the agent to hit its fallback escalation threshold. Investigate the deployment and compare session traces before and after.',
+      '3. Escalation is stable at 14% but Quality Score drops to 1.5: The agent is handling sessions and handing off appropriately, but the responses before escalation are poor. Users are escalating because the agent could not help, not because they needed a human by choice.'
+    ],
+    action:'Cross-reference with Abandonment Rate. High abandonment plus low escalation means users want to escalate but cannot find the option. Check that your escalation topic is properly configured and discoverable.'
+  },
+  'abandonment':{
+    tab:'Effectiveness',
+    title:'Abandonment Rate',
+    rows:[
+      ['Definition','The percentage of sessions where the user ended the conversation before receiving a resolution, without being deflected or escalated. Per Agentforce Analytics, abandonment represents sessions with no recorded positive outcome.'],
+      ['Purpose','The most direct signal of a failing user experience. Every abandonment is a user who tried and gave up.'],
+      ['What it indicates','42% trending up at +4.6% is the most urgent problem in this org. Nearly half of users are disengaging without any outcome.'],
+      ['Formula','Abandonment Rate = Abandoned Sessions / Total Sessions x 100']
+    ],
+    scenarios:[
+      '1. Abandonment at 42% with high engagement at 71%: Users are willing to use the agent but leave without resolution. This is a content and instruction problem, not a discoverability problem. The agent is engaging people and then failing them.',
+      '2. Abandonment spikes on a specific date: A Knowledge base change or deployment likely broke something. Pull session traces from that date and look for a common failure pattern in the last agent message before users left.',
+      '3. Abandonment is high for one topic only: Filter by subagent and find the highest-abandonment topic. Pull 10 transcripts and look at the last agent message before each abandonment. That message is the breaking point.'
+    ],
+    action:'High engagement plus high abandonment means users are trying but the agent is not helping. The fix is content and topic coverage, not discoverability. Start with your highest-volume topics.'
+  },
+  'engagement':{
+    tab:'Effectiveness',
+    title:'Engagement Rate',
+    rows:[
+      ['Definition','The percentage of sessions where users sent at least one message to the agent, rather than landing on the agent interface and immediately closing it. Defined in Salesforce Agentforce Analytics as sessions with at least one user-initiated interaction.'],
+      ['Purpose','Measures discoverability and willingness to try the agent. Low engagement means users are not finding or trusting the agent enough to start a conversation.'],
+      ['What it indicates','71% is strong. Users are finding and actively trying the agent. The problem in this org is downstream in quality and resolution, not in adoption.'],
+      ['Formula','Engagement Rate = Sessions With User Interaction / Total Sessions x 100']
+    ],
+    scenarios:[
+      '1. Engagement at 71% with low Success Rate of 22%: Users are trying but the agent is not delivering. Do not spend effort on improving the agent UI or placement. The entire problem is in topic instructions, actions, and grounding.',
+      '2. Engagement drops from 71% to 45% after the agent was moved to a different page: The agent is harder to find or the new context makes users less likely to start. This is a placement and UX issue, not a content issue.',
+      '3. Engagement is high at 71% on web but only 30% on mobile: The mobile experience has a problem. Check rendering, load time, and the initial agent greeting on mobile. Channel-level filtering will surface this difference.'
+    ],
+    action:'High engagement plus high abandonment is the most instructive combination in analytics. It narrows the problem to content and actions, not the agent surface or entry point.'
+  },
+  'success':{
+    tab:'Effectiveness',
+    title:'Success Rate',
+    rows:[
+      ['Definition','The percentage of conversations that completed a defined successful workflow outcome as configured in the agent topic or action. Per Salesforce, success criteria must be explicitly defined in the agent configuration to be measured.'],
+      ['Purpose','The strictest measure of agent effectiveness. Not just "the user engaged" or "the agent responded," but did the agent actually accomplish what the user came to do?'],
+      ['What it indicates','22% means most conversations do not reach a measurable success. There is a 16-point gap between deflection (38%) and success (22%), suggesting some deflections are false positives.'],
+      ['Formula','Success Rate = Successful Completions / Total Sessions x 100']
+    ],
+    scenarios:[
+      '1. Success Rate at 22% while Deflection Rate is at 38%: The gap between these two numbers means 16% of sessions are being counted as deflected but not successful. The agent may be ending conversations without actually resolving them. Audit your success criteria configuration.',
+      '2. Success Rate flat at 22% while all other metrics improve: The definition of success in your agent configuration may be misconfigured or too strict. A session completing the intended workflow may not be firing the success signal correctly.',
+      '3. Success Rate rises from 22% to 38% after adding clearer action confirmation steps: The agent was resolving requests but not confirming completion. Adding an explicit confirmation step in the topic flow caused the success signal to fire correctly.'
+    ],
+    action:'Audit how success is defined for each topic in your agent configuration. Vague or missing success criteria results in artificially low measured success rates. The measurement may be the problem, not the agent.'
+  },
+  'session-outcome':{
+    tab:'Effectiveness',
+    title:'Session Outcome Chart',
+    rows:[
+      ['What it shows','A stacked bar chart showing how every conversation resolved each day: Abandoned, Deflected, Escalated, or Not Set. Per Salesforce Agentforce Analytics documentation, each session is assigned exactly one outcome.'],
+      ['Purpose','Translates percentage metrics into raw daily counts. Shows whether a bad metric is a spike on one day or a sustained trend.'],
+      ['Not Set','Sessions where the outcome was not captured, typically caused by missing agent configuration, incomplete Session Tracing setup, or agents built on the wrong template.'],
+      ['What to watch','A growing Abandoned bar over time is a compounding problem. A growing Deflected bar means the agent is improving. Not Set appearing regularly is a data quality issue.']
+    ],
+    scenarios:[
+      '1. A spike in Escalated on one day: Correlate the date with your change log. A deployment, a Knowledge base update, or a Salesforce maintenance window on that date likely caused actions to fail, triggering the escalation fallback.',
+      '2. Not Set sessions appearing consistently: Sessions are running but not being attributed to an outcome. Check that your agent was built on the correct template and that the Analytics Data Kit was fully deployed before those sessions ran.',
+      '3. Abandoned bar grows each week while Deflected stays flat: The agent is not improving. Users who were abandoning last week are still abandoning this week. This trend will directly impact customer satisfaction scores. Escalate to a full topic audit.'
+    ],
+    action:'Not Set sessions are a data debt. They are sessions you cannot learn from. Investigate the agent template and confirm the Analytics Data Kit was deployed before those sessions ran.'
+  },
+  'unique-sessions':{
+    tab:'Usage',
+    title:'Unique Sessions',
+    rows:[
+      ['Definition','The total number of distinct conversation sessions initiated with the agent in the selected timeframe. Per Salesforce Analytics documentation, each session is a unique interaction window between a user and the agent.'],
+      ['Purpose','The baseline volume metric. All other usage and effectiveness metrics are calculated relative to this number.'],
+      ['What it indicates','284 sessions with +8.3% growth shows healthy adoption. The agent is being used and usage is expanding week over week.']
+    ],
+    scenarios:[
+      '1. Unique Sessions drops 40% the day after a new deployment: A technical issue is likely preventing sessions from initializing. Check Error Rate on the Health tab and review Apex and Flow logs for failures in the agent startup sequence.',
+      '2. Unique Sessions grows 50% month over month but Success Rate stays at 22%: Volume is growing but quality is not. More users are experiencing a failing agent at scale. Fix quality before continuing to drive adoption.',
+      '3. Unique Sessions is high but Unique Users is low: The same small group of people is using the agent repeatedly. They may be testing, or they may be returning because their issue was never resolved. Check which users appear most often in the Sessions tab.'
+    ],
+    action:'Track sessions week over week alongside channel data. If web sessions grow but mobile drops, a mobile-specific UX issue may be suppressing adoption on that channel.'
+  },
+  'unique-interactions':{
+    tab:'Usage',
+    title:'Unique Interactions',
+    rows:[
+      ['Definition','The total number of individual message exchanges between users and the agent across all sessions in the selected timeframe.'],
+      ['Purpose','Measures depth of engagement. Shows not just how many sessions started but how much conversation happened within them.'],
+      ['What it indicates','1.64K interactions across 284 sessions equals approximately 5.8 interactions per session. Users are having substantive conversations.']
+    ],
+    scenarios:[
+      '1. Unique Interactions grows faster than Unique Sessions: Each conversation is getting longer. Cross-reference with Success Rate. If success is rising too, users are having deeper and more productive conversations. If success is flat, users are struggling and sending more messages trying to get help.',
+      '2. Interactions per session drops from 5.8 to 2.1 after a Knowledge base update: The new knowledge may be answering questions faster and more directly, or users may be giving up sooner. Check Abandonment Rate to determine which.',
+      '3. Interactions spike for one specific topic: That topic likely requires more back and forth than others. Compare its interaction count to its Success Rate. High interactions plus high success means the topic is complex but working. High interactions plus low success means users are stuck in a loop.'
+    ],
+    action:'Cross-reference with Abandonment Rate. If interactions per session is high and abandonment is high, users are spending significant effort before giving up, which is a strong signal of content gaps.'
+  },
+  'unique-users':{
+    tab:'Usage',
+    title:'Unique Users',
+    rows:[
+      ['Definition','The count of individual authenticated users who started at least one session with the agent in the selected timeframe.'],
+      ['Purpose','Measures adoption breadth. Shows how many different people are using the agent, not just how many sessions occurred.'],
+      ['What it indicates','47 unique users growing at +12% shows healthy spread. In early deployments this number is typically small, and growth means word is spreading across the user base.']
+    ],
+    scenarios:[
+      '1. Unique Users is low at 47 out of a 500-employee deployment: Only 9% of the intended audience is using the agent. This is an awareness and training problem, not an agent quality problem. Run an enablement campaign before investing more in agent optimization.',
+      '2. Unique Users drops from 47 to 12 after a bad week of sessions: Word spread that the agent does not work. Once users lose trust they stop returning. Fixing the quality issues now matters more than promotion.',
+      '3. Unique Users is 47 but Unique Sessions is 284: Each user averages about 6 sessions in the timeframe. Users are returning repeatedly, which could mean they find the agent valuable, or it could mean they return because their issue was never fully resolved the first time.'
+    ],
+    action:'Track Unique Users against your deployment rollout plan. If you enabled the agent for 500 employees but only 47 are using it, there is an adoption gap. Training or awareness may be the fix, not the agent itself.'
+  },
+  'avg-interactions':{
+    tab:'Usage',
+    title:'Average Interactions Per Session',
+    rows:[
+      ['Definition','The mean number of message exchanges between a user and the agent in a single session.'],
+      ['Purpose','Measures the depth and complexity of individual conversations. Both very high and very low averages can indicate problems.'],
+      ['What it indicates','5.8 is a solid depth showing users are having real conversations. Very low (1 to 2) may mean users give up immediately. Very high (10 or more) may mean users cannot get resolution.']
+    ],
+    scenarios:[
+      '1. Average interactions climbs from 5.8 to 9.4 while Success Rate drops: Users are sending more messages trying to get help that never comes. The agent is engaging in longer conversations but not resolving them. This is an instruction and grounding problem.',
+      '2. Average interactions drops from 5.8 to 2.1 after a prompt update: The new prompts may be answering questions more directly. Check whether Success Rate and Deflection Rate also improved. If they did, the prompt change was effective.',
+      '3. One topic has an average of 11 interactions while all others average 4 to 6: That topic is unusually complex or the agent instructions are insufficient for it. Pull session traces for that topic and look for patterns in what users keep asking that the agent is not addressing.'
+    ],
+    action:'Segment by topic. Some topics naturally require more back and forth, such as troubleshooting flows. If a simple FAQ topic averages 8 interactions, the agent is failing to answer clearly on the first response.'
+  },
+  'avg-quality-empty':{
+    tab:'Quality',
+    title:'Average Quality Score',
+    rows:[
+      ['Definition','AI-generated score on a 1 to 5 scale rating the quality, relevance, and accuracy of agent responses. Per Salesforce Agentforce Analytics documentation, this score is generated by the Agent Optimization engine and requires RAG to be enabled.'],
+      ['Purpose','Measures response quality, not just activity. High engagement with a low quality score means users are trying the agent but getting bad answers.'],
+      ['Why it is empty','Quality scoring requires RAG to be enabled. Without RAG, the agent is not grounding responses in your Knowledge base, so there is no retrieval quality to measure.'],
+      ['Score scale','1 to 2: Very Low. 2 to 3: Low. 3 to 4: Good. 4 to 5: High.']
+    ],
+    scenarios:[
+      '1. Engagement Rate is 90% but Quality Score is empty because RAG is not enabled: The agent is actively engaging users but answering entirely from general AI training data, not from your Knowledge base. Every response is unverifiable and potentially wrong for your specific org context.',
+      '2. RAG is enabled but Quality Score shows 1.5 (Very Low): The retrieval pipeline is running but the agent is not finding relevant articles or is ignoring what it finds. Quality Score being visible means the problem can now be diagnosed through the RAG Metrics breakdown.',
+      '3. Quality Score is empty on a new org and engagement is building rapidly: This is the highest-risk moment. Users are forming impressions of the agent before quality can be measured. Enable RAG before the agent sees significant volume so problems are detectable early.'
+    ],
+    action:'Enable RAG from Setup, then Agentforce, then Knowledge Settings. After provisioning completes, reconfigure the Analytics app to add the RAG Data Model Objects. Quality scores will begin populating within the next reporting window.'
+  },
+  'rag-not-enabled':{
+    tab:'Quality',
+    title:'RAG Is Not Enabled',
+    rows:[
+      ['What RAG is','Retrieval-Augmented Generation. Before generating a response, the agent searches your Knowledge base for relevant articles and uses that content to ground its answer. Per Salesforce Trailhead, RAG is the foundation of Agentforce response quality.'],
+      ['Why it matters','Without RAG, the agent generates responses from its general training data only. No org-specific knowledge, no product documentation, no policy articles. Answers may sound confident but be completely wrong for your context.'],
+      ['What enabling it does','Connects the agent to your Knowledge articles as its source of truth. The Quality tab then measures how well the retrieval is working: are the right articles being found? Are responses grounded in what was retrieved?'],
+      ['How to enable','Setup, then Knowledge Settings, then enable Knowledge for Agentforce. Then wait for the Analytics Foundations SDM to provision the RAG Data Model Objects and reconfigure the Analytics app.']
+    ],
+    scenarios:[
+      '1. A user asks the agent about your return policy and the agent gives a plausible-sounding answer that is wrong: Without RAG, the LLM is drawing on training data from thousands of companies. Your specific return policy is not in the training data. The agent invents a plausible but incorrect answer.',
+      '2. The Deflection Rate is 65% but no one can verify whether deflected issues were correctly resolved: Without RAG, there is no quality data. You know the volume but not the accuracy. Deflection Rate without Quality Score is an incomplete picture.',
+      '3. RAG is enabled but the Quality tab still shows as empty: Provisioning may still be in progress. Allow 24 to 48 hours for the RAG Data Model Objects to populate. If it is still empty after 48 hours, check whether Knowledge for Agentforce is properly activated in Setup.'
+    ],
+    action:'Treat RAG not enabled as a blocker before production at scale. Without it, quality scores are unmeasurable and response accuracy is unverifiable. Enable it before the agent handles significant volume.'
+  },
+  'avg-quality':{
+    tab:'Quality',
+    title:'Average Quality Score',
+    rows:[
+      ['Definition','AI-generated score on a 1 to 5 scale measuring the quality, relevance, and accuracy of agent responses across all sessions. Per Salesforce Agentforce Analytics, generated by the Agent Optimization engine.'],
+      ['What 2.3 means','This is in the Low range (2 to 3). Responses are partially helpful but with significant gaps. The agent is engaging but not answering accurately or completely.'],
+      ['Root causes','Low scores typically indicate poor prompt design, insufficient Knowledge article coverage, weak retrieval precision surfacing the wrong articles, or misconfigured actions returning bad data.'],
+      ['Score scale','1 to 2: Very Low. 2 to 3: Low. 3 to 4: Good. 4 to 5: High.']
+    ],
+    scenarios:[
+      '1. Quality Score is 2.3 and Retrieval Precision is 61%: The low quality score is being caused by the retrieval pipeline surfacing irrelevant articles 39% of the time. Improving article titles and metadata to help the retriever is the highest-leverage fix before changing any prompt instructions.',
+      '2. Quality Score is 2.3 but Retrieval Precision and Coverage are both above 80%: The retrieval is working but the agent is not using what it finds effectively. The problem is in the prompt or the topic instructions, not the Knowledge base. Review whether the agent instructions tell it to answer from provided articles only.',
+      '3. Quality Score drops from 3.2 to 2.3 after publishing a batch of new Knowledge articles: The new articles may be poorly structured, too broad, or creating retrieval noise that displaces previously well-performing articles. Review the new articles for clarity and specificity.'
+    ],
+    action:'Drill into the Quality tab Data Explorer. Sort subagents by lowest score and highest volume. The intersection of those two conditions is your first priority for improvement.'
+  },
+  'rag-metrics':{
+    tab:'Quality',
+    title:'RAG Metrics',
+    rows:[
+      ['Definition','A set of three metrics measuring how well the Retrieval-Augmented Generation pipeline is performing. Per Salesforce Agentforce Analytics: Retrieval Precision, Retrieval Coverage, and Groundedness together describe the full picture of whether the agent is finding and using Knowledge articles correctly.'],
+      ['Why it matters','Response quality is downstream of retrieval quality. If the agent is finding the wrong articles, even a perfect prompt produces a bad answer. RAG Metrics tell you where in the pipeline the problem is.'],
+      ['Three dimensions','Retrieval Precision: are the articles it finds relevant? Retrieval Coverage: is it finding all the relevant articles? Groundedness: is the response actually based on what was retrieved?']
+    ],
+    scenarios:[
+      '1. All three RAG metrics are declining together: This points to a Knowledge base quality problem. Articles may be outdated, poorly titled, or lacking sufficient content for the retriever to score them accurately. Run a Knowledge audit before changing the agent configuration.',
+      '2. Retrieval Precision and Coverage are healthy (above 75%) but Quality Score is still low: The retrieval pipeline is working. The problem is in the generation step. The agent is finding the right articles but not using them well. Review agent prompt instructions and ensure the system prompt tells the agent to answer from retrieved articles.',
+      '3. Groundedness is high (above 80%) but quality scores are still low: The agent is faithfully reproducing what it retrieves, but what it retrieves is wrong or incomplete. This is a Retrieval Precision or Coverage problem, not a generation problem. Focus on improving Knowledge article quality.'
+    ],
+    action:'Use RAG metrics to separate retrieval problems from generation problems. Fix retrieval problems by improving Knowledge articles. Fix generation problems by improving prompt instructions.'
+  },
+  'retrieval-precision':{
+    tab:'Quality',
+    title:'Retrieval Precision',
+    rows:[
+      ['Definition','The percentage of retrieved Knowledge articles that were actually relevant to the user query. Per Salesforce Agentforce Analytics, precision measures whether the articles the agent finds are the right ones, not just any articles.'],
+      ['What 61% means','The agent is surfacing relevant content roughly 61% of the time. In 39% of retrievals, the agent is pulling irrelevant articles that may mislead the response.'],
+      ['Why it matters','Low precision means the agent is citing and using the wrong articles. The LLM will attempt to answer from whatever it retrieved, even if it is off-topic, producing confident but wrong responses.']
+    ],
+    scenarios:[
+      '1. A user asks about the refund policy. The agent retrieves a shipping policy article because both contain the word "return": The retriever matched on a keyword without understanding the intent. Adding a distinct title to each article and using more specific metadata tags will help the retriever disambiguate.',
+      '2. Retrieval Precision drops from 75% to 61% after adding 50 new Knowledge articles: The new articles are introducing retrieval noise. Some may overlap with existing articles on the same topic, splitting relevance scores and reducing precision. Consolidate overlapping articles.',
+      '3. Precision is low for questions about billing but high for questions about product features: Billing articles may be long and cover multiple subtopics. Break billing articles into shorter, single-topic articles. Shorter articles with focused titles consistently score higher in retrieval precision.'
+    ],
+    action:'Improve article titles and metadata so the retriever can score relevance more accurately. Ensure each Knowledge article covers one specific topic. Broad catch-all articles consistently hurt precision.'
+  },
+  'retrieval-coverage':{
+    tab:'Quality',
+    title:'Retrieval Coverage',
+    rows:[
+      ['Definition','The percentage of relevant Knowledge articles that were successfully retrieved for a given query. Per Salesforce Agentforce Analytics, coverage measures completeness: is the agent finding all of the relevant articles, not just some of them?'],
+      ['What 74% means','The agent is finding most of the relevant content but missing about 26% of articles that could have improved the answer. Users are getting partial information.'],
+      ['Why it matters','Low coverage produces incomplete answers. The agent may know part of the correct answer but not all of it, leading users to follow up with additional questions or seek information elsewhere.']
+    ],
+    scenarios:[
+      '1. A user asks a multi-part question about account setup. The agent retrieves the article about creating an account but misses the article about required verification fields: Coverage is low because the retriever does not find the second relevant article. Adding related article links within each article and improving metadata tagging can increase recall.',
+      '2. Coverage improves from 74% to 88% after restructuring Knowledge articles to have more explicit topic headings: The retriever uses headings and metadata to score relevance. Explicit headings make articles easier to find for the retriever. The content did not change, only the structure.',
+      '3. Coverage is high (90%) but Quality Score is still low: The agent is finding nearly all relevant articles but still producing poor responses. The issue is in Groundedness or in the prompt instructions telling the agent how to use what it retrieved, not in the retrieval itself.'
+    ],
+    action:'Check for Knowledge articles that should be retrieved but are not. Common causes include articles not indexed, chunking issues when articles are too long for the retriever, or missing metadata tags that the retriever depends on for relevance scoring.'
+  },
+  'groundedness':{
+    tab:'Quality',
+    title:'Groundedness Score',
+    rows:[
+      ['Definition','Measures how much of the agent response is actually based on the retrieved Knowledge articles versus generated from general AI training data. Per Salesforce Agentforce Analytics, groundedness is the final check in the RAG pipeline quality chain.'],
+      ['What 68% means','About 68% of the response content can be traced back to retrieved articles. 32% comes from the AI training data, which is the hallucination risk zone for org-specific information.'],
+      ['Why it matters','Even if retrieval is good, a low groundedness score means the agent is mixing Knowledge content with general AI knowledge, potentially introducing inaccuracies that contradict your actual policies or products.']
+    ],
+    scenarios:[
+      '1. Groundedness is 68% for a financial services agent handling account policy questions: 32% of each response is coming from general AI training data, not your policies. For compliance-sensitive topics, this is not acceptable. Strengthen the system prompt with explicit instructions to answer only from retrieved articles.',
+      '2. Groundedness improves from 68% to 84% after adding the instruction "Answer only using information found in the provided Knowledge articles" to the topic system prompt: This single change reduced the agent drawing on general training data by half. Prompt instructions directly control groundedness.',
+      '3. Groundedness is high (90%) but Retrieval Precision is low (55%): The agent is faithfully grounded in what it retrieved, but what it retrieved was often the wrong article. High groundedness in the wrong content still produces wrong answers. Fix Retrieval Precision first.'
+    ],
+    action:'Review the agent system prompt and topic instructions. Instructions such as "answer from the provided articles only" and "do not use information not found in the retrieved documents" directly improve groundedness by constraining the generation step.'
+  },
+  'error-rate':{
+    tab:'Health',
+    title:'Error Rate',
+    rows:[
+      ['Definition','The percentage of agent interactions that resulted in a technical error, including failed actions, API timeouts, Apex execution failures, and unhandled exceptions. Per Salesforce Agentforce Health Analytics.'],
+      ['What 2.3% means','2.3% with an upward trend (+0.8 percentage points) is a concern. While low in absolute terms, a rising error rate that is not investigated will compound as session volume grows.'],
+      ['Why it matters','Errors are silent failures from the user perspective. The agent stops working without a clear explanation. They are most often caused by external API dependencies or Apex action failures, not the AI reasoning layer.']
+    ],
+    scenarios:[
+      '1. Error Rate spikes from near zero to 8% on a specific date: This almost always correlates with a deployment, a downstream API change, or a Salesforce maintenance window. Timestamp the spike and compare to the org change log. The error appeared on a specific date because something changed on that date.',
+      '2. Error Rate is 2.3% and climbing over three consecutive weeks: No single event caused it but volume is growing slowly. This often indicates an intermittent external API that is becoming less reliable over time. Check the API service health page and add a timeout and fallback response to the action.',
+      '3. Error Rate is 2.3% but concentrated in one topic based on session trace review: The Orders subagent is generating nearly all errors because its backend API has a quota limit that is now being hit during peak hours. Rate-limiting the topic during high-volume periods or caching frequent responses can resolve the issue.'
+    ],
+    action:'Use Agent Platform Tracing when enabled to get the exact OpenTelemetry span for each error. It shows which specific action failed and the exact error message without needing to search debug logs manually.'
+  },
+  'session-duration':{
+    tab:'Health',
+    title:'Session Duration',
+    rows:[
+      ['Definition','The average length of a conversation session in seconds, from the first user message to the session close event. Per Salesforce Agentforce Health Analytics.'],
+      ['What 248s means','Approximately 4 minutes per session. This is moderate. Long enough for real multi-turn conversations, short enough that users are not getting stuck in unresolvable loops.'],
+      ['Two interpretations','Longer sessions can mean deeper engagement (good) or users struggling to get an answer (bad). Cross-reference with Success Rate and Abandonment Rate to know which applies in your org.']
+    ],
+    scenarios:[
+      '1. Session duration increases from 248 to 380 seconds at the same time Success Rate drops from 62% to 41%: Users are spending more time in conversations that still do not resolve. The additional time is not productive. This is friction, not engagement. Investigate which topics are producing the longest failing sessions.',
+      '2. Session duration increases from 248 to 410 seconds while Success Rate holds steady at 62%: Conversations are getting longer but resolving at the same rate. Users may be asking more complex multi-turn questions. This is deeper engagement, not a problem.',
+      '3. Session duration drops sharply from 248 to 90 seconds while Abandonment Rate rises: Users are giving up much faster than before. They are sending one or two messages, getting a bad response, and leaving immediately. This pattern typically follows a Knowledge base update that broke a high-volume topic.'
+    ],
+    action:'Segment session duration by outcome. Long sessions ending in Deflection mean the agent works but takes too long. Long sessions ending in Abandonment mean users are stuck, not engaged. The outcome determines the fix.'
+  },
+  'latency':{
+    tab:'Health',
+    title:'Agent Interaction Latency',
+    rows:[
+      ['Definition','The average time in seconds for the agent to respond to a user message after it is sent, covering the full pipeline including AI reasoning, knowledge retrieval, and action execution. Per Salesforce Agentforce Health Analytics.'],
+      ['What 1.8s means','1.8 seconds is borderline. Users typically tolerate up to 2 seconds before perceiving a delay. The +0.4 second upward trend is concerning because this metric is moving in the wrong direction.'],
+      ['Why it matters','Higher latency directly increases Abandonment Rate. Users who wait too long assume the agent is broken or unresponsive and end the session.']
+    ],
+    scenarios:[
+      '1. Latency crosses 3 seconds and Abandonment Rate rises 8 percentage points two weeks later: The correlation between response time and abandonment is reliable and delayed by 1 to 2 weeks as user patience erodes. Fixing latency often reduces abandonment without any changes to content quality.',
+      '2. Latency is 1.8 seconds overall but 4.2 seconds for the Order Status topic specifically: The Order Status action is calling an external API with no timeout configured. The action waits indefinitely for a slow response. Adding a 2-second timeout with a graceful fallback message will cap the latency for that topic.',
+      '3. Latency was 0.9 seconds before a new Apex action was added and is now 1.8 seconds: The Apex callout is synchronous and the external system it calls takes 0.9 seconds to respond. Refactoring to an asynchronous pattern or caching the most common lookups can restore the original latency.'
+    ],
+    action:'Use Agent Platform Tracing to identify which action in the response chain is causing the delay. In most cases, high latency is caused by a slow Apex call or an external API with no timeout configured, not the AI reasoning layer.'
+  },
+  'instruction-adherence':{
+    tab:'Trust',
+    title:'Instruction Adherence Rate',
+    rows:[
+      ['Definition','Measures how consistently the agent follows its configured instructions, guardrails, and topic boundaries rather than deviating from them. Per Salesforce Agentforce Analytics Trust documentation.'],
+      ['Purpose','Your governance metric. If adherence drops after a prompt change, the agent may be ignoring rules it previously followed. This metric makes prompt governance measurable.'],
+      ['Why it is empty','This metric requires 30 days of session data and sufficient session volume to generate statistically reliable scores. It will populate automatically once the threshold is met.'],
+      ['What to watch for','A sudden drop in adherence rate after a Knowledge base or prompt update is a red flag. The change may have introduced conflicting instructions that cause the agent to override its guardrails.']
+    ],
+    scenarios:[
+      '1. The system prompt is updated to add a guardrail against discussing competitor pricing. Instruction Adherence Rate the following week shows a drop from 94% to 71%: The new guardrail is conflicting with an older instruction. The agent is not reliably following the new rule. Review the full system prompt for conflicting instructions and test the specific scenario in Agent Builder.',
+      '2. Instruction Adherence Rate holds steady at 92% after a significant Knowledge base expansion: The agent added new retrieval content but did not change how it follows instructions. A stable adherence rate after a content change is the expected and healthy outcome.',
+      '3. Instruction Adherence Rate is empty after 45 days because session volume is too low: The metric needs both time and volume. If volume is genuinely low, you must rely on manual transcript review until you have enough data. Schedule weekly sampling of at least 20 sessions.'
+    ],
+    action:'While this metric is empty, manually review a sample of session transcripts weekly. Look for responses that feel off-brand, overly verbose, or that appear to ignore configured constraints such as topic boundaries or escalation triggers.'
+  },
+  'toxicity':{
+    tab:'Trust',
+    title:'Toxicity Score',
+    rows:[
+      ['Definition','Measures the presence of potentially harmful, inappropriate, or offensive language in AI-generated responses. Per Salesforce Agentforce Analytics, generated by the Einstein Trust Layer safety evaluation pipeline.'],
+      ['Purpose','Compliance and safety monitoring. Lower scores are better. Enterprise deployments should target near-zero toxicity for any customer or employee-facing agent.'],
+      ['Why it is empty','Same as Instruction Adherence: requires sufficient session volume and a 30-day data window before scores generate. The metric will populate automatically.'],
+      ['What to watch for','Even a small uptick in toxicity score warrants immediate investigation. One inappropriate response at scale is a brand and compliance risk.']
+    ],
+    scenarios:[
+      '1. Toxicity Score spikes from near zero to 0.12 after a new Knowledge article is published: A poorly written article containing inflammatory language is being retrieved and incorporated into responses. Identify the article by reviewing session traces from the spike date and remove or rewrite it.',
+      '2. Toxicity Score is consistently low (near zero) but a manual transcript review finds one borderline response: The metric is aggregate and can miss individual outliers. Low toxicity scores do not eliminate the need for manual sampling, especially for agents handling sensitive topics.',
+      '3. Toxicity Score is empty but an agent is already in production: Do not interpret empty as clean. The metric requires 30 days of data. If the agent is live and you cannot measure toxicity yet, compensate with weekly manual transcript sampling until the metric populates.'
+    ],
+    action:'Do not wait for the metric to flag a problem. Use the Agentforce Studio Sessions view to regularly spot-check transcripts from edge-case intents, especially requests adjacent to sensitive topics the agent was not explicitly trained for.'
+  },
+  'trust-empty':{
+    tab:'Trust',
+    title:'While Trust Metrics Are Populating',
+    rows:[
+      ['Minimum requirements','Trust metrics require 50 or more scored moments and 30 days of session data before scores generate. New orgs should plan for a 30-day observation window before these metrics are meaningful.'],
+      ['What to do now','Manually review session transcripts for off-brand or boundary-crossing responses. Focus on edge-case intents that push against your configured guardrails, such as sensitive topics, competitor comparisons, or off-topic requests.'],
+      ['Set up alerts','Agent Health Monitoring can be configured to alert on quality and safety thresholds. Use it as a proxy safety net while Trust metrics are still building.'],
+      ['Document your expectations','Before Trust metrics populate, write down what good instruction adherence looks like for your org. That baseline makes the metric more actionable when it appears.']
+    ],
+    scenarios:[
+      '1. A financial services org enables an agent for customer support and begins the 30-day wait for Trust metrics: During the wait period, the team manually reviews 20 transcripts per week and finds the agent is occasionally sharing account balance information without completing the required verification steps. This is caught and fixed before it becomes a compliance event.',
+      '2. The 30-day window passes and Trust metrics populate at levels below expectations: The manual review period gave the team a baseline. They can immediately correlate the metric with specific transcript patterns they already identified during the manual phase, instead of starting the investigation from scratch.',
+      '3. Trust metrics remain empty after 35 days: Session volume may be below the minimum threshold. A low-volume agent may require a longer observation window or a deliberate test period with internal users to generate enough scored moments for the metrics to initialize.'
+    ],
+    action:'The 30-day window is not dead time. It is your opportunity to catch issues manually before they appear in metrics. Schedule a weekly 20-minute transcript review, document your findings, and use them as baseline expectations when the metric populates.'
+  },
+  'interruption-rate':{
+    tab:'Voice',
+    title:'Interruption Rate',
+    rows:[
+      ['Definition','The percentage of voice interactions where the user spoke while the agent was still delivering its response, effectively interrupting it. Tracked per Salesforce Voice channel analytics in Agentforce.'],
+      ['What 0% means','Voice is not in active use, or all voice interactions are completing without interruption. This is a healthy baseline for a new deployment.'],
+      ['Why it matters','Rising interruption rates in voice signal that the agent is too slow, too verbose, or giving inaccurate answers. Users cut off the agent when they already know the response is wrong or when they are frustrated by the wait.'],
+      ['What to watch','Watch for interruption rate to climb above 5% as voice adoption grows. That threshold typically signals a latency or accuracy problem.']
+    ],
+    scenarios:[
+      '1. Interruption rate climbs from 0% to 18% the week after a new deployment: The new agent version produces longer responses. Users are cutting off the agent before it finishes. The fix is shortening responses and leading with the answer, not the explanation.',
+      '2. Interruption rate rises from 0% to 8% while Agent Interaction Latency rises from 0.07 to 2.1 seconds: The latency increase is causing users to start speaking again before the agent responds. The fix is performance optimization, not content.',
+      '3. Interruption rate is 0% but abandonment is high on the voice channel: Users are not interrupting but they are leaving. The agent is completing its responses but the responses are not useful. This is a quality problem, not a latency or verbosity problem.'
+    ],
+    action:'Cross-reference Interruption Rate with Agent Interaction Latency on the Health tab. If both increase together, the root cause is almost always response time, not content quality.'
+  },
+
+  // ── EMPLOYEE AGENT MODALS ──
+  'ea-engagement':{
+    tab:'Effectiveness',
+    title:'Engagement Rate (Employee Agent)',
+    rows:[
+      ['Definition','The percentage of sessions where an employee actively sent at least one message to the agent. Per Salesforce Agentforce Analytics, engagement measures whether users initiate real interaction rather than landing and immediately closing the agent.'],
+      ['Purpose','For employee agents, engagement is a measure of trust and adoption within the workforce. High engagement means employees are turning to the agent as a tool in their workflow.'],
+      ['What it indicates','98% is near-perfect engagement. Virtually every employee who opens the agent sends a message. The agent has strong internal adoption.']
+    ],
+    scenarios:[
+      '1. Engagement at 98% but Success Rate at 55%: Almost every employee tries the agent, but nearly half of sessions do not complete a successful outcome. The agent is trusted and discoverable, but it cannot finish what it starts for half of requests.',
+      '2. Engagement drops from 98% to 72% the week after a confusing UI update: The new interface made employees less likely to start a conversation. This is a UX problem. Revert the change and test with a smaller group before redeploying.',
+      '3. Engagement is 98% on the HR agent but 60% on the Sales agent: Sales employees are less likely to engage with their dedicated agent. This may reflect lower awareness, less trust, or a perception that the Sales agent is not useful for their daily tasks.'
+    ],
+    action:'High engagement is an asset. Protect it by maintaining agent quality and response reliability. A drop in engagement after any change is an immediate signal to investigate.'
+  },
+  'ea-escalation':{
+    tab:'Effectiveness',
+    title:'Escalation Rate (Employee Agent)',
+    rows:[
+      ['Definition','The percentage of employee agent sessions transferred to a human, such as an HR representative, IT support agent, or manager.'],
+      ['Purpose','For employee agents, escalation represents the boundary between what the AI can handle and what requires human judgment or authority.'],
+      ['What it indicates','0% is ambiguous. It could mean the agent is resolving everything, or it could mean the escalation path is not configured or discoverable. Must be read alongside Success Rate and Abandonment Rate.']
+    ],
+    scenarios:[
+      '1. Escalation at 0% with Success Rate at 55%: 45% of sessions fail without escalation. Employees are not getting help and are not being routed to a human. They are simply giving up. The escalation path is either broken or not surfaced.',
+      '2. Escalation at 0% and Success Rate at 90%: The agent is genuinely resolving most requests without needing to involve a human. This is the ideal state for high-volume, repeatable tasks like checking PTO balance or looking up a policy.',
+      '3. Escalation rises from 0% to 12% after HR reconfigures the agent to route sensitive topics to human representatives: This is intentional design. The 12% represents topics the organization decided should have human oversight, such as performance reviews or accommodation requests.'
+    ],
+    action:'Validate that the escalation path is configured and reachable before assuming 0% means success. Run a test session and attempt to reach a human deliberately to confirm the path is functional.'
+  },
+  'ea-success':{
+    tab:'Effectiveness',
+    title:'Success Rate (Employee Agent)',
+    rows:[
+      ['Definition','The percentage of employee agent sessions that completed a defined successful workflow outcome, as configured in the agent topic or action settings.'],
+      ['Purpose','Measures whether the agent is actually completing employee requests, not just engaging with them.'],
+      ['What it indicates','55% is moderate. The agent completes just over half of requests. With 98% engagement, that means nearly half of employees who try the agent leave without a completed outcome.']
+    ],
+    scenarios:[
+      '1. Success Rate at 55% with engagement at 98% and escalation at 0%: Roughly 43% of sessions are failing silently. Employees are engaging, not succeeding, and not being routed to a human. This is the highest-priority fix in this dashboard.',
+      '2. Success Rate varies by agent: HR agent at 70%, Sales agent at 40%. The HR agent has been in production longer and has better topic coverage. The Sales agent needs more topic instructions and action coverage built out.',
+      '3. Success Rate drops from 55% to 30% after a Knowledge base restructure: The restructure may have broken article indexing or changed how topics retrieve information. Roll back the Knowledge base change and test in a sandbox before redeploying.'
+    ],
+    action:'For every topic below 50% success, review the topic instructions, the actions it calls, and the Knowledge articles it retrieves. Low success on high-volume topics should be treated as a production incident.'
+  },
+  'ea-subagents-usage':{
+    tab:'Effectiveness',
+    title:'Subagents Usage',
+    rows:[
+      ['Definition','A horizontal bar chart showing session volume broken down by subagent, which corresponds to the topics configured in the employee agent. Per Salesforce documentation, subagents represent the named topic clusters the agent uses to classify and handle employee requests.'],
+      ['Purpose','Shows which topics employees are requesting most. Helps prioritize where to invest optimization effort.'],
+      ['What it indicates','Leave and PTO Management leads at 99 sessions, followed by Sales Research at 88. These are the two most critical topics to optimize because they receive the most traffic.']
+    ],
+    scenarios:[
+      '1. Leave and PTO Management has 99 sessions but a low quality score: This is the highest-impact improvement opportunity. Fix this topic first. The volume means improvements will immediately affect the most employees.',
+      '2. A topic appears with very few sessions despite being a core HR function: Employees may not know the agent handles that topic, or the topic name in the agent does not match how employees phrase their requests. Review the topic entry points and greetings.',
+      '3. NOT_SET appears as a subagent with significant volume: These sessions were not routed to any named topic. Check that your topic classification instructions are complete and that the agent has a default fallback topic configured.'
+    ],
+    action:'Sort by session volume and cross-reference with quality scores. The highest-volume, lowest-quality subagent is your most important optimization target.'
+  },
+  'ea-actions-usage':{
+    tab:'Effectiveness',
+    title:'Actions Usage',
+    rows:[
+      ['Definition','A horizontal bar chart showing how many times each configured agent action was invoked across all sessions. Actions include Flow executions, Apex calls, API integrations, and other automated steps triggered by the agent.'],
+      ['Purpose','Shows which backend automations are being used most. High-usage actions that have high error rates on the Health tab are critical to fix.'],
+      ['What it indicates','Leave and PTO Management action leads at 96 invocations, closely mirroring its subagent session count. This confirms the agent is actually triggering actions, not just responding with text.']
+    ],
+    scenarios:[
+      '1. An action appears in Subagents Usage but not in Actions Usage: The topic is being triggered but the action is never firing. Check the topic instructions to confirm the action is configured to run, and test the topic in Agent Builder.',
+      '2. Actions Usage count is much lower than Subagents Usage count: The agent is handling many sessions through text responses without invoking actions. This may be appropriate for FAQ topics, but for transactional topics it signals the agent is not completing tasks.',
+      '3. One action is invoked far more than others and also has the highest error rate on the Health tab: That action is the primary cause of your error rate. Investigate the underlying Flow or Apex for failures and fix it before the error rate impacts employee trust in the agent.'
+    ],
+    action:'Compare action invocation counts to your expected action coverage. If a key workflow action is rarely invoked, check whether the topic instructions are correctly routing users into that action path.'
+  },
+  'ea-unique-sessions':{
+    tab:'Usage',
+    title:'Unique Sessions (Employee Agent)',
+    rows:[
+      ['Definition','The total number of distinct employee agent conversation sessions in the selected timeframe.'],
+      ['Purpose','Baseline volume metric for the employee agent. Sets context for all other usage and effectiveness numbers.'],
+      ['What it indicates','275 sessions, down 3.8%: a slight decline. With only 12 unique users, each user is averaging about 23 sessions in the period.']
+    ],
+    scenarios:[
+      '1. Sessions down 3.8% while Stickiness Rate is up 6.3%: Fewer total sessions but returning users are engaging more consistently. The agent may have lost some initial casual experimenters but retained committed users, which is a healthy sign.',
+      '2. Sessions drop significantly after a new IT policy restricts the agent to specific departments: The restriction is working as intended. Analyze whether the restricted users now show up in support ticket volume to understand the productivity impact of the restriction.',
+      '3. Sessions grow but are concentrated in one of three agents: The HR agent handles most sessions while Sales and Service agents are underused. Run targeted awareness campaigns for the underused agents and confirm their topic coverage matches what those teams actually need.'
+    ],
+    action:'Track session trends alongside any org changes such as new agent deployments, topic updates, or access policy changes. Drops that correlate with changes are informative, not alarming.'
+  },
+  'ea-unique-interactions':{
+    tab:'Usage',
+    title:'Unique Interactions (Employee Agent)',
+    rows:[
+      ['Definition','The total number of individual message exchanges between employees and the agent across all sessions.'],
+      ['Purpose','Measures depth of engagement within sessions.'],
+      ['What it indicates','1.24K interactions across 275 sessions equals approximately 4.5 interactions per session. Employees are having multi-turn conversations with the agents.']
+    ],
+    scenarios:[
+      '1. Interactions down 2.1% while sessions are also down 3.8%: Interactions are declining slightly less than sessions, meaning individual conversations are becoming slightly deeper. This could indicate the agent is handling more complex follow-up questions.',
+      '2. Interactions per session spikes from 4.5 to 9 for the Sales Research agent: Employees are asking many follow-up questions. This could mean the initial responses are incomplete, or it could mean the agent is being used for complex, multi-step research workflows.',
+      '3. Interactions drops to 1.5 average across all agents after a new deployment: Something broke. Employees are starting sessions and immediately leaving after one or two messages. Check Error Rate and pull session traces from the deployment date.'
+    ],
+    action:'A sudden drop in interactions per session is as informative as a rise. Both warrant investigation. Match the change to the date of any agent updates or Knowledge base changes.'
+  },
+  'ea-unique-users':{
+    tab:'Usage',
+    title:'Unique Users (Employee Agent)',
+    rows:[
+      ['Definition','The number of individual employees who interacted with the agent in the selected timeframe.'],
+      ['Purpose','Measures adoption breadth across the employee base.'],
+      ['What it indicates','12 unique users, down 7.7%: This is a small, concentrated user base. The agent has not achieved broad adoption yet.']
+    ],
+    scenarios:[
+      '1. Only 12 unique users in an organization of 200 employees: Adoption is extremely limited. This is typical for a new deployment. Run an internal launch campaign, include the agent in onboarding materials, and track whether unique users grows over the next 30 days.',
+      '2. Unique users drops from 12 to 11 (the 7.7% decline): One user who was active last period did not return. At this small scale, a single person makes a significant difference in the metric. Focus on keeping current users engaged rather than over-interpreting the percentage change.',
+      '3. Unique users grows from 12 to 40 after an all-hands demo of the agent: Awareness was the barrier. Users who saw the demo started using the agent immediately. Schedule regular internal showcases of new capabilities to sustain growth.'
+    ],
+    action:'At 12 users, every individual session matters for data reliability. Wait until you have at least 50 unique users and 30 days of data before drawing strong conclusions from trends in this metric.'
+  },
+  'ea-avg-interactions':{
+    tab:'Usage',
+    title:'Average Interactions Per Session (Employee Agent)',
+    rows:[
+      ['Definition','The mean number of message exchanges per session across all employee agent conversations.'],
+      ['Purpose','Indicates conversation depth and whether employees are getting answers efficiently.'],
+      ['What it indicates','4.51 is a reasonable depth for an internal employee agent handling HR and operational queries.']
+    ],
+    scenarios:[
+      '1. Average interactions is 4.51 and trending slightly up while Success Rate holds steady: Conversations are becoming slightly longer but still resolving successfully. This may reflect employees asking more complex multi-part questions as they trust the agent more.',
+      '2. Average interactions for the Leave Management topic is 8 while all others are around 3: Leave Management may require more back and forth because it involves verification steps and eligibility checks. This is expected for a transactional topic. If users are abandoning before completion, simplify the verification flow.',
+      '3. Average interactions drops sharply after adding a direct action button for common requests: Employees can now complete tasks in fewer messages. A drop here after a UX improvement is a positive signal.'
+    ],
+    action:'Segment average interactions by topic. Compare high-interaction topics to their success rates to determine whether the length is efficient (complex topic, successful outcome) or inefficient (simple topic, user stuck in a loop).'
+  },
+  'ea-stickiness':{
+    tab:'Usage',
+    title:'Stickiness Rate',
+    rows:[
+      ['Definition','The percentage of users who returned to use the agent more than once in the selected timeframe. Per Salesforce Agentforce Analytics, Stickiness Rate measures repeat usage as an indicator of ongoing value delivery. This metric is unique to the Employee Agent dashboard.'],
+      ['Purpose','Measures whether the agent is becoming a regular part of employee workflow, not just a one-time experiment.'],
+      ['What it indicates','54.89% stickiness, up 6.3%: More than half of users are coming back. This is a strong signal that the agent is delivering enough value to be used repeatedly.']
+    ],
+    scenarios:[
+      '1. Stickiness at 54.89% but Unique Users at 12: Half of your small user base returns. This is a good sign for those 12 users, but the focus should be on growing the user base. High stickiness with low unique users means you have a committed core that has not expanded.',
+      '2. Stickiness drops from 54% to 30% after a bad deployment that raised error rates: Users tried the agent, encountered errors, and did not come back. The error rate problem on the Health tab is directly causing churn. Fix the errors first.',
+      '3. Stickiness rises from 54% to 75% after adding the Leave Management topic: A high-value topic drove daily return usage. Employees check their PTO balance regularly, so a reliable Leave Management action becomes a habit-forming entry point for the agent.'
+    ],
+    action:'Identify the topics that drive return visits. High-stickiness topics are the foundation of agent habit formation. Build out those topics first and market them internally to drive new user adoption.'
+  },
+  'ea-sessions-channel':{
+    tab:'Usage',
+    title:'Unique Sessions by Channel',
+    rows:[
+      ['Definition','A bar chart showing session volume broken down by AI Agent Channel Type: API, LightningDesktopCopilot, and SCRT2 EmbeddedMessaging. Per Salesforce documentation, channel type reflects how users are accessing the agent.'],
+      ['Purpose','Shows where employees are using the agent. Helps identify which deployment surface is driving the most engagement.'],
+      ['What it indicates','Sessions are primarily coming through the API channel with very few via LightningDesktopCopilot or EmbeddedMessaging, suggesting most usage is programmatic or via direct API integration rather than the native UI.']
+    ],
+    scenarios:[
+      '1. Almost all sessions come through the API channel: The agent may be integrated into another internal tool or workflow system rather than being accessed directly. Understand what system is calling the API to get a clear picture of actual usage context.',
+      '2. LightningDesktopCopilot sessions start growing after a Salesforce Copilot rollout: Employees are now accessing the agent through the Copilot interface inside Salesforce. Track whether the quality and success metrics differ by channel, as the UX is different.',
+      '3. SCRT2 EmbeddedMessaging sessions appear after a Slack or Teams integration: The agent is now accessible via a messaging platform. Monitor this channel separately because messaging conversations often have different patterns than direct agent interactions.'
+    ],
+    action:'If one channel dominates, ensure your quality and performance optimization efforts are focused on that channel. Metrics like latency and error rate can differ significantly between API-based and UI-based access.'
+  },
+  'ea-positive-feedback':{
+    tab:'User Satisfaction',
+    title:'Positive User Feedback',
+    rows:[
+      ['Definition','The total count of explicit thumbs-up or positive feedback signals submitted by employees during or after an agent session. Per Salesforce Agentforce Analytics, this reflects direct user sentiment collection within the agent interface.'],
+      ['Purpose','Measures whether employees are actively rating their experience as positive. Provides a direct sentiment signal alongside the indirect metrics like Success Rate.'],
+      ['What it indicates','Zero positive feedback in a new deployment is common and expected. The feedback mechanism may not yet be prominent or familiar to users.']
+    ],
+    scenarios:[
+      '1. Zero positive feedback despite a 98% Engagement Rate and 55% Success Rate: Employees are using the agent and succeeding, but not rating it. The feedback widget may not be visible, or employees simply do not know it exists. Add a prompt at the end of successful sessions asking for a rating.',
+      '2. Positive feedback starts appearing after adding a rating prompt at the end of each session: The mechanism was there but users needed to be directed to it. Even a small number of positive ratings (5 to 10) is valuable early signal.',
+      '3. Positive feedback is zero but negative feedback is also zero: No sentiment data at all means the feedback feature is not being used. Check that the thumbs-up and thumbs-down buttons are visible in the agent UI and test them yourself to confirm they are functional.'
+    ],
+    action:'Zero feedback is not a bad sign at launch. Add a post-session feedback prompt and give it 30 days. The ratio of positive to negative feedback is more meaningful than the raw counts once you have enough volume.'
+  },
+  'ea-negative-feedback':{
+    tab:'User Satisfaction',
+    title:'Negative User Feedback',
+    rows:[
+      ['Definition','The total count of explicit thumbs-down or negative feedback signals submitted by employees during or after an agent session.'],
+      ['Purpose','Provides direct user sentiment on poor experiences. Even a small number of negative signals can point to a specific failing topic or interaction pattern.'],
+      ['What it indicates','Zero negative feedback in a new deployment means either the experience is acceptable, or employees are not engaging with the feedback mechanism at all.']
+    ],
+    scenarios:[
+      '1. Negative feedback is zero but abandonment is 42%: Employees are leaving without resolution but not submitting negative ratings. They may not be bothered to rate it, or the feedback button is not visible at the abandonment point. Do not use zero negative feedback as proof that the experience is good.',
+      '2. Negative feedback appears for the first time after a new topic is deployed: One specific new topic is generating bad experiences. Filter negative feedback by the date it started and correlate with your deployment log. That topic likely has an instruction or grounding problem.',
+      '3. Negative feedback rises sharply while positive feedback stays flat: The agent is generating more bad experiences without any offsetting improvement in good ones. This is a signal of degrading quality, often caused by a Knowledge base change or a new topic that was deployed without sufficient testing.'
+    ],
+    action:'Treat the first negative feedback submissions as high-signal data. At low volume, each negative rating represents a real employee who had a bad enough experience to take action. Review the session transcript for every negative rating when volume is this low.'
+  },
+  'ea-user-satisfaction':{
+    tab:'User Satisfaction',
+    title:'User Satisfaction Overview',
+    rows:[
+      ['Definition','The User Satisfaction tab in the Employee Agent dashboard tracks direct feedback from employees using thumbs-up and thumbs-down signals within the agent interface. This tab is unique to the Employee Agent and replaces the Voice tab found in the Service Agent dashboard.'],
+      ['Purpose','Provides a direct sentiment layer on top of behavioral metrics like Success Rate and Abandonment Rate. Behavioral metrics tell you what happened; satisfaction feedback tells you how employees felt about it.'],
+      ['Why both are zero','In a new deployment, employees have not yet learned to use the feedback mechanism. This is expected and not a negative signal. It simply means no sentiment data has been collected yet.'],
+      ['What to do','Enable end-of-session feedback prompts, communicate the feedback mechanism to employees, and begin tracking the positive-to-negative ratio once volume reaches 20 or more submissions.']
+    ],
+    scenarios:[
+      '1. Both metrics are zero for the first 30 days: Normal for a new deployment. Do not draw conclusions from this. Focus on Success Rate and Abandonment Rate for quality signals during this period.',
+      '2. Positive feedback exceeds negative by 4:1 after 60 days: Employees who bother to rate the experience are mostly satisfied. This aligns with a 55% success rate. The remaining 45% of unsatisfied sessions are either not being rated or the users are simply abandoning without rating.',
+      '3. Negative feedback spikes to 15 in one week: Something changed. Correlate the date with your change log. A Knowledge base update, a new topic deployment, or a Salesforce release may have introduced regressions.'
+    ],
+    action:'Plan for a feedback collection strategy at deployment, not after the fact. Decide before launch how you will prompt employees for feedback and how you will triage negative submissions.'
+  },
+  'ea-avg-quality-empty':{
+    tab:'Quality',
+    title:'Average Quality Score (Employee Agent)',
+    rows:[
+      ['Definition','AI-generated score on a 1 to 5 scale assessing the quality, relevance, and accuracy of agent responses. Per Salesforce Agentforce Analytics, this score is generated by Agent Optimization and requires RAG to be enabled.'],
+      ['Purpose','Measures response quality for employee-facing interactions. Poor quality directly impacts employee productivity and trust in the agent.'],
+      ['Why it is empty','RAG is not enabled in this org. Quality scoring requires the agent to be grounded in Knowledge articles. Without RAG, there is no retrieval pipeline to measure.'],
+      ['Score scale','1 to 2: Very Low. 2 to 3: Low. 3 to 4: Good. 4 to 5: High.']
+    ],
+    scenarios:[
+      '1. Employees report the HR agent gives generic answers that do not reflect company policy: This is a direct consequence of RAG being disabled. The agent is answering from general training data, not from the actual HR policy documents in your Knowledge base.',
+      '2. Quality score shows as a dash even though Session Tracing is enabled: RAG must be separately enabled and provisioned. Session Tracing captures what happened; RAG enables quality scoring of what was said.',
+      '3. After enabling RAG, the Quality Score appears at 1.8 (Very Low): The agent now has access to Knowledge articles but the retrieval quality is poor. Articles may be outdated, too long to chunk properly, or missing the metadata the retriever needs to find them accurately.'
+    ],
+    action:'Enable RAG from Setup before going to production with any employee agent. Without it, you cannot measure whether the agent is giving employees accurate information, which is a compliance and productivity risk.'
+  },
+  'ea-rag-not-enabled':{
+    tab:'Quality',
+    title:'RAG Not Enabled (Employee Agent)',
+    rows:[
+      ['Definition','Retrieval-Augmented Generation (RAG) is the mechanism by which an Agentforce agent searches your Knowledge base for relevant articles before generating a response. Per Salesforce documentation, RAG must be enabled and provisioned before quality metrics can populate.'],
+      ['Purpose','Without RAG, employee agents generate responses from general AI training data only, not from your company policies, procedures, or institutional knowledge.'],
+      ['Why it matters for employees','Employee agents handle sensitive internal topics: HR policies, PTO rules, benefits, IT procedures. If the agent answers from general AI knowledge instead of your actual policies, it will give wrong answers that could mislead employees about their actual entitlements or procedures.'],
+      ['How to enable','Setup, then Knowledge Settings, then enable Knowledge for Agentforce. Wait for the Analytics Foundations SDM to provision the RAG-related Data Model Objects, then reconfigure the Analytics app.']
+    ],
+    scenarios:[
+      '1. An employee asks about the parental leave policy and the agent gives a generic answer based on common industry standards instead of the company-specific policy: RAG is not enabled. The agent has no access to the actual policy document. The employee makes decisions based on incorrect information.',
+      '2. The agent confidently answers a question about expense reimbursement limits but the answer is wrong by 40 percent: Without RAG, the LLM draws on training data from many companies. Your reimbursement limit is specific to your org and will not be in the training data.',
+      '3. After enabling RAG and uploading policy documents, quality score appears and begins at 2.2 (Low): The retriever is finding documents but the articles may need to be better structured. Short, clearly titled articles with specific topics perform better than long omnibus policy documents.'
+    ],
+    action:'For employee agents, RAG is not optional. Every topic that involves company-specific information such as policies, benefits, procedures, and limits requires RAG to answer accurately. Enable it before any production rollout.'
+  },
+  'ea-error-rate':{
+    tab:'Health',
+    title:'Error Rate (Employee Agent)',
+    rows:[
+      ['Definition','The percentage of agent interactions that resulted in a technical error, including failed actions, API timeouts, Flow execution failures, and unhandled exceptions. Per Salesforce Health Analytics documentation.'],
+      ['Purpose','Measures operational reliability. A high error rate directly causes session failures, abandoned conversations, and loss of employee trust.'],
+      ['What it indicates','8.71% is critically high and trending upward at +13.7%. Nearly 1 in 10 interactions is failing. This is the most urgent health problem in this dashboard.']
+    ],
+    scenarios:[
+      '1. Error rate at 8.71% concentrated in the Sales_Employee_Agent1 based on the multi-line chart: The Sales agent has a specific configuration or integration problem. The HR and Service agents may be performing normally. Isolate the investigation to the Sales agent, check its actions and Apex callouts.',
+      '2. Error rate spikes from near zero to 22% on a specific date for one agent: A deployment broke something. Check the change log for that date and compare session traces from before and after. The exact error type will be visible in Agent Platform Tracing if it is enabled.',
+      '3. Error rate is high and latency is also at 9.35 seconds: Both metrics are critical at the same time. This suggests an underlying infrastructure or integration problem. The actions are failing slowly rather than failing fast, which means timeouts are likely. Check whether the APIs the agent calls have timeout configurations.'
+    ],
+    action:'An error rate above 5% should be treated as a production incident. Identify which agent and which action is generating the errors using Agent Platform Tracing. Fix the root cause before adding new features or topics.'
+  },
+  'ea-session-duration':{
+    tab:'Health',
+    title:'Session Duration (Employee Agent)',
+    rows:[
+      ['Definition','The average length of an employee agent session in seconds.'],
+      ['Purpose','Shows how long employees spend in each session. Short sessions can indicate quick resolutions or early abandonment. Long sessions can indicate deep engagement or frustrating loops.'],
+      ['What it indicates','60.6 seconds (about one minute) is notably short. Combined with 4.51 interactions per session, employees are sending messages quickly and the agent is responding fast, but sessions are ending quickly.']
+    ],
+    scenarios:[
+      '1. Session duration of 60 seconds with a 55% success rate: Sessions that succeed are completing in about a minute, which is efficient. The 45% that do not succeed may be ending even faster due to early abandonment after a failed first response.',
+      '2. Session duration drops from 60 to 20 seconds after a Knowledge base update: Either the agent is answering faster (good) or employees are giving up almost immediately after one bad response (bad). Check whether Success Rate also changed to distinguish between these two interpretations.',
+      '3. Session duration for the Leave Management topic is 90 seconds while others average 40 seconds: Leave Management involves more steps, such as checking balances and submitting requests. Longer duration for transactional topics is expected. Compare to the Success Rate for that topic to confirm the additional time is being used productively.'
+    ],
+    action:'Do not optimize for short session duration in isolation. A short session with a high success rate is ideal. A short session with high abandonment means employees are giving up quickly. Always pair duration analysis with outcome data.'
+  },
+  'ea-latency':{
+    tab:'Health',
+    title:'Agent Interaction Latency (Employee Agent)',
+    rows:[
+      ['Definition','The average time in seconds for the agent to respond to a user message after it is sent. Per Salesforce Health Analytics, this covers the full response pipeline including reasoning, retrieval, and action execution.'],
+      ['Purpose','Measures perceived responsiveness. High latency directly impacts employee experience and productivity.'],
+      ['What it indicates','9.35 seconds is critically high. Best practice per Salesforce is to target under 3 seconds. At 9.35 seconds, employees are waiting nearly 10 seconds per message. In a 4.51-interaction session, that is over 40 seconds of waiting.']
+    ],
+    scenarios:[
+      '1. Latency at 9.35 seconds for Sales_Employee_Agent1 based on the multi-line chart while HR agent is at 2.1 seconds: The Sales agent has a specific performance bottleneck. Check whether the Sales agent calls external APIs or complex Apex. If Agent Platform Tracing is enabled, the trace will show exactly which step is slowest.',
+      '2. Latency is 9.35 seconds and Error Rate is 8.71%: Actions are both slow and failing. This is a severe integration problem. The APIs the agent depends on are responding slowly and then timing out. Investigate the downstream API health before looking at the agent configuration.',
+      '3. Latency improves from 9.35 to 3.2 seconds after switching a slow Apex callout to an asynchronous Flow: The bottleneck was a synchronous Apex call that the agent was waiting on. Restructuring the action to run asynchronously removed the wait from the response path.'
+    ],
+    action:'Use Agent Platform Tracing to identify the exact step causing the latency. In most cases, high latency in employee agents is caused by a slow external API call or a long-running Apex method in the action chain, not the AI reasoning layer itself.'
+  }
+};
+
+function openModal(key){
+  const m = MODALS[key];
+  if(!m) return;
+  document.getElementById('modal-tab-label').textContent = m.tab + ' Tab';
+  document.getElementById('modal-title').textContent = m.title;
+  let html = '';
+  m.rows.forEach(([label, value])=>{
+    html += `<div class="modal-row"><div class="modal-row-label">${label}</div><div class="modal-row-value">${value}</div></div>`;
+  });
+  if(m.scenarios && m.scenarios.length){
+    html += `<div class="modal-uc"><div class="modal-uc-label">Real-World Scenarios</div>`;
+    m.scenarios.forEach(s=>{ html += `<p style="margin:0 0 8px 0;">${s}</p>`; });
+    html += `</div>`;
+  } else if(m.uc){
+    html += `<div class="modal-uc"><div class="modal-uc-label">Real-World Use Case</div><p>${m.uc}</p></div>`;
+  }
+  if(m.action){
+    html += `<div class="modal-action"><strong>Practical Action:</strong> ${m.action}</div>`;
+  }
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+}
+function closeModalOnOverlay(e){
+  if(e.target.id==='modal') closeModal();
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ── Sidebar nav ──
+function showPage(page){
+  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item,.nav-sub-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const navEl = document.getElementById('nav-'+page);
+  if(navEl) navEl.classList.add('active');
+  // expand optimization sub-menu when its children are active
+  if(page==='insights'||page==='sessions'){
+    document.getElementById('nav-optimization').classList.add('expanded');
+    document.getElementById('opt-sub').classList.add('open');
+  }
+  if(page==='insights'||page==='sessions') initOptCharts();
+}
+function toggleOptNav(){
+  const nav = document.getElementById('nav-optimization');
+  const sub = document.getElementById('opt-sub');
+  nav.classList.toggle('expanded');
+  sub.classList.toggle('open');
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ── Sessions & Intents tab ──
+function switchSiTab(tab, btn){
+  document.querySelectorAll('.si-tab-nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('si-processed').style.display = tab==='processed'?'block':'none';
+  document.getElementById('si-unprocessed').style.display = tab==='unprocessed'?'block':'none';
+}
+
+// ── Performance Insights tab ──
+let perfSessionsChart, perfQualityChart, perfChartsInited=false;
+const PERF_LABELS = ['Pronto\nNOT_SET','Pronto\nVerify_Customers','Pronto\noff_topic','Pronto\nStorefront','Pronto\nOrder_Issues','Pronto\nSupport','NOT_SET\nNOT_SET','NOT_SET\nVerify','NOT_SET\nGeneralFAQ','NOT_SET\noff_topic','NOT_SET\nStorefront','HelloWorld\ngreeting','HelloWorld\nNOT_SET','HelloWorld\nEscalation','RAG\nNOT_SET','RAG\nGeneralFAQ'];
+const PERF_SESSIONS = [13,3,2,2,2,1,11,3,3,2,2,5,5,4,3,3];
+const PERF_QUALITY  = [1.8,1,1,1,3,1,1,1,1,1,5,4.8,4.8,4.75,1,null];
+const PERF_COLORS_S = PERF_SESSIONS.map(()=>'#4da6ff');
+const PERF_COLORS_Q = [
+  '#c0392b','#c0392b','#c0392b','#c0392b','#f39c12','#c0392b',
+  '#c0392b','#c0392b','#c0392b','#c0392b','#c0392b',
+  '#2ecc71','#2ecc71','#2ecc71','#c0392b',null
+].map(c=>c||'transparent');
+
+function initPerfCharts(){
+  if(perfChartsInited) return;
+  perfChartsInited = true;
+  const labels = PERF_LABELS.map(function(l){ return l.split('\n'); });
+  const QLABELS = ['Very Low','Very Low','Very Low','Very Low','Low','Very Low','Very Low','Very Low','Very Low','Very Low','Very Low','High','High','High','Very Low',''];
+  perfSessionsChart = new Chart(document.getElementById('perfSessionsChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: PERF_SESSIONS, backgroundColor: '#4da6ff', borderRadius: 3 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 10 }, color: '#888' } },
+        y: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#444' } }
+      }
+    }
+  });
+  perfQualityChart = new Chart(document.getElementById('perfQualityChart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: PERF_QUALITY, backgroundColor: PERF_COLORS_Q, borderRadius: 3 }] },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return ctx.parsed.x ? ctx.parsed.x + ' (' + (QLABELS[ctx.dataIndex] || '') + ')' : ''; } } }
+      },
+      scales: {
+        x: { grid: { color: '#f0f0f0' }, min: 0, max: 4.8, ticks: { font: { size: 10 }, color: '#888' } },
+        y: { grid: { display: false }, ticks: { display: false } }
+      }
+    }
+  });
+}
+function switchPerfView(view, btn){
+  document.querySelectorAll('.perf-view-btns button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Insights donut charts ──
+let topicDonut, intentDonut, optChartsInited=false;
+function initOptCharts(){
+  if(optChartsInited) return;
+  optChartsInited = true;
+  function makeDonut(id, data, colors){
+    const ctx = document.getElementById(id);
+    if(!ctx) return;
+    return new Chart(ctx.getContext('2d'),{
+      type:'doughnut',
+      data:{datasets:[{data, backgroundColor:colors, borderWidth:2, borderColor:'#fff'}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.parsed+'%'}}}}
+    });
+  }
+  topicDonut  = makeDonut('topicDonutChart', [30,25,28,17],['#2ecc71','#3498db','#f39c12','#c0392b']);
+  intentDonut = makeDonut('intentDonutChart',[40,22,20,18],['#2ecc71','#3498db','#f39c12','#c0392b']);
+  // init perf charts too if canvas ready
+  if(document.getElementById('perfSessionsChart')) initPerfCharts();
+}
+
+// ── Init ──
+window.addEventListener('load', initCharts);
+</script>
+</div><!-- /app-shell -->
+</body>
+</html>
