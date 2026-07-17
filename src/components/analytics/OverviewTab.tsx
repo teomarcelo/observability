@@ -1,149 +1,139 @@
-import { useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts'
-import type { AgentType, InnerTab, Metric } from '../../data/types'
-import {
-  saEffectivenessMetrics, saUsageMetrics, saQualityMetrics, saHealthMetrics, saTrustMetrics, saVoiceMetrics,
-  eaEffectivenessMetrics, eaUsageMetrics, eaSatisfactionMetrics,
-  chartDataMap, sessionOutcomeData, usageChartData, qualityChartData, latencyChartData,
-} from '../../data/mockData'
+import type { Nav } from '../../hooks/useNavigation'
+import type { InnerTab } from '../../data/types'
+import type { Selection } from '../../data/mockData'
+import { tabsFor, tabDef, computeMetrics, GRANULARITY_OPTIONS } from '../../data/mockData'
+import { Dropdown } from '../shared/Dropdown'
+import { InfoDot } from '../shared/InfoDot'
+import { MetricChart } from './MetricChart'
+import { TableView } from './TableView'
 
 interface Props {
-  agentType: AgentType
-  innerTab: InnerTab
+  nav: Nav
+  sel: Selection
   onOpenModal: (key: string) => void
 }
 
-function getMetrics(agentType: AgentType, tab: InnerTab): Metric[] {
-  if (agentType === 'service') {
-    switch (tab) {
-      case 'effectiveness': return saEffectivenessMetrics
-      case 'usage': return saUsageMetrics
-      case 'quality': return saQualityMetrics
-      case 'health': return saHealthMetrics
-      case 'trust': return saTrustMetrics
-      case 'voice': return saVoiceMetrics
-      default: return saEffectivenessMetrics
-    }
-  } else {
-    switch (tab) {
-      case 'effectiveness': return eaEffectivenessMetrics
-      case 'usage': return eaUsageMetrics
-      case 'user-satisfaction': return eaSatisfactionMetrics
-      case 'quality': return saQualityMetrics
-      case 'health': return saHealthMetrics
-      case 'trust': return saTrustMetrics
-      default: return eaEffectivenessMetrics
-    }
-  }
+const TAB_MODAL: Record<InnerTab, string> = {
+  effectiveness: 'tab-effectiveness',
+  usage: 'tab-usage',
+  quality: 'tab-quality',
+  health: 'tab-health',
+  trust: 'tab-trust',
+  voice: 'tab-voice',
+  'user-satisfaction': 'tab-user-satisfaction',
 }
 
-function getChartToggles(tab: InnerTab): string[] {
-  switch (tab) {
-    case 'effectiveness': return ['Deflection Rate', 'Escalation Rate', 'Abandonment Rate', 'Engagement Rate', 'Success Rate']
-    case 'usage': return ['Total Sessions']
-    case 'quality': return ['Quality Score']
-    case 'health': return ['Latency']
-    default: return ['Deflection Rate']
-  }
-}
-
-function getChartData(tab: InnerTab, activeToggle: string) {
-  if (tab === 'usage') return usageChartData
-  if (tab === 'quality') return qualityChartData
-  if (tab === 'health') return latencyChartData
-  return chartDataMap[activeToggle] || chartDataMap['Deflection Rate']
-}
-
-function getPanelTitle(tab: InnerTab): string {
-  switch (tab) {
-    case 'effectiveness': return 'Aggregated Effectiveness Metrics'
-    case 'usage': return 'Usage Metrics'
-    case 'quality': return 'Quality Metrics'
-    case 'health': return 'Health & Performance Metrics'
-    case 'trust': return 'Trust & Safety Metrics'
-    case 'voice': return 'Voice Channel Metrics'
-    case 'user-satisfaction': return 'User Satisfaction Metrics'
-    default: return 'Metrics'
-  }
-}
-
-export function OverviewTab({ agentType, innerTab, onOpenModal }: Props) {
-  const metrics = getMetrics(agentType, innerTab)
-  const toggles = getChartToggles(innerTab)
-  const [activeToggle, setActiveToggle] = useState(toggles[0])
-  const chartData = getChartData(innerTab, activeToggle)
+export function OverviewTab({ nav, sel, onOpenModal }: Props) {
+  const { agentType, innerTab, setInnerTab, viewMode, setViewMode, granularity, setGranularity } = nav
+  const tabs = tabsFor(agentType)
+  const current = tabDef(agentType, innerTab)
+  const heading = agentType === 'service' ? 'Agent Performance' : 'Agent Performance Overview'
 
   return (
-    <div className="tab-panel">
-      <div className="panel-title">{getPanelTitle(innerTab)}</div>
-      <div className="panel-body">
-        {/* Metrics Column */}
-        <div className="metrics">
-          {metrics.map(m => (
-            <div key={m.label} className="metric" onClick={() => onOpenModal(m.modalKey)}>
-              <div className="metric-label">{m.label}</div>
-              <div className="metric-value">{m.value}</div>
-              <div className={`metric-delta ${m.deltaType === 'good' ? 'delta-good' : 'delta-bad'}`}>
-                {m.delta}
-              </div>
-              <div className="metric-hint">Click to learn more</div>
+    <div className="overview-tab">
+      <div className="perf-header">
+        <button className="heading-btn section-title" onClick={() => onOpenModal('tab-overview')}>
+          {heading}
+          <InfoDot modalKey="tab-overview" onOpenModal={onOpenModal} label={heading} />
+        </button>
+        <div className="perf-controls">
+          <div className="perf-control-field">
+            <button className="field-label" onClick={() => onOpenModal('granularity')}>Granularity</button>
+            <Dropdown value={granularity} options={GRANULARITY_OPTIONS} onChange={setGranularity} width={110} ariaLabel="Granularity" />
+          </div>
+          <div className="view-toggle-group">
+            <div className="view-toggle">
+              <button className={viewMode === 'cards' ? 'active' : ''} onClick={() => setViewMode('cards')}>
+                {agentType === 'employee' ? 'Metric Cards' : 'Metric Card'}
+              </button>
+              <button className={viewMode === 'table' ? 'active' : ''} onClick={() => setViewMode('table')}>Table View</button>
             </div>
-          ))}
-        </div>
-
-        {/* Chart Column */}
-        <div className="chart-area">
-          {toggles.length > 1 && (
-            <div className="chart-toggles">
-              {toggles.map(t => (
-                <button
-                  key={t}
-                  className={activeToggle === t ? 'active' : ''}
-                  onClick={() => setActiveToggle(t)}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          )}
-          <div className="chart-title">Timeframe</div>
-          <div className="chart-wrap">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-                <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Line type="monotone" dataKey="value" stroke="#0070D2" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+            <InfoDot
+              modalKey={viewMode === 'cards' ? 'view-cards' : 'view-table'}
+              onOpenModal={onOpenModal}
+              label={viewMode === 'cards' ? 'Metric Cards View' : 'Table View'}
+            />
           </div>
         </div>
       </div>
 
-      {/* Session Outcome section (only for effectiveness) */}
-      {innerTab === 'effectiveness' && (
-        <div className="section-divider">
-          <div className="section-header">
-            <h3>Session Outcome Distribution</h3>
-          </div>
-          <div style={{ height: 250 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={sessionOutcomeData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-                <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="resolved" stackId="a" fill="#1a7a40" name="Resolved" />
-                <Bar dataKey="escalated" stackId="a" fill="#e67e22" name="Escalated" />
-                <Bar dataKey="abandoned" stackId="a" fill="#c0392b" name="Abandoned" />
-                <Bar dataKey="pending" stackId="a" fill="#95a5a6" name="Pending" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+      <div className="inner-tabs">
+        {tabs.map(t => (
+          <span className="tab-info-wrap" key={t.id}>
+            <button
+              className={`inner-tab ${innerTab === t.id ? 'active' : ''}`}
+              onClick={() => setInnerTab(t.id)}
+            >
+              {t.label}
+            </button>
+            <InfoDot modalKey={TAB_MODAL[t.id]} onOpenModal={onOpenModal} label={t.label} />
+          </span>
+        ))}
+      </div>
+
+      {current?.disabled ? (
+        <div className="disabled-state">
+          <h3>{current.disabled.title}</h3>
+          <p>{current.disabled.body}</p>
+          <button className="link-btn" onClick={() => onOpenModal(innerTab === 'trust' ? 'trust-disabled' : 'usersat-disabled')}>
+            {current.disabled.cta}
+          </button>
         </div>
+      ) : viewMode === 'table' ? (
+        <TableView sel={sel} onOpenModal={onOpenModal} />
+      ) : (
+        <CardsView nav={nav} sel={sel} onOpenModal={onOpenModal} />
       )}
+    </div>
+  )
+}
+
+function CardsView({ nav, sel, onOpenModal }: Props) {
+  const { agentType, innerTab, subMetric, setSubMetric, granularity } = nav
+  const current = tabDef(agentType, innerTab)
+  const metrics = current?.metrics ?? []
+  const computed = computeMetrics(sel, metrics)
+  const selectedDef = metrics.find(m => m.key === subMetric) ?? metrics[0]
+
+  return (
+    <div className="cards-view">
+      <div className="cards-view-head">
+        <button className="heading-btn aggregated-title" onClick={() => onOpenModal(TAB_MODAL[innerTab])}>
+          {current?.heading}
+          <InfoDot modalKey={TAB_MODAL[innerTab]} onOpenModal={onOpenModal} label={current?.heading} />
+        </button>
+        {metrics.length > 1 && (
+          <div className="submetric-group">
+            <div className="submetric-toggle">
+              {metrics.map(m => (
+                <button
+                  key={m.key}
+                  className={`submetric ${subMetric === m.key ? 'active' : ''}`}
+                  onClick={() => setSubMetric(m.key)}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            {selectedDef && (
+              <InfoDot modalKey={selectedDef.modalKey} onOpenModal={onOpenModal} label={selectedDef.label} />
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="cards-chart-grid">
+        <div className="metric-cards">
+          {computed.map(c => (
+            <button key={c.def.key} className="metric-card" onClick={() => onOpenModal(c.def.modalKey)}>
+              <div className="metric-card-label">{c.def.label}</div>
+              <div className="metric-card-value">{c.value}</div>
+              <div className={`metric-card-delta ${c.deltaType}`}>{c.delta}</div>
+            </button>
+          ))}
+        </div>
+        {selectedDef && <MetricChart sel={sel} metric={selectedDef} granularity={granularity} onOpenModal={onOpenModal} />}
+      </div>
     </div>
   )
 }

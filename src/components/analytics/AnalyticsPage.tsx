@@ -1,192 +1,99 @@
-import { useState } from 'react'
-import type { AgentType, AnalyticsTab, InnerTab, PerfBreakdown } from '../../data/types'
+import type { Nav } from '../../hooks/useNavigation'
+import type { AgentType } from '../../data/types'
+import type { Selection } from '../../data/mockData'
+import {
+  AGENT_FILTER_OPTIONS, TIMEFRAME_OPTIONS, CHANNEL_OPTIONS, MODALITY_OPTIONS,
+} from '../../data/mockData'
+import { Dropdown } from '../shared/Dropdown'
+import { InfoDot } from '../shared/InfoDot'
 import { OverviewTab } from './OverviewTab'
 import { PerformanceInsightsTab } from './PerformanceInsightsTab'
-import { TableView } from './TableView'
-
-type ViewMode = 'cards' | 'table'
 
 interface Props {
-  agentType: AgentType
-  onAgentTypeChange: (t: AgentType) => void
-  analyticsTab: AnalyticsTab
-  onAnalyticsTabChange: (t: AnalyticsTab) => void
-  innerTab: InnerTab
-  onInnerTabChange: (t: InnerTab) => void
-  perfBreakdown: PerfBreakdown
-  onPerfBreakdownChange: (b: PerfBreakdown) => void
+  nav: Nav
   onOpenModal: (key: string) => void
 }
 
-export function AnalyticsPage({
-  agentType, onAgentTypeChange,
-  analyticsTab, onAnalyticsTabChange,
-  innerTab, onInnerTabChange,
-  perfBreakdown, onPerfBreakdownChange,
-  onOpenModal,
-}: Props) {
-  const [viewMode, setViewMode] = useState<ViewMode>('cards')
+const AGENT_TYPE_OPTIONS = ['Service Agent', 'Employee Agent']
 
-  const innerTabs: { key: InnerTab; label: string }[] = agentType === 'service'
-    ? [
-        { key: 'effectiveness', label: 'Effectiveness' },
-        { key: 'usage', label: 'Usage' },
-        { key: 'quality', label: 'Quality' },
-        { key: 'health', label: 'Health' },
-        { key: 'trust', label: 'Trust' },
-        { key: 'voice', label: 'Voice' },
-      ]
-    : [
-        { key: 'effectiveness', label: 'Effectiveness' },
-        { key: 'usage', label: 'Usage' },
-        { key: 'user-satisfaction', label: 'User Satisfaction' },
-        { key: 'quality', label: 'Quality' },
-        { key: 'health', label: 'Health' },
-        { key: 'trust', label: 'Trust' },
-      ]
+export function AnalyticsPage({ nav, onOpenModal }: Props) {
+  const { agentType, setAgentType, analyticsTab, setAnalyticsTab } = nav
+  const isService = agentType === 'service'
+  const title = isService ? 'Service Agent Analytics' : 'Employee Agent Analytics'
+
+  const sel: Selection = {
+    agentType, agent: nav.agent, timeframe: nav.timeframe, channel: nav.channel, modality: nav.modality,
+  }
 
   return (
-    <>
-      {/* Analytics Header */}
-      <div className="analytics-header">
-        <div className="analytics-title">
-          <span>&#x1F4C8;</span>
-          <span>Agent Analytics</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#444' }}>Agent Type</span>
-          <select
-            className="agent-type-select"
-            value={agentType}
-            onChange={e => onAgentTypeChange(e.target.value as AgentType)}
-          >
-            <option value="service">Service Agent</option>
-            <option value="employee">Employee Agent</option>
-          </select>
-        </div>
-        <button className="help-btn">&#x1F4CA; Agent Analytics Help</button>
-      </div>
-
-      {/* Filter Bar */}
-      <div className="filter-bar">
-        <span style={{ fontWeight: 600, fontSize: 13, color: '#555' }}>Filter by:</span>
-        <span>
-          <label>Agent:</label>
-          <select>
-            <option>All</option>
-            <option>VariableManagement</option>
-            <option>RAG Agent</option>
-            <option>HelloWorld Agent</option>
-            <option>Pronto Service Agent</option>
-            <option>NOT_SET</option>
-          </select>
-        </span>
-        <span>
-          <label>Timeframe:</label>
-          <select>
-            <option>Last 30 Days</option>
-            <option>All</option>
-            <option>Custom</option>
-            <option disabled>── Calendar Year ──</option>
-            <option>Current Year</option>
-            <option>Previous Year</option>
-            <option>Next Year</option>
-            <option>Current Year to Date</option>
-            <option>Previous Year to Date</option>
-            <option disabled>── Calendar Quarter ──</option>
-            <option>Current Quarter</option>
-            <option>Previous Quarter</option>
-            <option>Next Quarter</option>
-            <option>Current Quarter to Date</option>
-            <option>Previous Quarter to Date</option>
-            <option disabled>── Calendar Month ──</option>
-            <option>Current Month</option>
-            <option>Previous Month</option>
-            <option>Next Month</option>
-            <option>Current Month to Date</option>
-            <option>Previous Month to Date</option>
-            <option disabled>── Last ──</option>
-            <option>Last 7 Days</option>
-            <option>Last 30 Days</option>
-            <option>Last 60 Days</option>
-            <option>Last 90 Days</option>
-            <option>Last 120 Days</option>
-          </select>
-        </span>
-        <span>
-          <label>Channel:</label>
-          <select>
-            <option>All</option>
-            <option>Builder</option>
-          </select>
-        </span>
-      </div>
-
-      {/* Top bar */}
-      <div className="topbar">
-        <div className="title">Agent Performance Overview</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <select className="granularity-select">
-            <option>Day</option>
-            <option>Week</option>
-            <option>Month</option>
-            <option>Year</option>
-          </select>
-          <div className="btn-group">
-            <button className={viewMode === 'cards' ? 'active' : ''} onClick={() => setViewMode('cards')}>Metric Cards</button>
-            <button className={viewMode === 'table' ? 'active' : ''} onClick={() => setViewMode('table')}>Table View</button>
+    <div className="analytics-page">
+      <div className="page-head">
+        <div className="page-head-left">
+          <div className="page-icon" aria-hidden>&#128202;</div>
+          <div>
+            <div className="page-eyebrow">Agent Analytics</div>
+            <h1 className="page-title">{title}</h1>
+          </div>
+          <div className="agent-type">
+            <button className="field-label" onClick={() => onOpenModal('agent-type')}>Agent Type</button>
+            <Dropdown
+              value={isService ? 'Service Agent' : 'Employee Agent'}
+              options={AGENT_TYPE_OPTIONS}
+              onChange={v => setAgentType((v === 'Service Agent' ? 'service' : 'employee') as AgentType)}
+              width={180}
+              ariaLabel="Agent Type"
+            />
           </div>
         </div>
-      </div>
-
-      {/* Tab nav: Overview | Performance Insights */}
-      <div className="tab-nav">
-        <button
-          className={analyticsTab === 'overview' ? 'active' : ''}
-          onClick={() => onAnalyticsTabChange('overview')}
-        >
-          Overview
-        </button>
-        <button
-          className={analyticsTab === 'performance-insights' ? 'active' : ''}
-          onClick={() => onAnalyticsTabChange('performance-insights')}
-        >
-          Performance Insights
+        <button className="help-btn" onClick={() => onOpenModal('agent-analytics-help')}>
+          &#128218; Agent Analytics Help
         </button>
       </div>
 
-      {/* Inner tab nav (only for Overview) */}
-      {analyticsTab === 'overview' && (
-        <div className="inner-tab-nav">
-          {innerTabs.map(t => (
-            <button
-              key={t.key}
-              className={innerTab === t.key ? 'active' : ''}
-              onClick={() => onInnerTabChange(t.key)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="filter-bar">
+        <span className="filter-by">Filter by:</span>
+        <Field label="Agent" modal="filter-agent" value={nav.agent} options={AGENT_FILTER_OPTIONS} onChange={nav.setAgent} onOpenModal={onOpenModal} />
+        <Field label="Timeframe" modal="filter-timeframe" value={nav.timeframe} options={TIMEFRAME_OPTIONS} onChange={nav.setTimeframe} onOpenModal={onOpenModal} />
+        <Field label="Channel" modal="filter-channel" value={nav.channel} options={CHANNEL_OPTIONS} onChange={nav.setChannel} onOpenModal={onOpenModal} />
+        {isService && (
+          <Field label="Modality" modal="filter-modality" value={nav.modality} options={MODALITY_OPTIONS} onChange={nav.setModality} onOpenModal={onOpenModal} />
+        )}
+      </div>
 
-      {/* Content */}
-      {analyticsTab === 'overview' && viewMode === 'cards' && (
-        <OverviewTab
-          agentType={agentType}
-          innerTab={innerTab}
-          onOpenModal={onOpenModal}
-        />
-      )}
-      {analyticsTab === 'overview' && viewMode === 'table' && (
-        <TableView agentType={agentType} innerTab={innerTab} />
-      )}
-      {analyticsTab === 'performance-insights' && (
-        <PerformanceInsightsTab
-          breakdown={perfBreakdown}
-          onBreakdownChange={onPerfBreakdownChange}
-        />
-      )}
-    </>
+      <div className="analytics-tabs">
+        <span className="tab-info-wrap">
+          <button className={`atab ${analyticsTab === 'overview' ? 'active' : ''}`} onClick={() => setAnalyticsTab('overview')}>Overview</button>
+          <InfoDot modalKey="tab-overview" onOpenModal={onOpenModal} label="Overview" />
+        </span>
+        <span className="tab-info-wrap">
+          <button className={`atab ${analyticsTab === 'performance-insights' ? 'active' : ''}`} onClick={() => setAnalyticsTab('performance-insights')}>Performance Insights</button>
+          <InfoDot modalKey="tab-performance-insights" onOpenModal={onOpenModal} label="Performance Insights" />
+        </span>
+      </div>
+
+      <div className="analytics-body">
+        {analyticsTab === 'overview'
+          ? <OverviewTab nav={nav} sel={sel} onOpenModal={onOpenModal} />
+          : <PerformanceInsightsTab nav={nav} onOpenModal={onOpenModal} />}
+      </div>
+    </div>
+  )
+}
+
+interface FieldProps {
+  label: string
+  modal: string
+  value: string
+  options: string[]
+  onChange: (v: string) => void
+  onOpenModal: (key: string) => void
+}
+
+function Field({ label, modal, value, options, onChange, onOpenModal }: FieldProps) {
+  return (
+    <div className="filter-field">
+      <button className="field-label" onClick={() => onOpenModal(modal)}>{label}</button>
+      <Dropdown value={value} options={options} onChange={onChange} width={150} ariaLabel={label} />
+    </div>
   )
 }

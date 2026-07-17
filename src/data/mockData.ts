@@ -1,208 +1,343 @@
-import type { Metric, TimeSeriesPoint, SessionRow, ScorerRow, AlertItem, RankingItem, BreakdownRow } from './types';
+import type {
+  AgentType, InnerTab, TabDef, MetricDef, ComputedMetric, SeriesPoint,
+  BreakdownRow, SessionRow, ScorerRow, PerfBreakdown, MetricFormat,
+} from './types';
 
-// ── Time series data generator ──
-function generateTimeSeries(baseValue: number, variance: number, days = 30): TimeSeriesPoint[] {
-  const points: TimeSeriesPoint[] = [];
-  for (let i = 0; i < days; i++) {
-    const date = new Date(2025, 4, i + 1);
-    const dayStr = `${date.getMonth() + 1}/${date.getDate()}`;
-    const value = Math.max(0, Math.min(100, baseValue + (Math.random() - 0.5) * variance * 2));
-    points.push({ day: dayStr, value: Math.round(value * 10) / 10 });
+// ────────────────────────────────────────────────────────────────────────
+// Verbatim labels captured from the live org (agt59056985com).
+// NOTE: "ADL Servie Agent" is spelled exactly as it appears in the real org.
+// ────────────────────────────────────────────────────────────────────────
+export const AGENTS = [
+  'HelloWorld Agent',
+  'ADL Servie Agent',
+  'Pronto Service Agent',
+  'Hello Earth',
+  'Merchant Support Agent',
+];
+
+export const AGENT_FILTER_OPTIONS = ['All', ...AGENTS];
+export const TIMEFRAME_OPTIONS = ['Last 7 Days', 'Last 30 Days', 'Last 90 Days'];
+export const CHANNEL_OPTIONS = ['All', 'Chat', 'Voice']; // verbatim
+export const MODALITY_OPTIONS = ['All', 'Text', 'Voice'];
+export const GRANULARITY_OPTIONS = ['Day', 'Week', 'Month'];
+
+export const TIMEFRAME_DAYS: Record<string, number> = {
+  'Last 7 Days': 7,
+  'Last 30 Days': 30,
+  'Last 90 Days': 90,
+};
+
+// ── Seeded deterministic generator (mulberry32 over a string hash) ─────────
+function seeded(seed: string): () => number {
+  let h = 1779033703 ^ seed.length;
+  for (let i = 0; i < seed.length; i++) {
+    h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return () => {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    const t = (h ^= h >>> 16) >>> 0;
+    return t / 4294967296;
+  };
+}
+
+function fmt(value: number, format: MetricFormat): string {
+  switch (format) {
+    case 'pct': return `${value.toFixed(0)}%`;
+    case 'int': return Math.round(value).toLocaleString();
+    case 'score': return value.toFixed(1);
+    case 'seconds': return `${value.toFixed(2)}`;
+    case 'ratio': return value.toFixed(1);
+  }
+}
+
+// ── Metric catalogs (per tab) ──────────────────────────────────────────────
+const effectiveness: MetricDef[] = [
+  { key: 'deflection', label: 'Deflection Rate', format: 'pct', base: 41, variance: 10, goodWhenUp: true, modalKey: 'deflection' },
+  { key: 'escalation', label: 'Escalation Rate', format: 'pct', base: 13, variance: 6, goodWhenUp: false, modalKey: 'escalation' },
+  { key: 'abandon', label: 'Abandon Rate', format: 'pct', base: 24, variance: 8, goodWhenUp: false, modalKey: 'abandon' },
+  { key: 'engagement', label: 'Engagement Rate', format: 'pct', base: 74, variance: 10, goodWhenUp: true, modalKey: 'engagement' },
+  { key: 'success', label: 'Success Rate', format: 'pct', base: 39, variance: 12, goodWhenUp: true, modalKey: 'success' },
+];
+
+const usage: MetricDef[] = [
+  { key: 'unique-sessions', label: 'Unique Sessions', format: 'int', base: 16, variance: 8, goodWhenUp: true, modalKey: 'unique-sessions' },
+  { key: 'unique-interactions', label: 'Unique Interactions', format: 'int', base: 32, variance: 14, goodWhenUp: true, modalKey: 'unique-interactions' },
+  { key: 'unique-users', label: 'Unique Users', format: 'int', base: 9, variance: 5, goodWhenUp: true, modalKey: 'unique-users' },
+  { key: 'avg-interactions', label: 'Average Interactions Per Session', format: 'ratio', base: 2.1, variance: 0.8, goodWhenUp: true, modalKey: 'avg-interactions' },
+];
+
+const quality: MetricDef[] = [
+  { key: 'avg-quality', label: 'Average Quality Score', format: 'score', base: 3.7, variance: 0.9, goodWhenUp: true, modalKey: 'avg-quality' },
+];
+
+const health: MetricDef[] = [
+  { key: 'error-rate', label: 'Error Rate', format: 'pct', base: 3, variance: 3, goodWhenUp: false, modalKey: 'error-rate' },
+  { key: 'session-duration', label: 'Session Duration (seconds)', format: 'seconds', base: 96, variance: 40, goodWhenUp: false, modalKey: 'session-duration' },
+  { key: 'agent-interaction-duration', label: 'Agent Interaction Duration', format: 'seconds', base: 2.09, variance: 1.2, goodWhenUp: false, modalKey: 'agent-interaction-duration' },
+  { key: 'agent-response-rate', label: 'Agent Response Rate', format: 'pct', base: 98, variance: 4, goodWhenUp: true, modalKey: 'agent-response-rate' },
+];
+
+const voice: MetricDef[] = [
+  { key: 'interruption', label: 'Interruption Rate', format: 'pct', base: 6, variance: 5, goodWhenUp: false, modalKey: 'interruption' },
+];
+
+// ── Tab definitions per agent type ─────────────────────────────────────────
+export const SERVICE_TABS: TabDef[] = [
+  { id: 'effectiveness', label: 'Effectiveness', heading: 'Aggregated Effectiveness Metrics', metrics: effectiveness },
+  { id: 'usage', label: 'Usage', heading: 'Aggregated Usage Metrics', metrics: usage },
+  { id: 'quality', label: 'Quality', heading: 'Aggregated Quality Metrics', metrics: quality },
+  { id: 'health', label: 'Health', heading: 'Aggregated Health Metrics', metrics: health },
+  {
+    id: 'trust', label: 'Trust', heading: 'Trust Metrics',
+    disabled: {
+      title: 'Trust Metrics are not enabled',
+      body: 'Trust metrics require Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
+      cta: 'Enable Einstein Feedback',
+    },
+  },
+  { id: 'voice', label: 'Voice', heading: 'Aggregated Voice Metrics', metrics: voice },
+];
+
+export const EMPLOYEE_TABS: TabDef[] = [
+  { id: 'effectiveness', label: 'Effectiveness', heading: 'Aggregated Effectiveness Metrics', metrics: effectiveness },
+  { id: 'usage', label: 'Usage', heading: 'Aggregated Usage Metrics', metrics: usage },
+  {
+    id: 'user-satisfaction', label: 'User Satisfaction', heading: 'User Satisfaction Metrics',
+    disabled: {
+      title: 'Audit & Feedback metrics are not enabled',
+      body: 'User Satisfaction metrics require Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
+      cta: 'Enable Einstein Feedback',
+    },
+  },
+  { id: 'quality', label: 'Quality', heading: 'Aggregated Quality Metrics', metrics: quality },
+  { id: 'health', label: 'Health', heading: 'Aggregated Health Metrics', metrics: health },
+  {
+    id: 'trust', label: 'Trust', heading: 'Trust Metrics',
+    disabled: {
+      title: 'Trust Metrics are not enabled',
+      body: 'Trust metrics require Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
+      cta: 'Enable Einstein Feedback',
+    },
+  },
+];
+
+export function tabsFor(agentType: AgentType): TabDef[] {
+  return agentType === 'service' ? SERVICE_TABS : EMPLOYEE_TABS;
+}
+
+export function tabDef(agentType: AgentType, id: InnerTab): TabDef | undefined {
+  return tabsFor(agentType).find(t => t.id === id);
+}
+
+// The colored dot series shows one series per agent (as in the real chart).
+export const AGENT_COLORS: Record<string, string> = {
+  'ADL Servie Agent': '#5867e8',
+  'Hello Earth': '#b34fd1',
+  'HelloWorld Agent': '#159c7a',
+  'NOT_SET': '#7d55c7',
+  'Pronto Service Agent': '#e5567a',
+  'Merchant Support Agent': '#e07b39',
+};
+
+// ── Dynamic computation ─────────────────────────────────────────────────────
+export interface Selection {
+  agentType: AgentType;
+  agent: string;
+  timeframe: string;
+  channel: string;
+  modality: string;
+}
+
+function seedOf(sel: Selection, extra: string): string {
+  return `${sel.agentType}|${sel.agent}|${sel.timeframe}|${sel.channel}|${sel.modality}|${extra}`;
+}
+
+export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
+  const rnd = seeded(seedOf(sel, def.key));
+  let raw = def.base + (rnd() - 0.5) * def.variance * 2;
+  if (def.format === 'pct') raw = Math.max(0, Math.min(100, raw));
+  else raw = Math.max(0, raw);
+  const deltaMag = (rnd() - 0.45) * def.variance;
+  const up = deltaMag >= 0;
+  const good = def.goodWhenUp ? up : !up;
+  const unit = def.format === 'pct' ? '%' : def.format === 'score' ? '' : '';
+  const tf = sel.timeframe.replace('Last ', 'prior ');
+  const delta = `${up ? '+' : ''}${deltaMag.toFixed(def.format === 'score' || def.format === 'ratio' ? 1 : 1)}${unit} vs. ${tf}`;
+  return { def, value: fmt(raw, def.format), raw, delta, deltaType: good ? 'good' : 'bad' };
+}
+
+export function computeMetrics(sel: Selection, defs: MetricDef[]): ComputedMetric[] {
+  return defs.map(d => computeMetric(sel, d));
+}
+
+// Scatter/line series: one series per agent, over N days of the timeframe.
+export function computeSeries(sel: Selection, def: MetricDef, granularity: string): SeriesPoint[] {
+  const days = TIMEFRAME_DAYS[sel.timeframe] ?? 30;
+  const step = granularity === 'Month' ? 30 : granularity === 'Week' ? 7 : 1;
+  const buckets = Math.max(3, Math.round(days / step));
+  const agents = sel.agent === 'All' ? AGENTS : [sel.agent];
+  const points: SeriesPoint[] = [];
+  const base = new Date(2026, 6, 14);
+  for (let i = 0; i < buckets; i++) {
+    const d = new Date(base);
+    d.setDate(base.getDate() - (buckets - 1 - i) * step);
+    const p: SeriesPoint = { day: `${d.getMonth() + 1}/${d.getDate()}` };
+    for (const a of agents) {
+      const rnd = seeded(seedOf(sel, `${def.key}|${a}|${i}`));
+      let v = def.base + (rnd() - 0.5) * def.variance * 2;
+      v = def.format === 'pct' ? Math.max(0, Math.min(100, v)) : Math.max(0, v);
+      p[a] = Math.round(v * 100) / 100;
+    }
+    points.push(p);
   }
   return points;
 }
 
-// ── Service Agent Metrics ──
-export const saEffectivenessMetrics: Metric[] = [
-  { label: 'Deflection Rate', value: '38%', delta: '+2.1% vs. prior 30 days', deltaType: 'good', modalKey: 'deflection' },
-  { label: 'Escalation Rate', value: '14%', delta: '-1.2% vs. prior 30 days', deltaType: 'good', modalKey: 'escalation' },
-  { label: 'Abandonment Rate', value: '42%', delta: '+4.6% vs. prior 30 days', deltaType: 'bad', modalKey: 'abandonment' },
-  { label: 'Engagement Rate', value: '71%', delta: '+3.2% vs. prior 30 days', deltaType: 'good', modalKey: 'engagement' },
-  { label: 'Success Rate', value: '22%', delta: '-5.1% vs. prior 30 days', deltaType: 'bad', modalKey: 'success' },
-];
-
-export const saUsageMetrics: Metric[] = [
-  { label: 'Total Sessions', value: '4,218', delta: '+12.3% vs. prior 30 days', deltaType: 'good', modalKey: 'total-sessions' },
-  { label: 'Unique Users', value: '1,847', delta: '+8.1% vs. prior 30 days', deltaType: 'good', modalKey: 'unique-users' },
-  { label: 'Avg Session Duration', value: '3m 42s', delta: '-0.5% vs. prior 30 days', deltaType: 'good', modalKey: 'avg-duration' },
-  { label: 'Peak Hour Sessions', value: '312', delta: '+15.4% vs. prior 30 days', deltaType: 'good', modalKey: 'peak-sessions' },
-  { label: 'Returning Users', value: '62%', delta: '+4.2% vs. prior 30 days', deltaType: 'good', modalKey: 'returning-users' },
-];
-
-export const saQualityMetrics: Metric[] = [
-  { label: 'Avg Quality Score', value: '3.6', delta: '+0.2 vs. prior 30 days', deltaType: 'good', modalKey: 'avg-quality' },
-  { label: 'High Quality %', value: '45%', delta: '+3.8% vs. prior 30 days', deltaType: 'good', modalKey: 'high-quality' },
-  { label: 'Low Quality %', value: '18%', delta: '-2.1% vs. prior 30 days', deltaType: 'good', modalKey: 'low-quality' },
-  { label: 'Quality Trend', value: 'Improving', delta: 'Stable over 7 days', deltaType: 'good', modalKey: 'quality-trend' },
-];
-
-export const saHealthMetrics: Metric[] = [
-  { label: 'Avg Latency', value: '1.8s', delta: '-0.3s vs. prior 30 days', deltaType: 'good', modalKey: 'avg-latency' },
-  { label: 'Error Rate', value: '2.1%', delta: '+0.4% vs. prior 30 days', deltaType: 'bad', modalKey: 'error-rate' },
-  { label: 'Uptime', value: '99.7%', delta: '+0.1% vs. prior 30 days', deltaType: 'good', modalKey: 'uptime' },
-  { label: 'Timeout Rate', value: '0.8%', delta: '-0.2% vs. prior 30 days', deltaType: 'good', modalKey: 'timeout-rate' },
-];
-
-export const saTrustMetrics: Metric[] = [
-  { label: 'Guardrail Triggers', value: '47', delta: '-12 vs. prior 30 days', deltaType: 'good', modalKey: 'guardrail-triggers' },
-  { label: 'Hallucination Rate', value: '3.2%', delta: '-0.8% vs. prior 30 days', deltaType: 'good', modalKey: 'hallucination-rate' },
-  { label: 'PII Detections', value: '8', delta: '-3 vs. prior 30 days', deltaType: 'good', modalKey: 'pii-detections' },
-  { label: 'Policy Violations', value: '2', delta: '-1 vs. prior 30 days', deltaType: 'good', modalKey: 'policy-violations' },
-];
-
-export const saVoiceMetrics: Metric[] = [
-  { label: 'Voice Sessions', value: '892', delta: '+18.2% vs. prior 30 days', deltaType: 'good', modalKey: 'voice-sessions' },
-  { label: 'Avg Call Duration', value: '4m 15s', delta: '-12s vs. prior 30 days', deltaType: 'good', modalKey: 'call-duration' },
-  { label: 'Voice Deflection', value: '28%', delta: '+3.4% vs. prior 30 days', deltaType: 'good', modalKey: 'voice-deflection' },
-  { label: 'Transfer Rate', value: '22%', delta: '-2.1% vs. prior 30 days', deltaType: 'good', modalKey: 'transfer-rate' },
-];
-
-// ── Employee Agent Metrics ──
-export const eaEffectivenessMetrics: Metric[] = [
-  { label: 'Deflection Rate', value: '52%', delta: '+4.3% vs. prior 30 days', deltaType: 'good', modalKey: 'deflection' },
-  { label: 'Escalation Rate', value: '8%', delta: '-2.1% vs. prior 30 days', deltaType: 'good', modalKey: 'escalation' },
-  { label: 'Abandonment Rate', value: '28%', delta: '-1.5% vs. prior 30 days', deltaType: 'good', modalKey: 'abandonment' },
-  { label: 'Engagement Rate', value: '84%', delta: '+5.7% vs. prior 30 days', deltaType: 'good', modalKey: 'engagement' },
-  { label: 'Success Rate', value: '46%', delta: '+3.2% vs. prior 30 days', deltaType: 'good', modalKey: 'success' },
-];
-
-export const eaUsageMetrics: Metric[] = [
-  { label: 'Total Sessions', value: '2,847', delta: '+9.1% vs. prior 30 days', deltaType: 'good', modalKey: 'total-sessions' },
-  { label: 'Unique Employees', value: '623', delta: '+14.2% vs. prior 30 days', deltaType: 'good', modalKey: 'unique-users' },
-  { label: 'Avg Session Duration', value: '2m 18s', delta: '-8s vs. prior 30 days', deltaType: 'good', modalKey: 'avg-duration' },
-  { label: 'Internal Queries', value: '1,920', delta: '+11.3% vs. prior 30 days', deltaType: 'good', modalKey: 'peak-sessions' },
-  { label: 'Repeat Usage', value: '78%', delta: '+6.1% vs. prior 30 days', deltaType: 'good', modalKey: 'returning-users' },
-];
-
-export const eaSatisfactionMetrics: Metric[] = [
-  { label: 'CSAT Score', value: '4.2', delta: '+0.3 vs. prior 30 days', deltaType: 'good', modalKey: 'csat-score' },
-  { label: 'Thumbs Up %', value: '76%', delta: '+4.8% vs. prior 30 days', deltaType: 'good', modalKey: 'thumbs-up' },
-  { label: 'Thumbs Down %', value: '12%', delta: '-2.3% vs. prior 30 days', deltaType: 'good', modalKey: 'thumbs-down' },
-  { label: 'No Feedback', value: '12%', delta: '-2.5% vs. prior 30 days', deltaType: 'good', modalKey: 'no-feedback' },
-];
-
-// ── Chart Data ──
-export const deflectionChartData = generateTimeSeries(38, 8);
-export const escalationChartData = generateTimeSeries(14, 4);
-export const abandonmentChartData = generateTimeSeries(42, 10);
-export const engagementChartData = generateTimeSeries(71, 8);
-export const successChartData = generateTimeSeries(22, 6);
-export const usageChartData = generateTimeSeries(140, 30);
-export const qualityChartData = generateTimeSeries(3.6, 0.8);
-export const latencyChartData = generateTimeSeries(1.8, 0.5);
-
-export const chartDataMap: Record<string, TimeSeriesPoint[]> = {
-  'Deflection Rate': deflectionChartData,
-  'Escalation Rate': escalationChartData,
-  'Abandonment Rate': abandonmentChartData,
-  'Engagement Rate': engagementChartData,
-  'Success Rate': successChartData,
+// ── Performance Insights: breakdown structure (subagents verbatim from org) ──
+const SUBAGENTS_BY_AGENT: Record<string, string[]> = {
+  'Pronto Service Agent': ['NOT_SET', 'Storefront_Search', 'Support_Policies_and_Terms'],
+  'NOT_SET': ['NOT_SET', 'Storefront_Search', 'greeting', 'Support_Policies_and_Terms', 'GeneralFAQ'],
+  'HelloWorld Agent': ['NOT_SET', 'greeting'],
+  'Hello Earth': ['NOT_SET'],
+  'ADL Servie Agent': ['NOT_SET', 'GeneralFAQ'],
 };
 
-// ── Session Outcome Data ──
-export const sessionOutcomeData = [
-  { day: '5/1', resolved: 45, escalated: 12, abandoned: 28, pending: 15 },
-  { day: '5/2', resolved: 52, escalated: 10, abandoned: 25, pending: 13 },
-  { day: '5/3', resolved: 48, escalated: 14, abandoned: 30, pending: 8 },
-  { day: '5/4', resolved: 55, escalated: 8, abandoned: 22, pending: 15 },
-  { day: '5/5', resolved: 42, escalated: 16, abandoned: 32, pending: 10 },
-  { day: '5/6', resolved: 60, escalated: 9, abandoned: 20, pending: 11 },
-  { day: '5/7', resolved: 58, escalated: 11, abandoned: 24, pending: 7 },
-  { day: '5/8', resolved: 50, escalated: 13, abandoned: 27, pending: 10 },
-  { day: '5/9', resolved: 47, escalated: 15, abandoned: 29, pending: 9 },
-  { day: '5/10', resolved: 63, escalated: 7, abandoned: 18, pending: 12 },
+const INTENTS_BY_AGENT: Record<string, string[]> = {
+  'Pronto Service Agent': ['Check Order Status', 'Return Request', 'Billing Inquiry'],
+  'NOT_SET': ['Check Order Status', 'General FAQ', 'Store Hours', 'Cancel Order'],
+  'HelloWorld Agent': ['Reset Password', 'General FAQ'],
+  'Hello Earth': ['General FAQ'],
+  'ADL Servie Agent': ['General FAQ', 'Update Address'],
+};
+
+const ACTIONS_BY_AGENT: Record<string, string[]> = {
+  'Pronto Service Agent': ['Get_Order_Details', 'Search_Knowledge', 'Create_Case'],
+  'NOT_SET': ['Search_Knowledge', 'Get_Order_Details', 'Escalate_To_Agent'],
+  'HelloWorld Agent': ['Search_Knowledge', 'Reset_Password'],
+  'Hello Earth': ['Search_Knowledge'],
+  'ADL Servie Agent': ['Search_Knowledge', 'Update_Contact'],
+};
+
+export const PERF_METRIC_OPTIONS = [
+  'Average Quality Score',
+  'Unique Sessions',
+  'Unique Interactions',
+  'Escalation Rate',
+  'Deflection Rate',
 ];
 
-// ── Insights KPIs ──
-export const insightsKpis = [
-  { label: 'Total Sessions', value: '4,218', badge: null, modalKey: 'total-sessions-insight' },
-  { label: 'Average Agent Latency', value: '1.8s', badge: { text: 'Medium', level: 'medium' as const }, modalKey: 'avg-latency-insight' },
-  { label: 'Average Quality Score', value: '3.6', badge: { text: 'High', level: 'high' as const }, modalKey: 'avg-quality-insight' },
-];
+export const PERF_BREAKDOWN_LABELS: Record<PerfBreakdown, { toggle: string; explore: string; col: string; select: string }> = {
+  subagents: { toggle: 'Subagents', explore: 'Explore Subagents by Metric', col: 'Subagent', select: 'Select Subagent' },
+  intents: { toggle: 'Intents', explore: 'Explore Intents by Metric', col: 'Intent', select: 'Select Intent' },
+  actions: { toggle: 'Actions', explore: 'Explore Actions by Metric', col: 'Action', select: 'Select Action' },
+};
 
-// ── Rankings ──
-export const topSubagents: RankingItem[] = [
-  { name: 'Order Lookup', sessions: 1240, score: 4.5, level: 'high' },
-  { name: 'FAQ Handler', sessions: 980, score: 4.2, level: 'high' },
-  { name: 'Billing Support', sessions: 720, score: 3.9, level: 'medium' },
-];
+function mapFor(bd: PerfBreakdown): Record<string, string[]> {
+  return bd === 'subagents' ? SUBAGENTS_BY_AGENT : bd === 'intents' ? INTENTS_BY_AGENT : ACTIONS_BY_AGENT;
+}
 
-export const bottomSubagents: RankingItem[] = [
-  { name: 'Returns Processing', sessions: 340, score: 2.1, level: 'low' },
-  { name: 'Account Recovery', sessions: 180, score: 1.8, level: 'very-low' },
-  { name: 'Complaint Handler', sessions: 290, score: 2.4, level: 'low' },
-];
+export function breakdownItems(bd: PerfBreakdown): string[] {
+  const set = new Set<string>();
+  Object.values(mapFor(bd)).forEach(arr => arr.forEach(x => set.add(x)));
+  return ['All', ...Array.from(set)];
+}
 
-export const topIntents: RankingItem[] = [
-  { name: 'Check Order Status', sessions: 890, score: 4.6, level: 'high' },
-  { name: 'Reset Password', sessions: 640, score: 4.3, level: 'high' },
-  { name: 'Update Address', sessions: 520, score: 3.8, level: 'medium' },
-];
+export function computeBreakdown(bd: PerfBreakdown, selectItem: string, metric: string): BreakdownRow[] {
+  const map = mapFor(bd);
+  const rows: BreakdownRow[] = [];
+  const scoreMode = metric === 'Average Quality Score';
+  for (const agentName of Object.keys(map)) {
+    for (const label of map[agentName]) {
+      if (selectItem !== 'All' && label !== selectItem) continue;
+      const rnd = seeded(`${bd}|${agentName}|${label}|${metric}`);
+      const value = scoreMode
+        ? Math.round((1 + rnd() * 4) * 10) / 10
+        : metric.includes('Rate')
+          ? Math.round(rnd() * 100)
+          : Math.round(1 + rnd() * 9);
+      rows.push({ agentName, label, value });
+    }
+  }
+  return rows;
+}
 
-export const bottomIntents: RankingItem[] = [
-  { name: 'Cancel Subscription', sessions: 210, score: 2.0, level: 'very-low' },
-  { name: 'Dispute Charge', sessions: 180, score: 2.3, level: 'low' },
-  { name: 'File Complaint', sessions: 150, score: 1.9, level: 'very-low' },
-];
-
-// ── Quality by Subagent (donut) ──
-export const qualityBySubagent = [
-  { name: 'High (4-5)', value: 45, color: '#1a7a40' },
-  { name: 'Medium (3-4)', value: 30, color: '#e67e22' },
-  { name: 'Low (2-3)', value: 18, color: '#d35400' },
-  { name: 'Very Low (1-2)', value: 7, color: '#c0392b' },
-];
-
-// ── Performance Insights Breakdown ──
-export const breakdownData: BreakdownRow[] = [
-  { agentName: 'Pronto Service Agent', subagentLabel: 'Order Lookup', sessions: 1240, avgScore: 4.5, scoreLevel: 'high' },
-  { agentName: 'Pronto Service Agent', subagentLabel: 'FAQ Handler', sessions: 980, avgScore: 4.2, scoreLevel: 'high' },
-  { agentName: 'Pronto Service Agent', subagentLabel: 'Billing Support', sessions: 720, avgScore: 3.9, scoreLevel: 'medium' },
-  { agentName: 'HelloWorld Agent', subagentLabel: 'General Chat', sessions: 560, avgScore: 3.4, scoreLevel: 'medium' },
-  { agentName: 'HelloWorld Agent', subagentLabel: 'Knowledge Base', sessions: 430, avgScore: 2.8, scoreLevel: 'low' },
-  { agentName: 'Merchant Support Agent', subagentLabel: 'Store Finder', sessions: 340, avgScore: 2.1, scoreLevel: 'low' },
-];
-
-// ── Sessions Data ──
-export const processedSessions: SessionRow[] = [
-  { id: 'SES-001-A7F2', agent: 'Pronto Service Agent', intent: 'Check Order Status', outcome: 'Resolved', outcomeColor: '#1a7a40', quality: '4.5 (High)', qualityLevel: 'high', reasoning: 'Successfully resolved without escalation. User confirmed satisfaction.', timestamp: '2025-05-10 14:23', tags: ['order-status', 'self-service'] },
-  { id: 'SES-002-B3K8', agent: 'Pronto Service Agent', intent: 'Return Request', outcome: 'Escalated', outcomeColor: '#e67e22', quality: '2.8 (Low)', qualityLevel: 'low', reasoning: 'Unable to process return due to policy exception. Transferred to human agent.', timestamp: '2025-05-10 14:18', tags: ['returns', 'escalation'] },
-  { id: 'SES-003-C9D1', agent: 'HelloWorld Agent', intent: 'Reset Password', outcome: 'Resolved', outcomeColor: '#1a7a40', quality: '4.8 (High)', qualityLevel: 'high', reasoning: 'Password reset completed in single turn. Verification successful.', timestamp: '2025-05-10 14:12', tags: ['auth', 'self-service'] },
-  { id: 'SES-004-D2E5', agent: 'Merchant Support Agent', intent: 'Update Store Hours', outcome: 'Abandoned', outcomeColor: '#c0392b', quality: '1.5 (Very Low)', qualityLevel: 'very-low', reasoning: 'User left after 3 failed attempts. Agent could not locate store record.', timestamp: '2025-05-10 14:05', tags: ['merchant', 'data-issue'] },
-  { id: 'SES-005-E8F3', agent: 'Pronto Service Agent', intent: 'Billing Inquiry', outcome: 'Resolved', outcomeColor: '#1a7a40', quality: '3.9 (Medium)', qualityLevel: 'medium', reasoning: 'Resolved with accurate billing breakdown. Minor delay in retrieval.', timestamp: '2025-05-10 13:58', tags: ['billing', 'self-service'] },
-  { id: 'SES-006-F4G7', agent: 'HelloWorld Agent', intent: 'General FAQ', outcome: 'Resolved', outcomeColor: '#1a7a40', quality: '4.2 (High)', qualityLevel: 'high', reasoning: 'Answered common question from knowledge base. Fast response time.', timestamp: '2025-05-10 13:52', tags: ['faq', 'knowledge-base'] },
-  { id: 'SES-007-G1H9', agent: 'Pronto Service Agent', intent: 'Cancel Order', outcome: 'Escalated', outcomeColor: '#e67e22', quality: '3.1 (Medium)', qualityLevel: 'medium', reasoning: 'Order in shipping state, requires manual intervention for cancellation.', timestamp: '2025-05-10 13:45', tags: ['orders', 'escalation'] },
-  { id: 'SES-008-H5J2', agent: 'Merchant Support Agent', intent: 'Dispute Charge', outcome: 'Abandoned', outcomeColor: '#c0392b', quality: '2.0 (Low)', qualityLevel: 'low', reasoning: 'Complex dispute requiring documentation. User did not complete upload.', timestamp: '2025-05-10 13:38', tags: ['disputes', 'incomplete'] },
-];
+// ── Sessions & Intents ──────────────────────────────────────────────────────
+export const SESSION_COLUMNS = ['Session ID', 'Timestamp', 'Session Duration', 'Session Outcome', 'Initial User Messages'];
 
 export const unprocessedSessions: SessionRow[] = [
-  { id: 'SES-101-X2Y4', agent: 'Pronto Service Agent', intent: 'Pending Classification', outcome: 'Processing', outcomeColor: '#666', quality: '--', qualityLevel: 'medium', reasoning: 'Awaiting scorer evaluation', timestamp: '2025-05-10 15:01', tags: ['pending'] },
-  { id: 'SES-102-Z7W1', agent: 'HelloWorld Agent', intent: 'Pending Classification', outcome: 'Processing', outcomeColor: '#666', quality: '--', qualityLevel: 'medium', reasoning: 'In queue for quality scoring', timestamp: '2025-05-10 15:00', tags: ['pending'] },
-  { id: 'SES-103-A9B3', agent: 'Merchant Support Agent', intent: 'Pending Classification', outcome: 'Processing', outcomeColor: '#666', quality: '--', qualityLevel: 'medium', reasoning: 'Awaiting intent classification', timestamp: '2025-05-10 14:59', tags: ['pending'] },
+  { id: '0Ub5f00000ABc12', timestamp: '2026-07-14 15:41', duration: '00:01:52', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Where is my order #10482?' },
+  { id: '0Ub5f00000ABc34', timestamp: '2026-07-14 15:38', duration: '00:00:47', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need to reset my password' },
+  { id: '0Ub5f00000ABc56', timestamp: '2026-07-14 15:33', duration: '00:03:12', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Can I return an item after 30 days?' },
+  { id: '0Ub5f00000ABc78', timestamp: '2026-07-14 15:29', duration: '00:00:58', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'What are your store hours today?' },
+  { id: '0Ub5f00000ABc90', timestamp: '2026-07-14 15:22', duration: '00:02:05', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'My payment was charged twice' },
 ];
 
-// ── Scorers Data ──
+// Mock "processed" rows to demonstrate the populated table (org currently shows
+// the "Processing latest sessions" state). Data is mock; structure is verbatim.
+export const processedSessions: SessionRow[] = [
+  { id: '0Ub5f00000AAa01', timestamp: '2026-07-13 11:02', duration: '00:02:14', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'Where is my order #10482?' },
+  { id: '0Ub5f00000AAa02', timestamp: '2026-07-13 10:51', duration: '00:04:39', outcome: 'Escalated', outcomeLevel: 'escalated', initialMessage: 'I want to dispute a charge' },
+  { id: '0Ub5f00000AAa03', timestamp: '2026-07-13 10:44', duration: '00:00:39', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'Reset my password please' },
+  { id: '0Ub5f00000AAa04', timestamp: '2026-07-13 10:31', duration: '00:05:20', outcome: 'Abandoned', outcomeLevel: 'abandoned', initialMessage: 'Update my store hours' },
+  { id: '0Ub5f00000AAa05', timestamp: '2026-07-13 10:22', duration: '00:01:47', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'What is your return policy?' },
+  { id: '0Ub5f00000AAa06', timestamp: '2026-07-13 10:08', duration: '00:03:02', outcome: 'Escalated', outcomeLevel: 'escalated', initialMessage: 'Cancel my order that already shipped' },
+];
+
+// ── Scorers (10 rows, verbatim structure captured from org) ──────────────────
+const SCORER_DESCRIPTIONS: Record<string, string> = {
+  'Abandonment Score': 'Indicates whether the customer abandoned the session before it was resolved.',
+  'Deflection Score': 'Indicates the degree to which the agent deflected the issue without escalating to a human.',
+};
+
+function scorer(name: string, agent: string): ScorerRow {
+  return {
+    name, version: '1.0', description: SCORER_DESCRIPTIONS[name], agent,
+    status: 'Active', sampledData: '100%', type: 'Standard',
+    modalKey: name === 'Abandonment Score' ? 'scorer-abandonment' : 'scorer-deflection',
+  };
+}
+
 export const scorersData: ScorerRow[] = [
-  { name: 'Abandonment Score', version: '1.0', description: 'Indicates whether the customer abandoned the session', agent: 'RAG Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Abandonment Score', version: '1.0', description: 'Indicates whether the customer abandoned the session', agent: 'Pronto Service Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Abandonment Score', version: '1.0', description: 'Indicates whether the customer abandoned the session', agent: 'HelloWorld Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Abandonment Score', version: '1.0', description: 'Indicates whether the customer abandoned the session', agent: 'Merchant Support Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Abandonment Score', version: '1.0', description: 'Indicates whether the customer abandoned the session', agent: 'Old Agentforce Service Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Deflection Score', version: '1.0', description: 'Indicates the degree to which the agent deflected the issue', agent: 'RAG Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Deflection Score', version: '1.0', description: 'Indicates the degree to which the agent deflected the issue', agent: 'HelloWorld Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Deflection Score', version: '1.0', description: 'Indicates the degree to which the agent deflected the issue', agent: 'Merchant Support Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Deflection Score', version: '1.0', description: 'Indicates the degree to which the agent deflected the issue', agent: 'Pronto Service Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
-  { name: 'Deflection Score', version: '1.0', description: 'Indicates the degree to which the agent deflected the issue', agent: 'Old Agentforce Service Agent', status: 'Active', sampledData: '100%', type: 'Standard' },
+  scorer('Abandonment Score', 'Hello Earth'),
+  scorer('Abandonment Score', 'Pronto Service Agent'),
+  scorer('Abandonment Score', 'HelloWorld Agent'),
+  scorer('Abandonment Score', 'ADL Servie Agent'),
+  scorer('Abandonment Score', 'Merchant Support Agent'),
+  scorer('Deflection Score', 'HelloWorld Agent'),
+  scorer('Deflection Score', 'Merchant Support Agent'),
+  scorer('Deflection Score', 'Hello Earth'),
+  scorer('Deflection Score', 'Pronto Service Agent'),
+  scorer('Deflection Score', 'ADL Servie Agent'),
 ];
 
-// ── Alerts Data ──
-export const alertsData: AlertItem[] = [
-  { id: 'ALT-001', title: 'Escalation Rate Spike — Service Agent', description: 'Escalation rate exceeded 25% threshold for Pronto Service Agent over the past 2 hours. Current rate: 31%.', severity: 'critical', status: 'active', agent: 'Pronto Service Agent', metric: 'Escalation Rate', timestamp: '2025-05-10 14:30', threshold: '25%', currentValue: '31%' },
-  { id: 'ALT-002', title: 'Quality Score Drop — Merchant Support', description: 'Average quality score dropped below 2.5 for Merchant Support Agent. Trending down for 3 consecutive days.', severity: 'warning', status: 'active', agent: 'Merchant Support Agent', metric: 'Avg Quality Score', timestamp: '2025-05-10 12:15', threshold: '2.5', currentValue: '2.1' },
-  { id: 'ALT-003', title: 'High Abandonment — Returns Flow', description: 'Returns Processing subagent showing 58% abandonment rate, significantly above the 40% threshold.', severity: 'critical', status: 'monitoring', agent: 'Pronto Service Agent', metric: 'Abandonment Rate', timestamp: '2025-05-10 10:45', threshold: '40%', currentValue: '58%' },
-  { id: 'ALT-004', title: 'Latency Warning — HelloWorld Agent', description: 'Response latency increased to 3.2s average. Users may experience degraded performance.', severity: 'warning', status: 'monitoring', agent: 'HelloWorld Agent', metric: 'Avg Latency', timestamp: '2025-05-10 09:20', threshold: '2.5s', currentValue: '3.2s' },
-  { id: 'ALT-005', title: 'Trust Guardrail Triggered', description: 'Multiple PII detection events in the past hour. 5 sessions flagged for potential data exposure.', severity: 'critical', status: 'active', agent: 'Pronto Service Agent', metric: 'PII Detections', timestamp: '2025-05-10 14:10', threshold: '3/hour', currentValue: '5/hour' },
-  { id: 'ALT-006', title: 'Session Volume Anomaly', description: 'Session volume dropped 40% below expected baseline for this time of day. Possible integration issue.', severity: 'info', status: 'monitoring', agent: 'All Agents', metric: 'Total Sessions', timestamp: '2025-05-10 08:00', threshold: '100/hr', currentValue: '60/hr' },
-  { id: 'ALT-007', title: 'Deflection Rate Recovery', description: 'Deflection rate has returned to normal levels after FAQ knowledge base update deployed yesterday.', severity: 'info', status: 'resolved', agent: 'HelloWorld Agent', metric: 'Deflection Rate', timestamp: '2025-05-09 16:00', threshold: '30%', currentValue: '42%' },
-  { id: 'ALT-008', title: 'Error Rate Normalized', description: 'Error rate spike from earlier today has been resolved. Root cause: temporary API timeout from payment provider.', severity: 'warning', status: 'resolved', agent: 'Pronto Service Agent', metric: 'Error Rate', timestamp: '2025-05-09 11:30', threshold: '5%', currentValue: '1.8%' },
+export const SCORER_COLUMNS = ['Name', 'Version', 'Description', 'Agent', 'Status', 'Sampled Data', 'Type'];
+
+// ── Table View: full ordered metric list (verbatim from org Table View) ──────
+export const TABLE_VIEW_METRICS: { label: string; key: string; format: MetricFormat; base: number; variance: number }[] = [
+  { label: 'Deflection Rate', key: 'deflection', format: 'pct', base: 41, variance: 10 },
+  { label: 'Escalation Rate', key: 'escalation', format: 'pct', base: 13, variance: 6 },
+  { label: 'Engagement Rate', key: 'engagement', format: 'pct', base: 74, variance: 10 },
+  { label: 'Success Rate', key: 'success', format: 'pct', base: 39, variance: 12 },
+  { label: 'Abandon Rate', key: 'abandon', format: 'pct', base: 24, variance: 8 },
+  { label: 'Unique Sessions', key: 'unique-sessions', format: 'int', base: 16, variance: 8 },
+  { label: 'Unique Interactions', key: 'unique-interactions', format: 'int', base: 32, variance: 14 },
+  { label: 'Unique Users', key: 'unique-users', format: 'int', base: 9, variance: 5 },
+  { label: 'Average Interactions Per Session', key: 'avg-interactions', format: 'ratio', base: 2.1, variance: 0.8 },
+  { label: 'Average Quality Score', key: 'avg-quality', format: 'score', base: 3.7, variance: 0.9 },
+  { label: 'Interaction Error Rate', key: 'error-rate', format: 'pct', base: 3, variance: 3 },
+  { label: 'Average Session Duration', key: 'session-duration', format: 'seconds', base: 96, variance: 40 },
+  { label: 'Average Agent Interaction Duration', key: 'agent-interaction-duration', format: 'seconds', base: 2.09, variance: 1.2 },
+  { label: 'Agent Response Rate', key: 'agent-response-rate', format: 'pct', base: 98, variance: 4 },
+  { label: 'Interruption Rate', key: 'interruption', format: 'pct', base: 6, variance: 5 },
 ];
+
+export function computeTableRows(sel: Selection): { label: string; value: string; key: string }[] {
+  return TABLE_VIEW_METRICS.map(m => {
+    const rnd = seeded(seedOf(sel, m.key));
+    let raw = m.base + (rnd() - 0.5) * m.variance * 2;
+    raw = m.format === 'pct' ? Math.max(0, Math.min(100, raw)) : Math.max(0, raw);
+    return { label: m.label, value: fmt(raw, m.format), key: m.key };
+  });
+}

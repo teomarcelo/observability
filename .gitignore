@@ -31,3 +31,9 @@ screenshots/
 screenshots2/
 screenshots3/
 screenshots4/
+screenshots5/
+
+# Playwright persistent auth session + captured inventory + local creds
+.auth/
+capture-inventory.json
+.sfauth.json
