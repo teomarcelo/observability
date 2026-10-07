@@ -54,46 +54,59 @@ function fmt(value: number, format: MetricFormat): string {
 }
 
 // ── Metric catalogs (per tab) ──────────────────────────────────────────────
-// Bases tuned toward Trailsignup demo-org shape (still seeded/mock, not live org numbers).
+// Teaching mock shaped like a mid-maturity service org: useful volume, mixed
+// wins/losses (deflection middling, abandon/escalation elevated, success lagging).
+// Not a copy of any one trial org snapshot (those can show 0% for thin data).
 const effectiveness: MetricDef[] = [
-  { key: 'deflection', label: 'Deflection Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: true, modalKey: 'deflection' },
-  { key: 'escalation', label: 'Escalation Rate', format: 'pct', base: 20.4, variance: 4, goodWhenUp: false, modalKey: 'escalation' },
-  { key: 'abandon', label: 'Abandon Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: false, modalKey: 'abandon' },
-  { key: 'engagement', label: 'Engagement Rate', format: 'pct', base: 27.5, variance: 5, goodWhenUp: true, modalKey: 'engagement' },
-  { key: 'success', label: 'Success Rate', format: 'pct', base: 8.7, variance: 3, goodWhenUp: true, modalKey: 'success' },
+  { key: 'deflection', label: 'Deflection Rate', format: 'pct', base: 41, variance: 7, goodWhenUp: true, modalKey: 'deflection' },
+  { key: 'escalation', label: 'Escalation Rate', format: 'pct', base: 14, variance: 5, goodWhenUp: false, modalKey: 'escalation' },
+  { key: 'abandon', label: 'Abandon Rate', format: 'pct', base: 24, variance: 6, goodWhenUp: false, modalKey: 'abandon' },
+  { key: 'engagement', label: 'Engagement Rate', format: 'pct', base: 71, variance: 8, goodWhenUp: true, modalKey: 'engagement' },
+  { key: 'success', label: 'Success Rate', format: 'pct', base: 34, variance: 8, goodWhenUp: true, modalKey: 'success' },
 ];
 
 const usage: MetricDef[] = [
-  { key: 'unique-sessions', label: 'Unique Sessions', format: 'int', base: 167, variance: 30, goodWhenUp: true, modalKey: 'unique-sessions' },
-  { key: 'unique-interactions', label: 'Unique Interactions', format: 'int', base: 904, variance: 120, goodWhenUp: true, modalKey: 'unique-interactions' },
-  { key: 'unique-users', label: 'Unique Users', format: 'int', base: 0, variance: 2, goodWhenUp: true, modalKey: 'unique-users' },
-  { key: 'avg-interactions', label: 'Average Interactions Per Session', format: 'ratio', base: 5.4, variance: 1.2, goodWhenUp: true, modalKey: 'avg-interactions' },
+  { key: 'unique-sessions', label: 'Unique Sessions', format: 'int', base: 148, variance: 28, goodWhenUp: true, modalKey: 'unique-sessions' },
+  { key: 'unique-interactions', label: 'Unique Interactions', format: 'int', base: 612, variance: 90, goodWhenUp: true, modalKey: 'unique-interactions' },
+  { key: 'unique-users', label: 'Unique Users', format: 'int', base: 97, variance: 18, goodWhenUp: true, modalKey: 'unique-users' },
+  { key: 'avg-interactions', label: 'Average Interactions Per Session', format: 'ratio', base: 4.1, variance: 0.9, goodWhenUp: true, modalKey: 'avg-interactions' },
 ];
 
 const quality: MetricDef[] = [
-  { key: 'avg-quality', label: 'Average Quality Score', format: 'score', base: 3.7, variance: 0.9, goodWhenUp: true, modalKey: 'avg-quality' },
+  { key: 'avg-quality', label: 'Average Quality Score', format: 'score', base: 3.4, variance: 0.6, goodWhenUp: true, modalKey: 'avg-quality' },
 ];
 
 const health: MetricDef[] = [
-  { key: 'error-rate', label: 'Error Rate', format: 'pct', base: 0, variance: 1, goodWhenUp: false, modalKey: 'error-rate' },
-  { key: 'session-duration', label: 'Session Duration (seconds)', format: 'seconds', base: 236, variance: 40, goodWhenUp: false, modalKey: 'session-duration' },
-  { key: 'agent-interaction-duration', label: 'Agent Interaction Duration (seconds)', format: 'seconds', base: 0, variance: 0.5, goodWhenUp: false, modalKey: 'agent-interaction-duration' },
-  { key: 'agent-response-rate', label: 'Agent Response Rate', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'agent-response-rate', fixedValue: '-' },
-  { key: 'p50-response-latency', label: 'P50 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
-  { key: 'p90-response-latency', label: 'P90 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
-  { key: 'p95-response-latency', label: 'P95 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
-  { key: 'p99-response-latency', label: 'P99 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
+  { key: 'error-rate', label: 'Error Rate', format: 'pct', base: 3.2, variance: 1.8, goodWhenUp: false, modalKey: 'error-rate' },
+  { key: 'session-duration', label: 'Session Duration (seconds)', format: 'seconds', base: 186, variance: 45, goodWhenUp: false, modalKey: 'session-duration' },
+  { key: 'agent-interaction-duration', label: 'Agent Interaction Duration (seconds)', format: 'seconds', base: 2.4, variance: 0.8, goodWhenUp: false, modalKey: 'agent-interaction-duration' },
+  { key: 'agent-response-rate', label: 'Agent Response Rate', format: 'pct', base: 94, variance: 4, goodWhenUp: true, modalKey: 'agent-response-rate' },
+  { key: 'p50-response-latency', label: 'P50 - Agent Response Latency', format: 'seconds', base: 1.8, variance: 0.5, goodWhenUp: false, modalKey: 'health-rag-latency' },
+  { key: 'p90-response-latency', label: 'P90 - Agent Response Latency', format: 'seconds', base: 4.6, variance: 1.2, goodWhenUp: false, modalKey: 'health-rag-latency' },
+  { key: 'p95-response-latency', label: 'P95 - Agent Response Latency', format: 'seconds', base: 6.9, variance: 1.6, goodWhenUp: false, modalKey: 'health-rag-latency' },
+  { key: 'p99-response-latency', label: 'P99 - Agent Response Latency', format: 'seconds', base: 11.4, variance: 2.4, goodWhenUp: false, modalKey: 'health-rag-latency' },
 ];
 
 const trust: MetricDef[] = [
-  { key: 'instruction-adherence', label: 'Instruction Adherence Rate', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'trust-instruction-adherence', fixedValue: '-' },
-  { key: 'toxicity', label: 'Toxicity Score', format: 'pct', base: 0, variance: 0, goodWhenUp: false, modalKey: 'trust-toxicity', fixedValue: '-' },
+  { key: 'instruction-adherence', label: 'Instruction Adherence Rate', format: 'pct', base: 81, variance: 7, goodWhenUp: true, modalKey: 'trust-instruction-adherence' },
+  { key: 'toxicity', label: 'Toxicity Score', format: 'pct', base: 2.4, variance: 1.4, goodWhenUp: false, modalKey: 'trust-toxicity' },
 ];
 
 const voice: MetricDef[] = [
-  { key: 'interruption', label: 'Interruption Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: false, modalKey: 'interruption' },
-  { key: 'agent-talk-ratio', label: 'Agent Talk Ratio', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'voice-agent-talk-ratio', fixedValue: '-' },
+  { key: 'interruption', label: 'Interruption Rate', format: 'pct', base: 11, variance: 4, goodWhenUp: false, modalKey: 'interruption' },
+  { key: 'agent-talk-ratio', label: 'Agent Talk Ratio', format: 'pct', base: 48, variance: 9, goodWhenUp: true, modalKey: 'voice-agent-talk-ratio' },
 ];
+
+/** Per-agent bias vs the metric base: some agents outperform, some drag averages down. */
+const AGENT_BIAS: Record<string, number> = {
+  'Pronto Service Agent': 0.12,
+  'Merchant Support Agent': 0.06,
+  'ADL Servie Agent': -0.02,
+  'HelloWorld Agent': -0.08,
+  'Hello Earth': -0.18,
+  'Service Employee Agent': 0.04,
+  'NOT_SET': -0.1,
+};
 
 // ── Tab definitions per agent type ─────────────────────────────────────────
 export const SERVICE_TABS: TabDef[] = [
@@ -161,6 +174,12 @@ function seedOf(sel: Selection, extra: string): string {
   return `${sel.agentType}|${sel.agent}|${sel.timeframe}|${sel.channel}|${sel.modality}|${extra}`;
 }
 
+function clampMetric(raw: number, format: MetricFormat): number {
+  if (format === 'pct') return Math.max(0, Math.min(100, raw));
+  if (format === 'score') return Math.max(1, Math.min(5, raw));
+  return Math.max(0, raw);
+}
+
 export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
   if (def.fixedValue !== undefined) {
     return {
@@ -172,16 +191,20 @@ export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
     };
   }
   const rnd = seeded(seedOf(sel, def.key));
-  let raw = def.base + (rnd() - 0.5) * def.variance * 2;
-  if (def.format === 'pct') raw = Math.max(0, Math.min(100, raw));
-  else raw = Math.max(0, raw);
-  const deltaMag = (rnd() - 0.45) * def.variance;
+  const agentBias = sel.agent === 'All' ? 0 : (AGENT_BIAS[sel.agent] ?? 0);
+  let raw = def.base * (1 + agentBias) + (rnd() - 0.5) * def.variance * 2;
+  raw = clampMetric(raw, def.format);
+  // Bias deltas slightly toward mixed/unfavorable so Overview rarely looks "all green".
+  const deltaMag = (rnd() - 0.55) * def.variance * 1.15;
   const up = deltaMag >= 0;
   const good = def.goodWhenUp ? up : !up;
-  const unit = def.format === 'pct' ? '%' : def.format === 'score' ? '' : '';
+  const unit = def.format === 'pct' ? '%' : def.format === 'score' ? '' : def.format === 'int' ? '' : '';
   const tf = sel.timeframe.replace('Last ', 'prior ');
   const favor = good ? 'favorable' : 'unfavorable';
-  const delta = `${up ? '+' : ''}${Math.abs(deltaMag).toFixed(1)}${unit} (${favor}) vs. ${tf}`;
+  const shown = Math.abs(deltaMag);
+  const delta = def.format === 'int'
+    ? `${up ? '+' : '-'}${Math.round(shown)} (${favor}) vs. ${tf}`
+    : `${up ? '+' : ''}${shown.toFixed(1)}${unit} (${favor}) vs. ${tf}`;
   return { def, value: fmt(raw, def.format), raw, delta, deltaType: good ? 'good' : 'bad' };
 }
 
@@ -189,7 +212,7 @@ export function computeMetrics(sel: Selection, defs: MetricDef[]): ComputedMetri
   return defs.map(d => computeMetric(sel, d));
 }
 
-// Scatter/line series: one series per agent, over N days of the timeframe.
+// Line series: one series per agent. Bias + gentle drift + day noise (org-like crossing lines).
 export function computeSeries(sel: Selection, def: MetricDef, granularity: string): SeriesPoint[] {
   const days = TIMEFRAME_DAYS[sel.timeframe] ?? 30;
   const step = granularity === 'Month' ? 30 : granularity === 'Week' ? 7 : 1;
@@ -197,15 +220,23 @@ export function computeSeries(sel: Selection, def: MetricDef, granularity: strin
   const agents = sel.agent === 'All' ? AGENTS : [sel.agent];
   const points: SeriesPoint[] = [];
   const base = new Date(2026, 6, 14);
+  // Usage charts in the org sit on a lower daily scale than the aggregated card totals.
+  const seriesScale = def.format === 'int' ? 0.12 : 1;
   for (let i = 0; i < buckets; i++) {
     const d = new Date(base);
     d.setDate(base.getDate() - (buckets - 1 - i) * step);
     const p: SeriesPoint = { day: `${d.getMonth() + 1}/${d.getDate()}` };
+    const t = buckets <= 1 ? 0 : i / (buckets - 1);
     for (const a of agents) {
       const rnd = seeded(seedOf(sel, `${def.key}|${a}|${i}`));
-      let v = def.base + (rnd() - 0.5) * def.variance * 2;
-      v = def.format === 'pct' ? Math.max(0, Math.min(100, v)) : Math.max(0, v);
-      p[a] = Math.round(v * 100) / 100;
+      const bias = AGENT_BIAS[a] ?? 0;
+      // Invert bias for "lower is better" metrics so weak agents look worse on chart.
+      const signedBias = def.goodWhenUp ? bias : -bias;
+      const drift = (t - 0.5) * def.variance * (0.35 + rnd() * 0.4) * (signedBias >= 0 ? 0.6 : 1.1);
+      const noise = (rnd() - 0.5) * def.variance * 1.6;
+      let v = (def.base * (1 + signedBias) + drift + noise) * seriesScale;
+      v = clampMetric(v, def.format);
+      p[a] = def.format === 'int' ? Math.round(v) : Math.round(v * 100) / 100;
     }
     points.push(p);
   }
@@ -265,15 +296,17 @@ export function computeBreakdown(bd: PerfBreakdown, selectItem: string, metric: 
   const map = mapFor(bd);
   const rows: BreakdownRow[] = [];
   const scoreMode = metric === 'Average Quality Score';
+  const rateBase = metric.includes('Escalation') ? 18 : metric.includes('Deflection') ? 38 : 45;
   for (const agentName of Object.keys(map)) {
     for (const label of map[agentName]) {
       if (selectItem !== 'All' && label !== selectItem) continue;
       const rnd = seeded(`${bd}|${agentName}|${label}|${metric}`);
+      const bias = AGENT_BIAS[agentName] ?? 0;
       const value = scoreMode
-        ? Math.round((1 + rnd() * 4) * 10) / 10
+        ? Math.round(clampMetric(3.2 * (1 + bias) + (rnd() - 0.5) * 1.4, 'score') * 10) / 10
         : metric.includes('Rate')
-          ? Math.round(rnd() * 100)
-          : Math.round(1 + rnd() * 9);
+          ? Math.round(clampMetric(rateBase * (1 + (metric.includes('Escalation') ? -bias : bias)) + (rnd() - 0.5) * 16, 'pct'))
+          : Math.round(Math.max(1, (6 + rnd() * 14) * (1 + bias * 0.5)));
       rows.push({ agentName, label, value });
     }
   }
@@ -343,21 +376,21 @@ export const SCORER_COLUMNS = ['Name', 'Version', 'Description', 'Agent', 'Statu
 
 // ── Table View: full ordered metric list (verbatim from org Table View) ──────
 export const TABLE_VIEW_METRICS: { label: string; key: string; format: MetricFormat; base: number; variance: number }[] = [
-  { label: 'Deflection Rate', key: 'deflection', format: 'pct', base: 41, variance: 10 },
-  { label: 'Escalation Rate', key: 'escalation', format: 'pct', base: 13, variance: 6 },
-  { label: 'Engagement Rate', key: 'engagement', format: 'pct', base: 74, variance: 10 },
-  { label: 'Success Rate', key: 'success', format: 'pct', base: 39, variance: 12 },
-  { label: 'Abandon Rate', key: 'abandon', format: 'pct', base: 24, variance: 8 },
-  { label: 'Unique Sessions', key: 'unique-sessions', format: 'int', base: 16, variance: 8 },
-  { label: 'Unique Interactions', key: 'unique-interactions', format: 'int', base: 32, variance: 14 },
-  { label: 'Unique Users', key: 'unique-users', format: 'int', base: 9, variance: 5 },
-  { label: 'Average Interactions Per Session', key: 'avg-interactions', format: 'ratio', base: 2.1, variance: 0.8 },
-  { label: 'Average Quality Score', key: 'avg-quality', format: 'score', base: 3.7, variance: 0.9 },
-  { label: 'Interaction Error Rate', key: 'error-rate', format: 'pct', base: 3, variance: 3 },
-  { label: 'Average Session Duration', key: 'session-duration', format: 'seconds', base: 96, variance: 40 },
-  { label: 'Average Agent Interaction Duration', key: 'agent-interaction-duration', format: 'seconds', base: 2.09, variance: 1.2 },
-  { label: 'Agent Response Rate', key: 'agent-response-rate', format: 'pct', base: 98, variance: 4 },
-  { label: 'Interruption Rate', key: 'interruption', format: 'pct', base: 6, variance: 5 },
+  { label: 'Deflection Rate', key: 'deflection', format: 'pct', base: 41, variance: 7 },
+  { label: 'Escalation Rate', key: 'escalation', format: 'pct', base: 14, variance: 5 },
+  { label: 'Engagement Rate', key: 'engagement', format: 'pct', base: 71, variance: 8 },
+  { label: 'Success Rate', key: 'success', format: 'pct', base: 34, variance: 8 },
+  { label: 'Abandon Rate', key: 'abandon', format: 'pct', base: 24, variance: 6 },
+  { label: 'Unique Sessions', key: 'unique-sessions', format: 'int', base: 148, variance: 28 },
+  { label: 'Unique Interactions', key: 'unique-interactions', format: 'int', base: 612, variance: 90 },
+  { label: 'Unique Users', key: 'unique-users', format: 'int', base: 97, variance: 18 },
+  { label: 'Average Interactions Per Session', key: 'avg-interactions', format: 'ratio', base: 4.1, variance: 0.9 },
+  { label: 'Average Quality Score', key: 'avg-quality', format: 'score', base: 3.4, variance: 0.6 },
+  { label: 'Interaction Error Rate', key: 'error-rate', format: 'pct', base: 3.2, variance: 1.8 },
+  { label: 'Average Session Duration', key: 'session-duration', format: 'seconds', base: 186, variance: 45 },
+  { label: 'Average Agent Interaction Duration', key: 'agent-interaction-duration', format: 'seconds', base: 2.4, variance: 0.8 },
+  { label: 'Agent Response Rate', key: 'agent-response-rate', format: 'pct', base: 94, variance: 4 },
+  { label: 'Interruption Rate', key: 'interruption', format: 'pct', base: 11, variance: 4 },
 ];
 
 export function computeTableRows(sel: Selection): { label: string; value: string; key: string }[] {
