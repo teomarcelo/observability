@@ -79,8 +79,8 @@ export function OverviewTab({ nav, sel, onOpenModal }: Props) {
           <button
             className="link-btn"
             onClick={() => onOpenModal(
-              innerTab === 'trust' ? 'trust-disabled'
-                : innerTab === 'custom-scorers' ? 'tab-custom-scorers'
+              innerTab === 'custom-scorers' ? 'custom-scorers-empty'
+                : innerTab === 'trust' ? 'trust-disabled'
                   : 'usersat-disabled',
             )}
           >
@@ -140,7 +140,9 @@ function CardsView({ nav, sel, onOpenModal }: Props) {
             </button>
           ))}
         </div>
-        {selectedDef && <MetricChart sel={sel} metric={selectedDef} granularity={granularity} onOpenModal={onOpenModal} />}
+        {selectedDef && !selectedDef.fixedValue && (
+          <MetricChart sel={sel} metric={selectedDef} granularity={granularity} onOpenModal={onOpenModal} />
+        )}
       </div>
     </div>
   )

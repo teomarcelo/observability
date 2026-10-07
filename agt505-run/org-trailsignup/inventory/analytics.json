@@ -1,0 +1,125 @@
+{
+  "surface": "analytics",
+  "org": "trailsignup",
+  "title": "Service Agent Analytics / Employee Agent Analytics",
+  "agentTypes": ["Service Agent", "Employee Agent"],
+  "filters": ["Agent", "Timeframe", "Channel", "Modality"],
+  "filterDefaults": {
+    "agent": "All",
+    "timeframe": "Last 30 Days",
+    "channel": "All",
+    "modality": "All"
+  },
+  "topTabs": ["Overview", "Performance Insights"],
+  "viewModes": ["Metric Card", "Table View"],
+  "granularity": ["Day"],
+  "metricCategories": [
+    "Effectiveness",
+    "Usage",
+    "Quality",
+    "Health",
+    "Trust",
+    "Voice",
+    "Custom Scorers"
+  ],
+  "chrome": [
+    "Analytics Settings",
+    "Agent Analytics Help",
+    "Refresh"
+  ],
+  "sections": [
+    "Agent Performance",
+    "Aggregated Effectiveness Metrics",
+    "Aggregated Usage Metrics",
+    "Aggregated Health Metrics",
+    "Aggregated Trust Metrics",
+    "Aggregated Voice Metrics",
+    "Sessions Breakdown",
+    "Session Outcome",
+    "Task Resolution",
+    "Breakdowns (Performance Insights)"
+  ],
+  "effectivenessMetrics": [
+    "Deflection Rate",
+    "Escalation Rate",
+    "Abandon Rate",
+    "Engagement Rate",
+    "Success Rate"
+  ],
+  "usageMetrics": [
+    "Unique Sessions",
+    "Unique Interactions",
+    "Unique Users",
+    "Average Interactions Per Session"
+  ],
+  "qualityMetrics": ["Average Quality Score"],
+  "healthMetrics": [
+    "Error Rate",
+    "Session Duration (seconds)",
+    "Agent Interaction Duration (seconds)",
+    "Agent Response Rate",
+    "P50 - Agent Response Latency",
+    "P50 - Agent Response Completion Latency",
+    "P90 - Agent Response Latency",
+    "P90 - Agent Response Completion Latency",
+    "P95 - Agent Response Latency",
+    "P95 - Agent Response Completion Latency",
+    "P99 - Agent Response Latency",
+    "P99 - Agent Response Completion Latency"
+  ],
+  "trustMetrics": [
+    "Instruction Adherence Rate",
+    "Toxicity Score"
+  ],
+  "voiceMetrics": [
+    "Interruption Rate",
+    "Agent Talk Ratio"
+  ],
+  "performanceInsights": {
+    "breakdowns": ["Subagents", "Intents", "Actions"],
+    "controls": ["Select Subagent", "Select Metric"],
+    "defaultMetric": "Average Quality Score",
+    "state": "Empty/loading panel for Subagents by Average Quality Score"
+  },
+  "populatedValues": {
+    "Deflection Rate": "0%",
+    "Escalation Rate": "20.36%",
+    "Escalation Rate delta": "+29.1% (favorable) / +4.59% vs prior 30 days (Aug 8–Sep 7, 2026)",
+    "Abandon Rate": "0%",
+    "Engagement Rate": "27.54%",
+    "Engagement Rate delta": "+3.9% (favorable) / +1.03% vs prior 30 days",
+    "Success Rate": "8.74%",
+    "Unique Sessions": "167",
+    "Unique Sessions delta": "-44.0% (131) vs prior 30 days",
+    "Unique Interactions": "904",
+    "Unique Interactions delta": "-47.5% (818) vs prior 30 days",
+    "Unique Users": "0",
+    "Error Rate": "0%",
+    "Session Duration (seconds)": "235.69",
+    "Session Duration delta": "-14.1% (unfavorable) / 38.54 vs prior",
+    "Agent Interaction Duration (seconds)": "0",
+    "Interruption Rate": "0%"
+  },
+  "emptyStates": [
+    "Task Resolution / Sessions Breakdown / Session Outcome often show Loading on Overview",
+    "Quality: Average Quality Score — not enabled / empty",
+    "Trust: Instruction Adherence Rate and Toxicity Score show dash (-)",
+    "Voice: Agent Talk Ratio shows dash (-)",
+    "Health RAG: 'RAG metrics require RAG to be enabled. Enable it from Setup...'",
+    "Custom Scorers: 'Your custom scorers will appear here. Create and activate a scorer in Agentforce Studio to start tracking trends over time.'",
+    "Employee Agent Analytics: long loading spinner / no cards rendered in capture window",
+    "Table View: stayed on loading spinner in supplemental capture"
+  ],
+  "screenshots": [
+    "screenshots/02_analytics_overview.png",
+    "screenshots/05_analytics_cat_usage.png",
+    "screenshots/06_analytics_cat_quality.png",
+    "screenshots/07_analytics_cat_health.png",
+    "screenshots/08_analytics_cat_trust.png",
+    "screenshots/09_analytics_cat_voice.png",
+    "screenshots/10_analytics_cat_custom_scorers.png",
+    "screenshots/12_analytics_tab_performance_insights.png",
+    "screenshots/16_analytics_employee_agent.png",
+    "screenshots/30_analytics_table_view.png"
+  ]
+}

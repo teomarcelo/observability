@@ -1,0 +1,19 @@
+{
+  "surface": "alerts",
+  "org": "trailsignup",
+  "present": true,
+  "navLabel": "Alerts",
+  "urlPattern": "c__nav=alerts",
+  "state": "Blank main pane after navigation (no list, empty illustration, or New Alert chrome captured reliably)",
+  "notes": [
+    "Sidebar Alerts item is present and navigates to alerts route",
+    "Main content stayed empty/blank even after ~10s wait",
+    "Clicking generic 'New' from Alerts context landed on Build → Grids empty state (false-positive click); not an Alerts create modal",
+    "No alert rows, thresholds, or config modal text captured"
+  ],
+  "screenshots": [
+    "screenshots/21_alerts_default.png",
+    "screenshots/38_alerts_after_wait.png",
+    "screenshots/39_alerts_new_modal.png"
+  ]
+}

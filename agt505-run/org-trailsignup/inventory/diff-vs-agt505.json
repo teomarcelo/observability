@@ -1,0 +1,94 @@
+{
+  "comparedAt": "2026-10-07T19:00:00.000Z",
+  "sources": {
+    "trailsignup": "agt505-run/org-trailsignup/inventory/",
+    "agt505": "agt505-run/inventory/"
+  },
+  "nav": {
+    "observe": {
+      "same": ["Analytics", "Sessions & Intents", "Alerts"],
+      "diff": "None — both orgs omit Insights/Scorers from Observe"
+    },
+    "build": {
+      "same": ["Agents", "Tests", "Prompt Templates", "Data", "AI Models", "Agentforce DX"],
+      "trailsignupOnly": ["Grids (with New badge)"],
+      "agt505InventoryMissed": "AGT505 nav.json did not list Grids; trailsignup clearly shows Grids in Build"
+    }
+  },
+  "analytics": {
+    "structureMatch": true,
+    "sameCategories": [
+      "Effectiveness",
+      "Usage",
+      "Quality",
+      "Health",
+      "Trust",
+      "Voice",
+      "Custom Scorers"
+    ],
+    "sameTopTabs": ["Overview", "Performance Insights"],
+    "sameFilters": ["Agent", "Timeframe", "Channel", "Modality"],
+    "richerInTrailsignup": [
+      "Populated Effectiveness: Escalation 20.36%, Engagement 27.54%, Success 8.74%",
+      "Populated Usage: Unique Sessions 167, Unique Interactions 904",
+      "Populated Health: Session Duration 235.69s with prior-period deltas",
+      "Visible prior-period delta callouts (+favorable / −unfavorable) with Aug 8–Sep 7, 2026 comparison window",
+      "Trust shows Instruction Adherence Rate + Toxicity Score as dash cards (not only Einstein Feedback empty state)",
+      "Voice includes Agent Talk Ratio (dash) alongside Interruption Rate 0%",
+      "Custom Scorers empty copy: 'Your custom scorers will appear here...'"
+    ],
+    "richerOrDocumentedInAgt505": [
+      "AGT505 captured empty-state strings: Task Resolution not enabled, Enable Einstein Feedback",
+      "AGT505 egDiffs note EG vs org label mismatches (Abandonment vs Abandon Rate)"
+    ],
+    "labelDiffsVsTeachingApp": [
+      "Trust section heading org: Aggregated Trust Metrics (app uses 'Trust Metrics' + disabled Einstein Feedback)",
+      "Health shows RAG enablement message for latency metrics",
+      "Employee Agent page often spinner-only; app shows full Employee tabs"
+    ]
+  },
+  "sessions": {
+    "sameTabs": ["Processed Sessions", "Unprocessed Sessions"],
+    "trailsignup": {
+      "rows": 0,
+      "defaultAgentFilter": "Service Employee Agent",
+      "defaultTimeframe": "Last 7 Days",
+      "processingBanner": false
+    },
+    "agt505": {
+      "rows": "1 unprocessed after Ex2 Live Test",
+      "columnsDocumented": [
+        "Session ID",
+        "Timestamp",
+        "Session Duration",
+        "Session Outcome",
+        "Initial User Messages",
+        "Initial Agent Responses",
+        "Subagents",
+        "Actions"
+      ],
+      "processingBanner": true
+    },
+    "gap": "Trailsignup sessions empty — cannot confirm column set or sample outcomes here; use AGT505 for columns/banner teaching"
+  },
+  "alerts": {
+    "bothHaveNav": true,
+    "trailsignupContent": "blank pane",
+    "agt505": "alerts inventory not separately rich; teaching app has alerts UI"
+  },
+  "insightsScorers": {
+    "both": "No separate Observe nav item"
+  },
+  "topGapsVsNetlifyTeachingApp": [
+    "1. mockData effectiveness bases (Deflection ~41%, Engagement ~74%, Success ~39%) diverge from this org's real shape (0% / 27.54% / 8.74%) — consider a trailsignup-aligned seed preset",
+    "2. Unique Sessions base 16 vs org 167; Unique Interactions base 32 vs org 904",
+    "3. Sidebar missing Grids under Build (org shows Grids + New badge)",
+    "4. Trust UI: org shows dash metric cards (Instruction Adherence, Toxicity); app uses Einstein Feedback disabled empty state only",
+    "5. Custom Scorers empty copy should match org: 'Your custom scorers will appear here...'",
+    "6. Health RAG gating message for latency percentiles not mirrored in app",
+    "7. Voice: add Agent Talk Ratio (dash/disabled) next to Interruption Rate",
+    "8. Sessions default Agent filter label 'Service Employee Agent' + Evaluations control not in app chrome",
+    "9. Prior-period delta wording '(favorable)/(unfavorable)' + absolute pp change not modeled in teaching cards",
+    "10. Alerts surface in org was blank; app's Alerts page may over-invent structure until org content is confirmed"
+  ]
+}

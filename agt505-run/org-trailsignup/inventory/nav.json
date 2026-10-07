@@ -1,0 +1,38 @@
+{
+  "surface": "nav",
+  "org": "trailsignup",
+  "orgUrl": "https://trailsignup-468870dbe54366.lightning.force.com",
+  "app": "Agentforce Studio",
+  "observeOptimize": [
+    "Analytics",
+    "Sessions & Intents",
+    "Alerts"
+  ],
+  "build": [
+    "Agents",
+    "Tests",
+    "Grids",
+    "Prompt Templates",
+    "Data",
+    "AI Models",
+    "Agentforce DX"
+  ],
+  "buildBadges": {
+    "Grids": "New"
+  },
+  "buildChildren": {
+    "Data": ["Data Libraries", "Retrievers", "Search Indexes"]
+  },
+  "missingVsTeachingApp": [
+    "Grids present in org Build nav (with New badge); teaching app Sidebar omits Grids"
+  ],
+  "notes": [
+    "No Insights or Scorers under Observe & Optimize (same as AGT505)",
+    "Email verification banner + Agentforce Coworker Setup banner visible on all surfaces",
+    "Actions appeared in interactive dump but is not a top-level Build row in screenshots"
+  ],
+  "screenshots": [
+    "screenshots/01_studio_landing.png",
+    "screenshots/02_analytics_overview.png"
+  ]
+}

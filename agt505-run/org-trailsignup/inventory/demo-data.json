@@ -1,0 +1,73 @@
+{
+  "org": "trailsignup",
+  "label": "trailsignup-demo",
+  "capturedAt": "2026-10-07T18:55:43.345Z",
+  "dataRichness": "partial",
+  "summary": "Analytics Overview/Usage/Health show real non-zero Service Agent metrics (sessions, escalation, engagement, duration). Sessions & Intents and Alerts are empty. Employee Agent Analytics did not finish loading.",
+  "agentTypes": ["Service Agent", "Employee Agent"],
+  "agentNamesSeen": ["Service Employee Agent"],
+  "filterDefaults": {
+    "analytics": {
+      "agentType": "Service Agent",
+      "agent": "All",
+      "timeframe": "Last 30 Days",
+      "channel": "All",
+      "modality": "All",
+      "granularity": "Day",
+      "viewMode": "Metric Card"
+    },
+    "sessions": {
+      "agent": "Service Employee Agent",
+      "timeframe": "Last 7 Days",
+      "channel": "All",
+      "modality": "All"
+    }
+  },
+  "metricValues": {
+    "effectiveness": {
+      "Deflection Rate": "0%",
+      "Escalation Rate": "20.36%",
+      "Abandon Rate": "0%",
+      "Engagement Rate": "27.54%",
+      "Success Rate": "8.74%"
+    },
+    "usage": {
+      "Unique Sessions": 167,
+      "Unique Interactions": 904,
+      "Unique Users": 0,
+      "Average Interactions Per Session": null
+    },
+    "health": {
+      "Error Rate": "0%",
+      "Session Duration (seconds)": 235.69,
+      "Agent Interaction Duration (seconds)": 0,
+      "Agent Response Rate": "-",
+      "latencyPercentiles": "dash / RAG-gated messaging"
+    },
+    "quality": {
+      "Average Quality Score": "not enabled / empty"
+    },
+    "trust": {
+      "Instruction Adherence Rate": "-",
+      "Toxicity Score": "-"
+    },
+    "voice": {
+      "Interruption Rate": "0%",
+      "Agent Talk Ratio": "-"
+    }
+  },
+  "deltasVsPrior30Days": {
+    "Escalation Rate": "+29.1% favorable (+4.59 pp)",
+    "Engagement Rate": "+3.9% favorable (+1.03 pp)",
+    "Unique Sessions": "-44.0% (131)",
+    "Unique Interactions": "-47.5% (818)",
+    "Session Duration": "-14.1% unfavorable (38.54s)"
+  },
+  "sessionOutcomes": [],
+  "sessionSample": [],
+  "alertsSample": [],
+  "orgBanners": [
+    "Email verification required for full features",
+    "Agentforce Coworker access — Go to Setup"
+  ]
+}

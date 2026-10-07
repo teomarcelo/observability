@@ -7,9 +7,10 @@ interface Props {
   onOpenModal: (key: string) => void
 }
 
-const buildItems: { icon: string; label: string; modalKey: string; external?: boolean; chevron?: boolean }[] = [
+const buildItems: { icon: string; label: string; modalKey: string; external?: boolean; chevron?: boolean; badge?: string }[] = [
   { icon: '\u{1F916}', label: 'Agents', modalKey: 'build-agents' },
   { icon: '\u{1F9EA}', label: 'Tests', modalKey: 'build-tests' },
+  { icon: '\u{1F5FA}', label: 'Grids', modalKey: 'build-grids', badge: 'New' },
   { icon: '\u{1F4DD}', label: 'Prompt Templates', modalKey: 'build-prompts', external: true },
   { icon: '\u{1F5C4}', label: 'Data', modalKey: 'build-data', chevron: true },
   { icon: '\u{1F9E0}', label: 'AI Models', modalKey: 'build-models' },
@@ -37,6 +38,7 @@ export function Sidebar({ activeSection, onNavigate, onOpenModal }: Props) {
           >
             <span className="nav-icon">{item.icon}</span>
             <span>{item.label}</span>
+            {item.badge && <span className="sidebar-badge">{item.badge}</span>}
             {item.external && <span className="nav-ext">&#8599;</span>}
             {item.chevron && <span className="nav-chevron">&#9662;</span>}
           </div>

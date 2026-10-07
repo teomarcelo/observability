@@ -1,0 +1,43 @@
+{
+  "surface": "sessions",
+  "org": "trailsignup",
+  "title": "Sessions & Intents",
+  "savedView": "Default View",
+  "filters": ["Agent", "Timeframe", "Channel", "Modality"],
+  "filterDefaults": {
+    "agent": "Service Employee Agent",
+    "timeframe": "Last 7 Days",
+    "channel": "All",
+    "modality": "All"
+  },
+  "tabs": ["Processed Sessions", "Unprocessed Sessions"],
+  "chrome": [
+    "New Saved View",
+    "Sessions & Intents Help",
+    "Search this table",
+    "Refresh",
+    "Select Fields to Display",
+    "Filter",
+    "Download CSV (visible columns + transcripts)",
+    "Evaluations"
+  ],
+  "counts": {
+    "processed": 0,
+    "unprocessed": 0
+  },
+  "emptyState": {
+    "heading": "No Data",
+    "alsoSeen": "No matching sessions for the selected criteria (studio landing)"
+  },
+  "columns": [],
+  "columnsNote": "Table empty (0 rows); column headers not rendered. AGT505 inventory lists Session ID, Timestamp, Session Duration, Session Outcome, Initial User Messages, Initial Agent Responses, Subagents, Actions — assume same when rows exist.",
+  "banners": [],
+  "processingBanner": "Not observed (no 'Processing latest sessions / Insights aren't ready' banner in this org at capture time)",
+  "sampleRows": [],
+  "screenshots": [
+    "screenshots/17_sessions_default.png",
+    "screenshots/19_sessions_processed_sessions.png",
+    "screenshots/20_sessions_unprocessed_sessions.png",
+    "screenshots/37_sessions_unprocessed_detail.png"
+  ]
+}

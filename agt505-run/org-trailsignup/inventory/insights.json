@@ -1,0 +1,18 @@
+{
+  "surface": "insights",
+  "org": "trailsignup",
+  "present": false,
+  "status": "No separate Insights or Scorers Observe nav item",
+  "related": [
+    "Analytics → Performance Insights tab (Subagents / Intents / Actions breakdowns)",
+    "Analytics → Custom Scorers category empty state",
+    "Sessions & Intents (no processing/Insights banner observed)"
+  ],
+  "notes": [
+    "Matches AGT505: Observe nav is Analytics, Sessions & Intents, Alerts only"
+  ],
+  "screenshots": [
+    "screenshots/12_analytics_tab_performance_insights.png",
+    "screenshots/10_analytics_cat_custom_scorers.png"
+  ]
+}

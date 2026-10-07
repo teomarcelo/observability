@@ -8,6 +8,7 @@ import type {
 // NOTE: "ADL Servie Agent" is spelled exactly as it appears in the real org.
 // ────────────────────────────────────────────────────────────────────────
 export const AGENTS = [
+  'Service Employee Agent',
   'HelloWorld Agent',
   'ADL Servie Agent',
   'Pronto Service Agent',
@@ -53,19 +54,20 @@ function fmt(value: number, format: MetricFormat): string {
 }
 
 // ── Metric catalogs (per tab) ──────────────────────────────────────────────
+// Bases tuned toward Trailsignup demo-org shape (still seeded/mock, not live org numbers).
 const effectiveness: MetricDef[] = [
-  { key: 'deflection', label: 'Deflection Rate', format: 'pct', base: 41, variance: 10, goodWhenUp: true, modalKey: 'deflection' },
-  { key: 'escalation', label: 'Escalation Rate', format: 'pct', base: 13, variance: 6, goodWhenUp: false, modalKey: 'escalation' },
-  { key: 'abandon', label: 'Abandon Rate', format: 'pct', base: 24, variance: 8, goodWhenUp: false, modalKey: 'abandon' },
-  { key: 'engagement', label: 'Engagement Rate', format: 'pct', base: 74, variance: 10, goodWhenUp: true, modalKey: 'engagement' },
-  { key: 'success', label: 'Success Rate', format: 'pct', base: 39, variance: 12, goodWhenUp: true, modalKey: 'success' },
+  { key: 'deflection', label: 'Deflection Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: true, modalKey: 'deflection' },
+  { key: 'escalation', label: 'Escalation Rate', format: 'pct', base: 20.4, variance: 4, goodWhenUp: false, modalKey: 'escalation' },
+  { key: 'abandon', label: 'Abandon Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: false, modalKey: 'abandon' },
+  { key: 'engagement', label: 'Engagement Rate', format: 'pct', base: 27.5, variance: 5, goodWhenUp: true, modalKey: 'engagement' },
+  { key: 'success', label: 'Success Rate', format: 'pct', base: 8.7, variance: 3, goodWhenUp: true, modalKey: 'success' },
 ];
 
 const usage: MetricDef[] = [
-  { key: 'unique-sessions', label: 'Unique Sessions', format: 'int', base: 16, variance: 8, goodWhenUp: true, modalKey: 'unique-sessions' },
-  { key: 'unique-interactions', label: 'Unique Interactions', format: 'int', base: 32, variance: 14, goodWhenUp: true, modalKey: 'unique-interactions' },
-  { key: 'unique-users', label: 'Unique Users', format: 'int', base: 9, variance: 5, goodWhenUp: true, modalKey: 'unique-users' },
-  { key: 'avg-interactions', label: 'Average Interactions Per Session', format: 'ratio', base: 2.1, variance: 0.8, goodWhenUp: true, modalKey: 'avg-interactions' },
+  { key: 'unique-sessions', label: 'Unique Sessions', format: 'int', base: 167, variance: 30, goodWhenUp: true, modalKey: 'unique-sessions' },
+  { key: 'unique-interactions', label: 'Unique Interactions', format: 'int', base: 904, variance: 120, goodWhenUp: true, modalKey: 'unique-interactions' },
+  { key: 'unique-users', label: 'Unique Users', format: 'int', base: 0, variance: 2, goodWhenUp: true, modalKey: 'unique-users' },
+  { key: 'avg-interactions', label: 'Average Interactions Per Session', format: 'ratio', base: 5.4, variance: 1.2, goodWhenUp: true, modalKey: 'avg-interactions' },
 ];
 
 const quality: MetricDef[] = [
@@ -73,14 +75,24 @@ const quality: MetricDef[] = [
 ];
 
 const health: MetricDef[] = [
-  { key: 'error-rate', label: 'Error Rate', format: 'pct', base: 3, variance: 3, goodWhenUp: false, modalKey: 'error-rate' },
-  { key: 'session-duration', label: 'Session Duration (seconds)', format: 'seconds', base: 96, variance: 40, goodWhenUp: false, modalKey: 'session-duration' },
-  { key: 'agent-interaction-duration', label: 'Agent Interaction Duration', format: 'seconds', base: 2.09, variance: 1.2, goodWhenUp: false, modalKey: 'agent-interaction-duration' },
-  { key: 'agent-response-rate', label: 'Agent Response Rate', format: 'pct', base: 98, variance: 4, goodWhenUp: true, modalKey: 'agent-response-rate' },
+  { key: 'error-rate', label: 'Error Rate', format: 'pct', base: 0, variance: 1, goodWhenUp: false, modalKey: 'error-rate' },
+  { key: 'session-duration', label: 'Session Duration (seconds)', format: 'seconds', base: 236, variance: 40, goodWhenUp: false, modalKey: 'session-duration' },
+  { key: 'agent-interaction-duration', label: 'Agent Interaction Duration (seconds)', format: 'seconds', base: 0, variance: 0.5, goodWhenUp: false, modalKey: 'agent-interaction-duration' },
+  { key: 'agent-response-rate', label: 'Agent Response Rate', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'agent-response-rate', fixedValue: '-' },
+  { key: 'p50-response-latency', label: 'P50 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
+  { key: 'p90-response-latency', label: 'P90 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
+  { key: 'p95-response-latency', label: 'P95 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
+  { key: 'p99-response-latency', label: 'P99 - Agent Response Latency', format: 'seconds', base: 0, variance: 0, goodWhenUp: false, modalKey: 'health-rag-latency', fixedValue: '-' },
+];
+
+const trust: MetricDef[] = [
+  { key: 'instruction-adherence', label: 'Instruction Adherence Rate', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'trust-instruction-adherence', fixedValue: '-' },
+  { key: 'toxicity', label: 'Toxicity Score', format: 'pct', base: 0, variance: 0, goodWhenUp: false, modalKey: 'trust-toxicity', fixedValue: '-' },
 ];
 
 const voice: MetricDef[] = [
-  { key: 'interruption', label: 'Interruption Rate', format: 'pct', base: 6, variance: 5, goodWhenUp: false, modalKey: 'interruption' },
+  { key: 'interruption', label: 'Interruption Rate', format: 'pct', base: 0, variance: 2, goodWhenUp: false, modalKey: 'interruption' },
+  { key: 'agent-talk-ratio', label: 'Agent Talk Ratio', format: 'pct', base: 0, variance: 0, goodWhenUp: true, modalKey: 'voice-agent-talk-ratio', fixedValue: '-' },
 ];
 
 // ── Tab definitions per agent type ─────────────────────────────────────────
@@ -89,21 +101,14 @@ export const SERVICE_TABS: TabDef[] = [
   { id: 'usage', label: 'Usage', heading: 'Aggregated Usage Metrics', metrics: usage },
   { id: 'quality', label: 'Quality', heading: 'Aggregated Quality Metrics', metrics: quality },
   { id: 'health', label: 'Health', heading: 'Aggregated Health Metrics', metrics: health },
-  {
-    id: 'trust', label: 'Trust', heading: 'Trust Metrics',
-    disabled: {
-      title: 'Trust Metrics are not enabled',
-      body: 'Trust metrics require Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
-      cta: 'Enable Einstein Feedback',
-    },
-  },
+  { id: 'trust', label: 'Trust', heading: 'Aggregated Trust Metrics', metrics: trust },
   { id: 'voice', label: 'Voice', heading: 'Aggregated Voice Metrics', metrics: voice },
   {
     id: 'custom-scorers', label: 'Custom Scorers', heading: 'Custom Scorers',
     disabled: {
-      title: 'Task Resolution metric is not enabled',
-      body: 'Task Resolution metric requires Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
-      cta: 'Enable Einstein Feedback',
+      title: 'Your custom scorers will appear here',
+      body: 'Create and activate a scorer in Agentforce Studio to start tracking trends over time.',
+      cta: 'Learn about custom scorers',
     },
   },
 ];
@@ -121,14 +126,7 @@ export const EMPLOYEE_TABS: TabDef[] = [
   },
   { id: 'quality', label: 'Quality', heading: 'Aggregated Quality Metrics', metrics: quality },
   { id: 'health', label: 'Health', heading: 'Aggregated Health Metrics', metrics: health },
-  {
-    id: 'trust', label: 'Trust', heading: 'Trust Metrics',
-    disabled: {
-      title: 'Trust Metrics are not enabled',
-      body: 'Trust metrics require Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
-      cta: 'Enable Einstein Feedback',
-    },
-  },
+  { id: 'trust', label: 'Trust', heading: 'Aggregated Trust Metrics', metrics: trust },
 ];
 
 export function tabsFor(agentType: AgentType): TabDef[] {
@@ -141,6 +139,7 @@ export function tabDef(agentType: AgentType, id: InnerTab): TabDef | undefined {
 
 // The colored dot series shows one series per agent (as in the real chart).
 export const AGENT_COLORS: Record<string, string> = {
+  'Service Employee Agent': '#0b5cab',
   'ADL Servie Agent': '#5867e8',
   'Hello Earth': '#b34fd1',
   'HelloWorld Agent': '#159c7a',
@@ -163,6 +162,15 @@ function seedOf(sel: Selection, extra: string): string {
 }
 
 export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
+  if (def.fixedValue !== undefined) {
+    return {
+      def,
+      value: def.fixedValue,
+      raw: 0,
+      delta: 'Insufficient data',
+      deltaType: 'bad',
+    };
+  }
   const rnd = seeded(seedOf(sel, def.key));
   let raw = def.base + (rnd() - 0.5) * def.variance * 2;
   if (def.format === 'pct') raw = Math.max(0, Math.min(100, raw));
@@ -172,7 +180,8 @@ export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
   const good = def.goodWhenUp ? up : !up;
   const unit = def.format === 'pct' ? '%' : def.format === 'score' ? '' : '';
   const tf = sel.timeframe.replace('Last ', 'prior ');
-  const delta = `${up ? '+' : ''}${deltaMag.toFixed(def.format === 'score' || def.format === 'ratio' ? 1 : 1)}${unit} vs. ${tf}`;
+  const favor = good ? 'favorable' : 'unfavorable';
+  const delta = `${up ? '+' : ''}${Math.abs(deltaMag).toFixed(1)}${unit} (${favor}) vs. ${tf}`;
   return { def, value: fmt(raw, def.format), raw, delta, deltaType: good ? 'good' : 'bad' };
 }
 

@@ -1,0 +1,15 @@
+{
+  "org": "trailsignup-demo",
+  "username": "trailsignup.468870dbe54366@salesforce.com",
+  "startedAt": "2026-10-07T18:53:36.532Z",
+  "mfa": false,
+  "surfacesVisited": [
+    "Agentforce Studio landing",
+    "Analytics",
+    "Sessions & Intents",
+    "Alerts"
+  ],
+  "errors": [],
+  "demoDataPopulated": true,
+  "finishedAt": "2026-10-07T18:55:43.345Z"
+}

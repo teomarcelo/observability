@@ -33,6 +33,8 @@ export interface MetricDef {
   variance: number;
   goodWhenUp: boolean;
   modalKey: string;
+  /** When set, show this literal (e.g. "-") instead of a generated number — org insufficient-data / gated state. */
+  fixedValue?: string;
 }
 
 // A tab's content: either a set of metrics, or a "not enabled" empty state.

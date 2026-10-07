@@ -42,3 +42,8 @@ capture-inventory.json
 agt505-run/paste-pronto.cjs
 agt505-run/pronto-agent-script.txt
 agt505-run/screenshots/
+
+agt505-run/org-trailsignup/.sfauth.json
+agt505-run/org-trailsignup/.auth-trailsignup/
+agt505-run/org-trailsignup/raw/
+agt505-run/org-trailsignup/*.log

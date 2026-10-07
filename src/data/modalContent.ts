@@ -592,6 +592,17 @@ export const modals: Record<string, ModalContent> = {
     practical: 'Out of scope here, but it is the design-time twin of run-time scoring.',
     sources: [S.testResults, S.scorers],
   },
+  'build-grids': {
+    tabLabel: 'Build', title: 'Grids',
+    rows: [
+      { label: 'Location', value: 'Agentforce Studio → Build (often shown with a New badge).' },
+      { label: 'Not', value: 'Not part of Observe & Optimize Analytics.' },
+    ],
+    purpose: 'A Build-side workspace for grid-style agent authoring/layout experiences in Agentforce Studio.',
+    useCase: 'Open Grids when assembling agent surfaces; use Observe & Optimize when measuring production behavior.',
+    practical: 'Out of scope for this monitoring replica; included so the sidebar matches the live Studio shell.',
+    sources: [S.news],
+  },
   'build-prompts': {
     tabLabel: 'Build', title: 'Prompt Templates',
     rows: [{ label: 'Purpose', value: 'Define reusable prompt templates the agent and scorers use.' }],
@@ -760,13 +771,85 @@ export const modals: Record<string, ModalContent> = {
   'tab-custom-scorers': {
     tabLabel: 'Metric Tab', title: 'Custom Scorers',
     rows: [
-      { label: 'Contains', value: 'Custom scorer / Task Resolution style metrics for Service Agent Analytics.' },
-      { label: 'Org state (AGT505)', value: 'Often shows Task Resolution metric is not enabled until Einstein Feedback is on.' },
+      { label: 'Contains', value: 'Custom scorer trends for Service Agent Analytics.' },
+      { label: 'Empty state (org)', value: 'Your custom scorers will appear here after you create and activate a scorer in Agentforce Studio.' },
     ],
-    purpose: 'Surfaces custom scoring and task-resolution signals beyond the standard Effectiveness set.',
+    purpose: 'Surfaces custom scoring signals beyond the standard Effectiveness set.',
     useCase: 'When standard KPIs are not enough, custom scorers grade conversations against your own criteria.',
-    practical: 'If the tab is disabled, enable Einstein Feedback from Setup and wait for Analytics Foundations DMOs, then reconfigure the app.',
+    practical: 'Create and activate a scorer in Agentforce Studio to start tracking trends over time.',
     sources: [S.scorers, S.analytics],
+  },
+  'custom-scorers-empty': {
+    tabLabel: 'Custom Scorers', title: 'Your custom scorers will appear here',
+    rows: [
+      { label: 'Org copy', value: 'Create and activate a scorer in Agentforce Studio to start tracking trends over time.' },
+    ],
+    purpose: 'Explains the empty Custom Scorers category when no custom scorer is publishing trends yet.',
+    useCase: 'Teach that Analytics waits for activated scorers before this category fills in.',
+    practical: 'Do not treat this empty state as a broken dashboard; it is the default until scorers exist.',
+    sources: [S.scorers, S.analytics],
+  },
+  'trust-instruction-adherence': {
+    tabLabel: 'Trust', title: 'Instruction Adherence Rate',
+    rows: [
+      { label: 'Category', value: 'Aggregated Trust Metrics' },
+      { label: 'Common org state', value: 'Shows as "-" / insufficient data until enough feedback volume accumulates.' },
+    ],
+    purpose: 'Indicates how often the agent stays within its instructions and guardrails.',
+    useCase: 'Watch for drops after prompt or knowledge changes that introduce conflicting rules.',
+    practical: 'A dash does not mean Trust is missing from the UI; it means there is not yet enough data to score.',
+    sources: [S.analytics, S.testResults],
+  },
+  'trust-toxicity': {
+    tabLabel: 'Trust', title: 'Toxicity Score',
+    rows: [
+      { label: 'Category', value: 'Aggregated Trust Metrics' },
+      { label: 'Common org state', value: 'Shows as "-" / insufficient data until enough volume accumulates.' },
+    ],
+    purpose: 'Tracks toxic or unsafe language signals in agent conversations.',
+    useCase: 'Governance and brand-risk reviews after enabling Trust Layer / feedback pipelines.',
+    practical: 'Do not invent a numeric threshold from this teaching app; use official docs and your org policy.',
+    sources: [S.analytics],
+  },
+  'voice-agent-talk-ratio': {
+    tabLabel: 'Voice', title: 'Agent Talk Ratio',
+    rows: [
+      { label: 'Category', value: 'Aggregated Voice Metrics' },
+      { label: 'Common org state', value: 'May show "-" when voice volume is low or the metric is not yet populated.' },
+    ],
+    purpose: 'Share of talk time attributed to the agent in voice conversations (alongside Interruption Rate).',
+    useCase: 'Tune how much the agent speaks versus the customer on voice channels.',
+    practical: 'Official formula details should come from Salesforce Help; this replica does not invent thresholds.',
+    sources: [S.analytics],
+  },
+  'health-rag-latency': {
+    tabLabel: 'Health', title: 'Agent Response Latency percentiles',
+    rows: [
+      { label: 'Metrics', value: 'P50 / P90 / P95 / P99 Agent Response Latency (and completion latency variants in the live org).' },
+      { label: 'Gating', value: 'RAG metrics require RAG to be enabled from Setup, then Analytics Foundations DMOs and app reconfiguration.' },
+    ],
+    purpose: 'Latency percentiles show how long the agent takes to respond; RAG-related latency surfaces need RAG provisioning.',
+    useCase: 'Separate slow-model problems from retrieval pipeline problems when RAG is enabled.',
+    practical: 'A dash here often means RAG (or related DMOs) is not ready, not that Health is broken.',
+    sources: [S.analytics],
+  },
+  'sessions-evaluations': {
+    tabLabel: 'Sessions & Intents', title: 'Evaluations',
+    rows: [{ label: 'Control', value: 'Evaluations dropdown on the Sessions & Intents toolbar in the live org.' }],
+    purpose: 'Opens evaluation-related views for sessions once evaluation workflows are configured.',
+    useCase: 'Move from raw session lists into graded evaluation work.',
+    practical: 'Chrome match for Studio; evaluation content depends on org setup.',
+    sources: [S.analytics],
+  },
+  'sessions-saved-view': {
+    tabLabel: 'Sessions & Intents', title: 'Saved views',
+    rows: [
+      { label: 'Controls', value: 'Default View, New Saved View, Pin this view, More view actions.' },
+    ],
+    purpose: 'Lets analysts save filter combinations for Sessions & Intents.',
+    useCase: 'Pin a Service-agent Last-7-Days view for the workshop.',
+    practical: 'Teaching replica keeps the chrome clickable; persistence is not stored server-side here.',
+    sources: [S.analytics],
   },
   'sessions-processing-banner': {
     tabLabel: 'Sessions & Intents', title: 'Processing latest sessions',

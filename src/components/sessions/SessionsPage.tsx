@@ -34,7 +34,12 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
           <h1 className="page-title">Sessions &amp; Intents</h1>
           <button className="info-dot" onClick={() => onOpenModal('sessions-page')} aria-label="About Sessions & Intents">&#9432;</button>
         </div>
-        <button className="help-btn" onClick={() => onOpenModal('sessions-help')}>&#128218; Sessions &amp; Intents Help</button>
+        <div className="page-head-actions">
+          <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>Default View</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>New Saved View</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-evaluations')}>Evaluations</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-help')}>&#128218; Sessions &amp; Intents Help</button>
+        </div>
       </div>
 
       <div className="filter-bar">
