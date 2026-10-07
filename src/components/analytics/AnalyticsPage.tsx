@@ -27,15 +27,14 @@ export function AnalyticsPage({ nav, onOpenModal }: Props) {
 
   return (
     <div className="analytics-page">
-      <div className="page-head">
-        <div className="page-head-left">
-          <div className="page-icon" aria-hidden>&#128202;</div>
-          <div>
-            <div className="page-eyebrow">Agent Analytics</div>
-            <h1 className="page-title">{title}</h1>
-          </div>
+      <div className="sf-list-head">
+        <div className="sf-list-head-left">
+          <button type="button" className="sf-list-title" onClick={() => onOpenModal('tab-overview')}>
+            <span className="sf-list-title-icon" aria-hidden>&#128202;</span>
+            <span>{title}</span>
+          </button>
           <div className="agent-type">
-            <button className="field-label" onClick={() => onOpenModal('agent-type')}>Agent Type</button>
+            <button type="button" className="field-label" onClick={() => onOpenModal('agent-type')}>Agent Type</button>
             <Dropdown
               value={isService ? 'Service Agent' : 'Employee Agent'}
               options={AGENT_TYPE_OPTIONS}
@@ -45,17 +44,17 @@ export function AnalyticsPage({ nav, onOpenModal }: Props) {
             />
           </div>
         </div>
-        <div className="page-head-actions">
-          <button className="help-btn" onClick={() => onOpenModal('analytics-settings')} aria-label="Analytics Settings">
-            &#9881; Analytics Settings
+        <div className="sf-list-head-right">
+          <button type="button" className="sf-icon-btn" onClick={() => onOpenModal('analytics-settings')} aria-label="Analytics Settings" title="Analytics Settings">
+            &#9881;
           </button>
-          <button className="help-btn" onClick={() => onOpenModal('agent-analytics-help')}>
-            &#128218; Agent Analytics Help
+          <button type="button" className="sf-btn" onClick={() => onOpenModal('agent-analytics-help')}>
+            Agent Analytics Help
           </button>
         </div>
       </div>
 
-      <div className="filter-bar">
+      <div className="filter-bar sf-filter-bar">
         <button type="button" className="filter-by linkish" onClick={() => onOpenModal('filter-by')}>Filter by:</button>
         <Field label="Agent" modal="filter-agent" value={nav.agent} options={AGENT_FILTER_OPTIONS} onChange={nav.setAgent} onOpenModal={onOpenModal} />
         <Field label="Timeframe" modal="filter-timeframe" value={nav.timeframe} options={TIMEFRAME_OPTIONS} onChange={nav.setTimeframe} onOpenModal={onOpenModal} />

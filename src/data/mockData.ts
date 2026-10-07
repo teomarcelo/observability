@@ -315,6 +315,7 @@ export function computeBreakdown(bd: PerfBreakdown, selectItem: string, metric: 
 }
 
 // ── Sessions & Intents ──────────────────────────────────────────────────────
+/** Default Fields to Display (org Select Fields modal) — Sources/Errors are Available only. */
 export const SESSION_COLUMNS = [
   'Session ID',
   'Timestamp',
@@ -324,26 +325,99 @@ export const SESSION_COLUMNS = [
   'Initial Agent Responses',
   'Subagents',
   'Actions',
-  'Sources',
+];
+
+export const SESSION_AVAILABLE_COLUMNS = [
+  'Connected Subagent Exec Duration',
+  'Deflection Score',
+  'Abandon Score',
+  'Agent Talk Ratio',
+  'Connected Subagents',
   'Errors',
+  'User Feedback',
+  'Instruction Adherence',
+  'Sources',
+  'Toxicity Score',
 ];
 
 export const unprocessedSessions: SessionRow[] = [
-  { id: '01a1179e-5ca1-79d2-9613-d3ceebd7ed7b', timestamp: '10/07/2026, 11:26:59 AM', duration: '--', outcome: 'NOT_SET', outcomeLevel: 'processing', initialMessage: '--' },
-  { id: '0Ub5f00000ABc12', timestamp: '2026-07-14 15:41', duration: '00:01:52', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Provide me information about the fusion bites restaurant' },
-  { id: '0Ub5f00000ABc34', timestamp: '2026-07-14 15:38', duration: '00:00:47', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need to speak to an agent' },
-  { id: '0Ub5f00000ABc56', timestamp: '2026-07-14 15:33', duration: '00:03:12', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need some help with info about a store' },
+  {
+    id: '0Ub5f00000ABc12', timestamp: 'Jul 14, 2026, 3:41 p.m.', duration: '00:01:52',
+    outcome: 'NOT_SET', outcomeLevel: 'not_set',
+    initialMessage: 'Provide me information about the fusion bites restaurant',
+    initialAgentResponse: '', subagents: '', actions: '',
+  },
+  {
+    id: '0Ub5f00000ABc34', timestamp: 'Jul 14, 2026, 3:38 p.m.', duration: '00:00:47',
+    outcome: 'NOT_SET', outcomeLevel: 'not_set',
+    initialMessage: 'I need to speak to an agent',
+    initialAgentResponse: '', subagents: '', actions: '',
+  },
+  {
+    id: '0Ub5f00000ABc56', timestamp: 'Jul 14, 2026, 3:33 p.m.', duration: '00:03:12',
+    outcome: 'NOT_SET', outcomeLevel: 'not_set',
+    initialMessage: 'I need some help with info about a store',
+    initialAgentResponse: '', subagents: '', actions: '',
+  },
+  {
+    id: '0Ub5f00000ABc78', timestamp: 'Jul 14, 2026, 3:27 p.m.', duration: '00:02:05',
+    outcome: 'NOT_SET', outcomeLevel: 'not_set',
+    initialMessage: 'Where is my order #10482?',
+    initialAgentResponse: '', subagents: '', actions: '',
+  },
+  {
+    id: '0Ub5f00000ABc90', timestamp: 'Jul 14, 2026, 3:22 p.m.', duration: '00:01:18',
+    outcome: 'NOT_SET', outcomeLevel: 'not_set',
+    initialMessage: 'Can I return an item after 30 days?',
+    initialAgentResponse: '', subagents: '', actions: '',
+  },
 ];
 
-// Mock "processed" rows to demonstrate the populated table (org currently shows
-// the "Processing latest sessions" state). Data is mock; structure is verbatim.
+// Populated Processed rows for teaching (AGT505-style). Trailsignup can be empty;
+// structure/columns match org Select Fields defaults.
 export const processedSessions: SessionRow[] = [
-  { id: '0Ub5f00000AAa01', timestamp: '2026-07-13 11:02', duration: '00:02:14', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'Where is my order #10482?' },
-  { id: '0Ub5f00000AAa02', timestamp: '2026-07-13 10:51', duration: '00:04:39', outcome: 'Escalated', outcomeLevel: 'escalated', initialMessage: 'I want to dispute a charge' },
-  { id: '0Ub5f00000AAa03', timestamp: '2026-07-13 10:44', duration: '00:00:39', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'Reset my password please' },
-  { id: '0Ub5f00000AAa04', timestamp: '2026-07-13 10:31', duration: '00:05:20', outcome: 'Abandoned', outcomeLevel: 'abandoned', initialMessage: 'Update my store hours' },
-  { id: '0Ub5f00000AAa05', timestamp: '2026-07-13 10:22', duration: '00:01:47', outcome: 'Resolved', outcomeLevel: 'resolved', initialMessage: 'What is your return policy?' },
-  { id: '0Ub5f00000AAa06', timestamp: '2026-07-13 10:08', duration: '00:03:02', outcome: 'Escalated', outcomeLevel: 'escalated', initialMessage: 'Cancel my order that already shipped' },
+  {
+    id: '0Ub5f00000AAa01', timestamp: 'Jul 13, 2026, 11:02 a.m.', duration: '00:02:14',
+    outcome: 'Resolved', outcomeLevel: 'resolved',
+    initialMessage: 'Where is my order #10482?',
+    initialAgentResponse: 'Your order #10482 shipped yesterday and is out for delivery.',
+    subagents: 'Storefront_Search', actions: 'Get_Order_Details',
+  },
+  {
+    id: '0Ub5f00000AAa02', timestamp: 'Jul 13, 2026, 10:51 a.m.', duration: '00:04:39',
+    outcome: 'Escalated', outcomeLevel: 'escalated',
+    initialMessage: 'I want to dispute a charge',
+    initialAgentResponse: 'I can help look up the charge. Connecting you with a specialist.',
+    subagents: 'Support_Policies_and_Terms', actions: 'Create_Case, Escalate_To_Agent',
+  },
+  {
+    id: '0Ub5f00000AAa03', timestamp: 'Jul 13, 2026, 10:44 a.m.', duration: '00:00:39',
+    outcome: 'Resolved', outcomeLevel: 'resolved',
+    initialMessage: 'Reset my password please',
+    initialAgentResponse: 'I sent a password reset link to the email on your account.',
+    subagents: 'greeting', actions: 'Reset_Password',
+  },
+  {
+    id: '0Ub5f00000AAa04', timestamp: 'Jul 13, 2026, 10:31 a.m.', duration: '00:05:20',
+    outcome: 'Abandoned', outcomeLevel: 'abandoned',
+    initialMessage: 'Update my store hours',
+    initialAgentResponse: 'Which store location should I update?',
+    subagents: 'NOT_SET', actions: '',
+  },
+  {
+    id: '0Ub5f00000AAa05', timestamp: 'Jul 13, 2026, 10:22 a.m.', duration: '00:01:47',
+    outcome: 'Resolved', outcomeLevel: 'resolved',
+    initialMessage: 'What is your return policy?',
+    initialAgentResponse: 'Most items can be returned within 30 days with the original receipt.',
+    subagents: 'Support_Policies_and_Terms', actions: 'Search_Knowledge',
+  },
+  {
+    id: '0Ub5f00000AAa06', timestamp: 'Jul 13, 2026, 10:08 a.m.', duration: '00:03:02',
+    outcome: 'Escalated', outcomeLevel: 'escalated',
+    initialMessage: 'Cancel my order that already shipped',
+    initialAgentResponse: 'Because the order already shipped, a specialist needs to help.',
+    subagents: 'Storefront_Search', actions: 'Get_Order_Details, Escalate_To_Agent',
+  },
 ];
 
 // ── Scorers (10 rows, verbatim structure captured from org) ──────────────────

@@ -74,8 +74,12 @@ export interface SessionRow {
   timestamp: string;
   duration: string;
   outcome: string;
-  outcomeLevel: 'resolved' | 'escalated' | 'abandoned' | 'processing';
+  outcomeLevel: 'resolved' | 'escalated' | 'abandoned' | 'processing' | 'not_set';
   initialMessage: string;
+  /** Default Intent Fields columns (org Select Fields → Fields to Display). */
+  initialAgentResponse?: string;
+  subagents?: string;
+  actions?: string;
 }
 
 export interface ScorerRow {

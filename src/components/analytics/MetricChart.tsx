@@ -20,15 +20,19 @@ export function MetricChart({ sel, metric, granularity, onOpenModal }: Props) {
   return (
     <div className="metric-chart">
       <button className="chart-title heading-btn" onClick={() => onOpenModal('metric-chart')}>
-        {metric.label} over time
+        Timeframe
         <InfoDot modalKey="metric-chart" onOpenModal={onOpenModal} label="chart" />
       </button>
       <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#eef1f6" />
-          <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#5c6b7a' }} />
-          <YAxis tick={{ fontSize: 11, fill: '#5c6b7a' }} width={40} />
-          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e9f0' }} />
+        <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 8 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
+          <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#706e6b' }} />
+          <YAxis
+            tick={{ fontSize: 11, fill: '#706e6b' }}
+            width={48}
+            label={{ value: metric.label, angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: '#706e6b' } }}
+          />
+          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, border: '1px solid #c9c7c5' }} />
           <Legend wrapperStyle={{ fontSize: 11 }} />
           {agents.map(a => (
             <Line
@@ -38,8 +42,8 @@ export function MetricChart({ sel, metric, granularity, onOpenModal }: Props) {
               name={a}
               stroke={AGENT_COLORS[a] ?? '#0176d3'}
               strokeWidth={2}
-              dot={{ r: 3 }}
-              activeDot={{ r: 5 }}
+              dot={{ r: 2.5 }}
+              activeDot={{ r: 4 }}
               isAnimationActive={true}
             />
           ))}
