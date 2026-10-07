@@ -17,6 +17,9 @@ const COL_MODAL: Record<string, string> = {
   'Session Duration': 'col-session-duration',
   'Session Outcome': 'col-session-outcome',
   'Initial User Messages': 'col-initial-messages',
+  'Initial Agent Responses': 'col-initial-agent-responses',
+  'Subagents': 'col-subagents',
+  'Actions': 'col-actions',
 }
 
 export function SessionsPage({ nav, onOpenModal }: Props) {
@@ -54,6 +57,12 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
           </span>
         </div>
 
+        {sessionTab === 'processed' && (
+          <button type="button" className="sessions-banner" onClick={() => onOpenModal('sessions-processing-banner')}>
+            Processing latest sessions. Insights aren&apos;t ready yet for your latest sessions. Raw data is available now in the Unprocessed Sessions tab.
+          </button>
+        )}
+
         <table className="data-table">
           <thead>
             <tr>
@@ -72,6 +81,9 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
                 <td>{r.duration}</td>
                 <td><span className={`outcome ${r.outcomeLevel}`}>{r.outcome}</span></td>
                 <td className="truncate">{r.initialMessage}</td>
+                <td>--</td>
+                <td>--</td>
+                <td>--</td>
               </tr>
             ))}
           </tbody>

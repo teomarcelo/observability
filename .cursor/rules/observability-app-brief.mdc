@@ -1,0 +1,39 @@
+---
+description: Origin prompts and product brief for the Agentforce Observability teaching app
+alwaysApply: true
+---
+
+# Agentforce Observability Lab
+
+Educational, click-to-learn replica of Agentforce Studio **Observe & Optimize**. Live at https://af-observability.netlify.app/. Mock/seeded data only; no Salesforce org connection. Unofficial learning project.
+
+## Product rules
+
+- Recreate Observe & Optimize structure (Analytics, Sessions & Intents, Scorers, Alerts) closely enough to teach from.
+- Nearly every button, metric, percentage, chart, tab, filter, column, toggle, and section must open an explanatory modal covering: what it is, how to read the value, purpose, use cases, concrete examples, and links to official Salesforce docs only.
+- Prefer official sources: help.salesforce.com, developer.salesforce.com, trailhead.salesforce.com, architect.salesforce.com. Do not invent formulas or thresholds when docs do not state them.
+- Keep the app deployable as a static teaching surface (HTML/React build). Instructor-reference disclaimer stays visible.
+
+## Exercise guide (source of truth)
+
+Current EG: `/Users/tmarcelo/Downloads/2026 Downloads/AGT505_FULL_SP26v1-English-EG (3).pdf`  
+Title: **Agentforce Observability Activation Workshop (AGT505)** — Exercise Guide (SP26v1 English).  
+Contents: Setup; Exercise 1 Set Up Agentforce Observability; Exercise 2 Interact with an Agent; Exercise 3 Experience Agentforce Observability.
+
+When validating or updating the teaching app, match this EG. Older filenames (e.g. `AGT505_Observability_Activation_Workshop_EG.pdf`) are historical only.
+
+## Origin prompts (Claude Code, AGT505 workshop)
+
+**Brief 1**
+
+Review the exercise guide and slides. Validate every exercise step against the disposable Salesforce trial org, documenting anything broken, outdated, renamed, or moved. Recreate the dashboards and observability features as a runnable HTML teaching app, matching the guide closely. Make every button, metric, percentage, chart, and section interactive. Each opens a modal explaining: what it represents, how to interpret values, purpose, practical use cases, concrete examples, and relevant official Salesforce documentation. Deliver the app with validation findings and corrected exercise steps.
+
+**Brief 2**
+
+Create a deployed, accessible HTML app. Recreate the dashboards and observability features from the guide verbatim so they can be explained to customers. Each button or section opens a modal explaining what numbers or percentages mean, use case, purpose, and examples, linked to official documentation.
+
+## Later Cursor refinements
+
+- Preserve the click-to-learn modal pattern from the deployed v1.
+- Audit every tab, layer, component, and section so each has a clickable modal.
+- Public repo with a README that explains the teaching purpose.

@@ -37,3 +37,8 @@ screenshots5/
 .auth/
 capture-inventory.json
 .sfauth.json
+
+# AGT505 local run dumps (keep EG deliverables tracked if desired)
+agt505-run/paste-pronto.cjs
+agt505-run/pronto-agent-script.txt
+agt505-run/screenshots/

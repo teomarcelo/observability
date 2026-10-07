@@ -1,0 +1,143 @@
+{
+  "surface": "sessions",
+  "filters": [
+    "Agent",
+    "Timeframe (Last 7 Days)",
+    "Channel",
+    "Modality"
+  ],
+  "tabs": [
+    "Processed Sessions",
+    "Unprocessed Sessions"
+  ],
+  "banner": "Processing latest sessions / Insights aren't ready yet... Raw data in Unprocessed Sessions",
+  "columns": [
+    "Session ID",
+    "Timestamp",
+    "Session Duration",
+    "Session Outcome",
+    "Initial User Messages",
+    "Initial Agent Responses",
+    "Subagents",
+    "Actions"
+  ],
+  "evidence": "1 unprocessed session after Ex2 Live Test (01a1179e-...)",
+  "egDiffs": [
+    "EG Ex3 Task 2 Optimization \u2192 Insights is not a separate Observe nav item in this org; Insights messaging appears on Sessions & Intents / Analytics Performance Insights",
+    "Observe nav is Analytics, Sessions & Intents, Alerts (no Scorers)"
+  ],
+  "clickables": [
+    {
+      "id": "sessions-00",
+      "surface": "sessions",
+      "label": "Agent",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "agent"
+    },
+    {
+      "id": "sessions-01",
+      "surface": "sessions",
+      "label": "Timeframe",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "timeframe"
+    },
+    {
+      "id": "sessions-02",
+      "surface": "sessions",
+      "label": "Channel",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "channel"
+    },
+    {
+      "id": "sessions-03",
+      "surface": "sessions",
+      "label": "Modality",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "modality"
+    },
+    {
+      "id": "sessions-04",
+      "surface": "sessions",
+      "label": "Processed Sessions",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "processed-sessions"
+    },
+    {
+      "id": "sessions-05",
+      "surface": "sessions",
+      "label": "Unprocessed Sessions",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "unprocessed-sessions"
+    },
+    {
+      "id": "sessions-06",
+      "surface": "sessions",
+      "label": "Sessions & Intents Help",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "sessions-&-intents-help"
+    },
+    {
+      "id": "sessions-07",
+      "surface": "sessions",
+      "label": "processing banner",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "processing-banner"
+    },
+    {
+      "id": "sessions-08",
+      "surface": "sessions",
+      "label": "Session ID",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "session-id"
+    },
+    {
+      "id": "sessions-09",
+      "surface": "sessions",
+      "label": "Timestamp",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "timestamp"
+    },
+    {
+      "id": "sessions-10",
+      "surface": "sessions",
+      "label": "Session Duration",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "session-duration"
+    },
+    {
+      "id": "sessions-11",
+      "surface": "sessions",
+      "label": "Session Outcome",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "session-outcome"
+    },
+    {
+      "id": "sessions-12",
+      "surface": "sessions",
+      "label": "Initial User Messages",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "initial-user-messages"
+    },
+    {
+      "id": "sessions-13",
+      "surface": "sessions",
+      "label": "Initial Agent Responses",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "initial-agent-responses"
+    },
+    {
+      "id": "sessions-14",
+      "surface": "sessions",
+      "label": "Subagents",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "subagents"
+    },
+    {
+      "id": "sessions-15",
+      "surface": "sessions",
+      "label": "Actions",
+      "screenshot": "screenshots/sessions-unprocessed.png",
+      "modalKeyNeeded": "actions"
+    }
+  ]
+}

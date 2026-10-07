@@ -1,6 +1,10 @@
 # Agentforce Observability, an interactive replica
 
-An educational, click-to-learn replica of the **Observe & Optimize** area of Salesforce Agentforce Studio. It recreates the real dashboard's structure (Analytics, Sessions & Intents, Scorers, Alerts) and makes almost every element clickable: click a metric, tab, filter, column, toggle, or control and a modal explains what it is, how to read the number, and what a higher or lower value signals to a team.
+An educational, click-to-learn replica of the **Observe & Optimize** area of Salesforce Agentforce Studio. It recreates the real dashboard's structure and makes almost every element clickable: click a metric, tab, filter, column, toggle, or control and a modal explains what it is, how to read the number, and what a higher or lower value signals to a team.
+
+Live: https://af-observability.netlify.app/  
+Canonical GitHub: https://github.com/teomarcelo/observability  
+(Former remote: `tmarcelojr/observability`.)
 
 The goal is to help someone learn agent observability by exploring the actual UI, not by reading a wall of docs.
 
@@ -9,12 +13,13 @@ The goal is to help someone learn agent observability by exploring the actual UI
 ## What it covers
 
 - **Analytics** with two views:
-  - **Overview**: aggregated metrics grouped into Effectiveness, Usage, Quality, Health, Trust, and Voice (Service agents) or User Satisfaction (Employee agents), as metric cards with a time-series chart, plus a dense Table View.
+  - **Overview**: aggregated metrics grouped into Effectiveness, Usage, Quality, Health, Trust, Voice, and Custom Scorers (Service) or User Satisfaction (Employee), as metric cards with a time-series chart, plus Table View.
   - **Performance Insights**: breakdowns of any metric by Subagents, Intents, or Actions.
-- **Sessions & Intents**: processed and unprocessed session tables with per-column explanations.
-- **Scorers**: the scorer list (standard and custom) with per-column and per-scorer detail.
+- **Sessions & Intents**: processed and unprocessed session tables with per-column explanations and the processing banner when Insights lag.
 - **Alerts**: the empty/setup state and its configuration requirements.
-- Agent-type switch (Service vs. Employee) and the full filter bar (Agent, Timeframe, Channel, Modality).
+- Agent-type switch (Service vs. Employee) and the filter bar (Agent, Timeframe, Channel, Modality).
+
+Observe & Optimize nav in the AGT505 trial org is **Analytics → Sessions & Intents → Alerts** (no separate Scorers item in that org). The teaching app matches that nav.
 
 ## Learn-by-clicking
 
@@ -25,6 +30,62 @@ Nearly every surface opens an explanatory modal:
 - Sidebar items, section headings, the chart, and even the Salesforce shell chrome in the header are all clickable.
 
 Where a metric's exact in-product formula isn't publicly quotable, the modal says so and links only to official Salesforce documentation rather than inventing thresholds.
+
+## How this project was created (roles and rules)
+
+### Product rules (hard constraints)
+
+1. Match the trial org UI for demo purposes (labels, tabs, filters, section structure). Trust the **org** over outdated exercise-guide screenshots when they disagree.
+2. Do **not** reinvent the design. Keep the Salesforce-like shell, cards, and click-to-learn modal pattern.
+3. Keep **mock/seeded data** in `src/data/mockData.ts`. Do not pipe live org metric numbers into the app.
+4. Keep the **clickable modal** system (`Modal.tsx`, `modalContent.ts`, `InfoDot` / `onOpenModal`).
+5. Every org clickable must be clickable in the app and open a modal. Every section has a modal.
+6. Modal sources: official Salesforce docs only (help / developer / trailhead / architect).
+7. Never commit `.sfauth.json`, passwords, or `.auth/` session data.
+
+### Exercise guide source of truth
+
+Workshop EG used for validation and updates:
+
+`/Users/tmarcelo/Downloads/2026 Downloads/AGT505_FULL_SP26v1-English-EG (3).pdf`
+
+Updated EG artifacts from a run (when generated) live under `agt505-run/`.
+
+### Origin prompts (summary)
+
+1. Validate the AGT505 exercise steps against a disposable trial org; recreate Observability dashboards as a runnable HTML/React teaching app; every button/metric/section opens a modal with meaning, purpose, use cases, examples, and official docs.
+2. Deploy an accessible teaching surface that recreates the guide features so they can be explained to customers, with modals linked to official documentation.
+
+### Orchestrator loop and waves
+
+Work is run as an **orchestrator loop**: spawn subagents → collect results → run phase tests → fix on FAIL → advance only on PASS. Implementers do **not** self-certify UI parity.
+
+| Wave | What |
+|---|---|
+| 0 | Prep: ProntoAgent script, EG checklist, modal coverage audit |
+| 1 | Serial org: login + Exercise 2 (create/test/activate Pronto Service Agent) |
+| 2 | Parallel org inventory: Analytics, Insights (if present), Sessions, nav siblings + screenshots |
+| 3 | Parallel code sync by file ownership (analytics / sessions / shell / modalContent sole writer) |
+| 3b | **CRITICAL UI parity QA** (separate agents; FAIL blocks deploy; metric *values* may stay mock) |
+| 4 | Deploy Netlify `af-observability` + re-QA against the live URL |
+| 5 | Brand-new EG PDF: same design/format as SP26v1, highlight changes, replace dashboard screenshots with new org shots |
+| Docs | README roles/rules (this section) |
+
+### Roles
+
+| Role | Responsibility |
+|---|---|
+| Orchestrator | Advances waves, owns FAIL lists, writes `agt505-run/RUNLOG.md` |
+| GitHub / Netlify connector | Hosts under `teomarcelo/observability`, keeps Netlify deployable |
+| Wave 0 agents | Pronto script, EG parse, replica modal audit |
+| Ex2 operator | Builder create / Live Test / Commit / Activate |
+| Inventory agents | Click every org control; screenshots + inventory JSON |
+| UI sync agents | Match org labels/structure without redesign |
+| Modals-docs owner | Sole writer of new `modalContent.ts` keys |
+| UI parity QA | Independent gate vs org inventory (local then live) |
+| Deploy verifier | Build + Netlify + live modal smoke |
+| EG PDF author | Updated guide with highlights + new screenshots |
+| README author | Documents roles, rules, waves |
 
 ## Tech
 
@@ -40,7 +101,7 @@ src/
     layout/       Header, Sidebar
     analytics/    Overview, Performance Insights, Table View, Metric Chart
     sessions/     Sessions & Intents
-    scorers/      Scorers list
+    scorers/      Scorers list (legacy page; not in AGT505 Observe nav)
     alerts/       Alerts empty state
     shared/       Modal, Dropdown, InfoDot
   data/
@@ -50,6 +111,7 @@ src/
   hooks/
     useNavigation.ts  Section/tab/filter state
     useModal.ts       Modal open/close + content lookup
+agt505-run/           Run artifacts (inventory, screenshots, RUNLOG; local)
 ```
 
 ## Run it locally

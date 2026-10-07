@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><title>AGT505 Observability EG — Updated (highlighted)</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin:0;background:#eef1f6;color:#1a1a1a}
+.page{max-width:900px;margin:24px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 30px rgba(0,0,0,.1)}
+.hdr{background:#032D60;color:#fff;padding:36px 48px}
+.hdr .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7EC8E3;font-weight:700}
+.hdr h1{margin:8px 0 6px;font-size:26px}
+.hdr p{color:#a8c8e8;margin:0;font-size:14px}
+.ch{background:#f0f4fa;border-top:3px solid #0070D2;padding:14px 48px;font-weight:800}
+.sec{padding:18px 48px 8px}
+.sec h2{font-size:18px;margin:0 0 8px}
+.sec ol{margin:0 0 16px;padding-left:22px;line-height:1.55}
+mark.chg{background:#FFF3B0;padding:0 3px;border-radius:2px}
+.callout{border-left:4px solid #FE9339;background:#FFF8E6;padding:12px 14px;margin:12px 0 18px;font-size:13px}
+.shot{width:100%;border:1px solid #dde5f0;border-radius:6px;margin:8px 0 18px}
+.footer{padding:16px 48px 40px;font-size:12px;color:#666}
+</style></head><body><div class="page">
+<div class="hdr">
+  <div class="eyebrow">Agentforce Activation Workshops (AGT505)</div>
+  <h1>Agentforce Observability Activation Workshop</h1>
+  <p>Exercise Guide — Updated against live org (SP26v1 base). Changes highlighted.</p>
+</div>
+<div class="ch">Change log (highlighted vs SP26v1 EG)</div>
+<div class="sec">
+  <div class="callout"><strong>How to read this PDF:</strong> Yellow <mark class="chg">highlights</mark> mark steps or labels corrected to match the AGT505 trial org UI captured during the run. Screenshots below are new org captures (not the Netlify mock app).</div>
+  <ol>
+    <li><mark class="chg">Observe &amp; Optimize nav:</mark> Analytics, Sessions &amp; Intents, Alerts (no Scorers item; no separate Optimization → Insights nav item).</li>
+    <li><mark class="chg">Analytics top tabs:</mark> Overview and Performance Insights (not separate Agent Effectiveness / Quality top tabs). Effectiveness/Usage/Quality/Health/Trust/Voice/<mark class="chg">Custom Scorers</mark> are category pills under Overview.</li>
+    <li><mark class="chg">Abandon Rate</mark> (EG said Abandonment Rate).</li>
+    <li><mark class="chg">Sessions:</mark> Processed may show “Processing latest sessions…”; use <mark class="chg">Unprocessed Sessions</mark> for immediate post-test rows. Columns include Initial Agent Responses, Subagents, Actions.</li>
+  </ol>
+</div>
+<div class="ch">Exercise 2: Interact with an Agent</div>
+<div class="sec">
+  <h2>Task 1 — Create agent from script</h2>
+  <ol>
+    <li>App Launcher → Agentforce Studio → Agents.</li>
+    <li>New Agent menu → <strong>New from Script</strong>.</li>
+    <li>Paste script from <code>sforce.co/ProntoAgent</code> → Create Agent.</li>
+    <li>Preview → Select User → <strong>EinsteinServiceAgent User</strong> → Save.</li>
+  </ol>
+  <h2>Task 2 — Test and activate</h2>
+  <ol>
+    <li>Preview in Live Test Mode. Reset between turns.</li>
+    <li>Utterances: fusion bites restaurant; speak to an agent; help with info about a store.</li>
+    <li>Save → Commit Version → Activate → exit Builder.</li>
+  </ol>
+</div>
+<div class="ch">Exercise 3: Experience Agentforce Observability</div>
+<div class="sec">
+  <h2>Task 1 — Analytics (Service Agent)</h2>
+  <ol>
+    <li>Agentforce Studio → Analytics. Agent Type = Service Agent.</li>
+    <li>Filter bar: Agent, Timeframe, Channel, Modality (<mark class="chg">count these four</mark>).</li>
+    <li>Explore <mark class="chg">Overview</mark> → Agent Performance / Aggregated Effectiveness Metrics (Success, Engagement, Abandon, Escalation, Deflection).</li>
+    <li>Explore category pills including <mark class="chg">Custom Scorers</mark> (may show Task Resolution / Einstein Feedback disabled).</li>
+    <li>Open <mark class="chg">Performance Insights</mark> for breakdowns (replaces EG “Agent Effectiveness” top-tab framing).</li>
+  </ol>
+  <p>Org screenshot — Analytics Overview:</p>
+  <img class="shot" src="screenshots/analytics-overview.png" alt="Analytics overview from org"/>
+  <h2>Task 2 — <mark class="chg">Insights (via Sessions / Performance Insights)</mark></h2>
+  <div class="callout">SP26v1 EG said Optimization → Insights. In this org, use Analytics → Performance Insights and the Sessions processing banner instead of a separate Insights page.</div>
+  <h2>Task 3 — Sessions &amp; Intents</h2>
+  <ol>
+    <li>Select Sessions &amp; Intents.</li>
+    <li>Processed Sessions may be empty / processing; open <mark class="chg">Unprocessed Sessions</mark> to see test traffic.</li>
+    <li>Open a Session ID for the chat/trace detail when available.</li>
+  </ol>
+  <p>Org screenshot — Unprocessed Sessions:</p>
+  <img class="shot" src="screenshots/sessions-unprocessed.png" alt="Unprocessed sessions from org"/>
+</div>
+<div class="footer">Unofficial teaching update derived from AGT505 SP26v1 EG + live org capture. Not affiliated with Salesforce. Highlighted text = change vs original EG.</div>
+</div></body></html>

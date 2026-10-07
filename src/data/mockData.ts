@@ -98,6 +98,14 @@ export const SERVICE_TABS: TabDef[] = [
     },
   },
   { id: 'voice', label: 'Voice', heading: 'Aggregated Voice Metrics', metrics: voice },
+  {
+    id: 'custom-scorers', label: 'Custom Scorers', heading: 'Custom Scorers',
+    disabled: {
+      title: 'Task Resolution metric is not enabled',
+      body: 'Task Resolution metric requires Einstein Feedback to be enabled. Enable it from Setup, wait for provisioning to complete and for the related DMOs to be available in the Analytics Foundations SDM, then reconfigure the app.',
+      cta: 'Enable Einstein Feedback',
+    },
+  },
 ];
 
 export const EMPLOYEE_TABS: TabDef[] = [
@@ -264,14 +272,22 @@ export function computeBreakdown(bd: PerfBreakdown, selectItem: string, metric: 
 }
 
 // ── Sessions & Intents ──────────────────────────────────────────────────────
-export const SESSION_COLUMNS = ['Session ID', 'Timestamp', 'Session Duration', 'Session Outcome', 'Initial User Messages'];
+export const SESSION_COLUMNS = [
+  'Session ID',
+  'Timestamp',
+  'Session Duration',
+  'Session Outcome',
+  'Initial User Messages',
+  'Initial Agent Responses',
+  'Subagents',
+  'Actions',
+];
 
 export const unprocessedSessions: SessionRow[] = [
-  { id: '0Ub5f00000ABc12', timestamp: '2026-07-14 15:41', duration: '00:01:52', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Where is my order #10482?' },
-  { id: '0Ub5f00000ABc34', timestamp: '2026-07-14 15:38', duration: '00:00:47', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need to reset my password' },
-  { id: '0Ub5f00000ABc56', timestamp: '2026-07-14 15:33', duration: '00:03:12', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Can I return an item after 30 days?' },
-  { id: '0Ub5f00000ABc78', timestamp: '2026-07-14 15:29', duration: '00:00:58', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'What are your store hours today?' },
-  { id: '0Ub5f00000ABc90', timestamp: '2026-07-14 15:22', duration: '00:02:05', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'My payment was charged twice' },
+  { id: '01a1179e-5ca1-79d2-9613-d3ceebd7ed7b', timestamp: '10/07/2026, 11:26:59 AM', duration: '--', outcome: 'NOT_SET', outcomeLevel: 'processing', initialMessage: '--' },
+  { id: '0Ub5f00000ABc12', timestamp: '2026-07-14 15:41', duration: '00:01:52', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'Provide me information about the fusion bites restaurant' },
+  { id: '0Ub5f00000ABc34', timestamp: '2026-07-14 15:38', duration: '00:00:47', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need to speak to an agent' },
+  { id: '0Ub5f00000ABc56', timestamp: '2026-07-14 15:33', duration: '00:03:12', outcome: 'Unprocessed', outcomeLevel: 'processing', initialMessage: 'I need some help with info about a store' },
 ];
 
 // Mock "processed" rows to demonstrate the populated table (org currently shows

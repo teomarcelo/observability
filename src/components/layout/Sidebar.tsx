@@ -16,10 +16,11 @@ const buildItems: { icon: string; label: string; modalKey: string; external?: bo
   { icon: '\u{1F4BB}', label: 'Agentforce DX', modalKey: 'build-dx' },
 ]
 
+// Observe & Optimize nav mirrors the AGT505 trial org (Analytics, Sessions & Intents, Alerts).
+// Scorers is not present in that org's Observe group; keep the page reachable only if needed for older demos.
 const observeItems: { icon: string; label: string; section: Section; beta?: boolean; infoKey: string }[] = [
   { icon: '\u{1F4C8}', label: 'Analytics', section: 'analytics', infoKey: 'agent-analytics-help' },
   { icon: '\u{1F5C2}', label: 'Sessions & Intents', section: 'sessions', infoKey: 'sessions-page' },
-  { icon: '\u{1F4CB}', label: 'Scorers', section: 'scorers', beta: true, infoKey: 'scorers-page' },
   { icon: '\u{1F514}', label: 'Alerts', section: 'alerts', infoKey: 'alerts-page' },
 ]
 

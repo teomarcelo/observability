@@ -21,6 +21,7 @@ const TAB_MODAL: Record<InnerTab, string> = {
   trust: 'tab-trust',
   voice: 'tab-voice',
   'user-satisfaction': 'tab-user-satisfaction',
+  'custom-scorers': 'tab-custom-scorers',
 }
 
 export function OverviewTab({ nav, sel, onOpenModal }: Props) {
@@ -75,7 +76,14 @@ export function OverviewTab({ nav, sel, onOpenModal }: Props) {
         <div className="disabled-state">
           <h3>{current.disabled.title}</h3>
           <p>{current.disabled.body}</p>
-          <button className="link-btn" onClick={() => onOpenModal(innerTab === 'trust' ? 'trust-disabled' : 'usersat-disabled')}>
+          <button
+            className="link-btn"
+            onClick={() => onOpenModal(
+              innerTab === 'trust' ? 'trust-disabled'
+                : innerTab === 'custom-scorers' ? 'tab-custom-scorers'
+                  : 'usersat-disabled',
+            )}
+          >
             {current.disabled.cta}
           </button>
         </div>

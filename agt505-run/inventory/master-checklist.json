@@ -1,0 +1,15 @@
+{
+  "orgObserveNav": [
+    "Analytics",
+    "Sessions & Intents",
+    "Alerts"
+  ],
+  "analyticsParity": "Overview + Performance Insights; category pills include Custom Scorers; Abandon Rate naming matches org",
+  "sessionsParity": "Columns extended; processing banner added; mock unprocessed rows include Ex2-style prompts",
+  "egHighlightsForPdf": [
+    "EG Ex3 Task 2 Optimization \u2192 Insights is not a separate Observe nav item in this org; Insights messaging appears on Sessions & Intents / Analytics Performance Insights",
+    "Observe nav is Analytics, Sessions & Intents, Alerts (no Scorers)",
+    "EG Agent Effectiveness / Quality top tabs \u2192 org Overview categories + Performance Insights",
+    "EG Abandonment Rate \u2192 org Abandon Rate"
+  ]
+}

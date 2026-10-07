@@ -1,0 +1,313 @@
+{
+  "source": "/tmp/agt505_eg.txt",
+  "sourcePdf": "/Users/tmarcelo/Downloads/2026 Downloads/AGT505_FULL_SP26v1-English-EG (3).pdf",
+  "guide": "Agentforce Observability Activation Workshop (AGT505) SP26v1 English",
+  "exercise2": {
+    "title": "Interact with an Agent",
+    "goal": "Create an agent with script to interact with and see some data coming in to the Observability dashboards.",
+    "timeMinutes": 10,
+    "tasks": [
+      {
+        "id": "ex2-t1",
+        "title": "Create a new agent",
+        "steps": [
+          {
+            "id": "ex2-t1-s1",
+            "action": "Open Agentforce Studio via App Launcher",
+            "expectedUiLabels": [
+              "App Launcher",
+              "Agentforce Studio"
+            ]
+          },
+          {
+            "id": "ex2-t1-s2",
+            "action": "Go to Agents; open New Agent menu and choose New from Script",
+            "expectedUiLabels": [
+              "Agents",
+              "New Agent",
+              "New from Script"
+            ]
+          },
+          {
+            "id": "ex2-t1-s3",
+            "action": "Copy script from sforce.co/ProntoAgent and paste into Agent Script field; select Create Agent",
+            "expectedUiLabels": [
+              "Copy",
+              "Agent Script",
+              "Create Agent"
+            ],
+            "notes": "Pronto agent script saved locally at agt505-run/pronto-agent-script.txt"
+          },
+          {
+            "id": "ex2-t1-s4a",
+            "action": "Select Pronto Service Agent from agents table",
+            "expectedUiLabels": [
+              "Pronto Service Agent"
+            ]
+          },
+          {
+            "id": "ex2-t1-s4b",
+            "action": "Select Preview",
+            "expectedUiLabels": [
+              "Preview"
+            ]
+          },
+          {
+            "id": "ex2-t1-s4c",
+            "action": "Select Select User",
+            "expectedUiLabels": [
+              "Select User"
+            ]
+          },
+          {
+            "id": "ex2-t1-s4d",
+            "action": "Select EinsteinServiceAgent User",
+            "expectedUiLabels": [
+              "EinsteinServiceAgent User"
+            ]
+          },
+          {
+            "id": "ex2-t1-s4e",
+            "action": "Select Save",
+            "expectedUiLabels": [
+              "Save"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ex2-t2",
+        "title": "Test and activate the agent",
+        "steps": [
+          {
+            "id": "ex2-t2-s1a",
+            "action": "Select Preview and ensure Live Test Mode",
+            "expectedUiLabels": [
+              "Preview",
+              "Live Test Mode"
+            ]
+          },
+          {
+            "id": "ex2-t2-s1b",
+            "action": "Enter test utterance about fusion bites restaurant",
+            "expectedUiLabels": [],
+            "utterance": "Provide me information about the fusion bites restaurant"
+          },
+          {
+            "id": "ex2-t2-s1c",
+            "action": "Reset the simulator (top right of testing window)",
+            "expectedUiLabels": [
+              "Reset"
+            ]
+          },
+          {
+            "id": "ex2-t2-s1d",
+            "action": "Enter escalation utterance",
+            "expectedUiLabels": [],
+            "utterance": "I need to speak to an agent"
+          },
+          {
+            "id": "ex2-t2-s1e",
+            "action": "Reset the simulator",
+            "expectedUiLabels": [
+              "Reset"
+            ]
+          },
+          {
+            "id": "ex2-t2-s1f",
+            "action": "Enter store-info utterance",
+            "expectedUiLabels": [],
+            "utterance": "I need some help with info about a store"
+          },
+          {
+            "id": "ex2-t2-s2",
+            "action": "Select Save",
+            "expectedUiLabels": [
+              "Save"
+            ]
+          },
+          {
+            "id": "ex2-t2-s3",
+            "action": "Select Commit Version, then Commit Version again",
+            "expectedUiLabels": [
+              "Commit Version"
+            ]
+          },
+          {
+            "id": "ex2-t2-s4",
+            "action": "Select Activate, then Activate again",
+            "expectedUiLabels": [
+              "Activate"
+            ]
+          },
+          {
+            "id": "ex2-t2-s5",
+            "action": "Exit Builder via left arrow (top left)",
+            "expectedUiLabels": [
+              "Back",
+              "left arrow"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "exercise3": {
+    "title": "Experience Agentforce Observability",
+    "goal": "Navigate the Analytics dashboard to interpret KPIs; review Insights for low-performing topics; drill into session traces.",
+    "timeMinutes": 5,
+    "tasks": [
+      {
+        "id": "ex3-t1",
+        "title": "Explore Agent Analytics for Service Agents in Agentforce Studio",
+        "steps": [
+          {
+            "id": "ex3-t1-s1",
+            "action": "From Agentforce Studio select Analytics",
+            "expectedUiLabels": [
+              "Agentforce Studio",
+              "Analytics"
+            ]
+          },
+          {
+            "id": "ex3-t1-s2",
+            "action": "In Agent Type dropdown, select Service Agent; explore filter bar under Agent Type",
+            "expectedUiLabels": [
+              "Agent Type",
+              "Service Agent"
+            ],
+            "notes": "EG asks how many filters are in the filter bar"
+          },
+          {
+            "id": "ex3-t1-s3a",
+            "action": "On Overview tab, locate Performance Overview and Agent Usage Overview",
+            "expectedUiLabels": [
+              "Overview",
+              "Performance Overview",
+              "Agent Usage Overview"
+            ]
+          },
+          {
+            "id": "ex3-t1-s3b",
+            "action": "View metrics via dropdown for the 5 Performance Overview cards; read descriptions",
+            "expectedUiLabels": [
+              "Engagement Rate",
+              "Escalation Rate",
+              "Deflection Rate",
+              "Abandonment Rate",
+              "Avg. Time to Deflection"
+            ]
+          },
+          {
+            "id": "ex3-t1-s3c",
+            "action": "Locate Agent Usage Overview section and note what information is shown",
+            "expectedUiLabels": [
+              "Agent Usage Overview"
+            ]
+          },
+          {
+            "id": "ex3-t1-s4",
+            "action": "Select Agent Effectiveness tab; review session/outcome insights",
+            "expectedUiLabels": [
+              "Agent Effectiveness",
+              "Total Sessions",
+              "Engaged Sessions",
+              "Deflected Sessions",
+              "Escalated Sessions",
+              "Abandoned Sessions",
+              "Avg. Time to Escalation"
+            ]
+          },
+          {
+            "id": "ex3-t1-s5",
+            "action": "Select Quality tab; review Quality Overview and Data Explorer",
+            "expectedUiLabels": [
+              "Quality",
+              "Quality Overview",
+              "Data Explorer"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ex3-t2",
+        "title": "Explore Optimization Insights",
+        "steps": [
+          {
+            "id": "ex3-t2-s1",
+            "action": "Locate Optimization section and expand it",
+            "expectedUiLabels": [
+              "Optimization"
+            ]
+          },
+          {
+            "id": "ex3-t2-s2",
+            "action": "Select Insights",
+            "expectedUiLabels": [
+              "Insights"
+            ]
+          },
+          {
+            "id": "ex3-t2-s3",
+            "action": "In Select an Agent dropdown, select the Service agent created in Ex2",
+            "expectedUiLabels": [
+              "Select an Agent"
+            ]
+          },
+          {
+            "id": "ex3-t2-s4",
+            "action": "Explore dashboard cards; read the i icons",
+            "expectedUiLabels": [
+              "i"
+            ]
+          },
+          {
+            "id": "ex3-t2-s5",
+            "action": "Scroll to next three cards (may be empty; Insights take time to generate)",
+            "expectedUiLabels": []
+          }
+        ]
+      },
+      {
+        "id": "ex3-t3",
+        "title": "Explore Optimization Sessions & Intents",
+        "steps": [
+          {
+            "id": "ex3-t3-s1",
+            "action": "Select Sessions & Intents",
+            "expectedUiLabels": [
+              "Sessions & Intents"
+            ]
+          },
+          {
+            "id": "ex3-t3-s2",
+            "action": "Confirm Processed Sessions tab is selected by default (may be empty while processing)",
+            "expectedUiLabels": [
+              "Processed Sessions"
+            ]
+          },
+          {
+            "id": "ex3-t3-s3",
+            "action": "Select Unprocessed Sessions; expect test interactions to appear",
+            "expectedUiLabels": [
+              "Unprocessed Sessions",
+              "Sessions & Intent"
+            ]
+          },
+          {
+            "id": "ex3-t3-s4a",
+            "action": "Select a session ID to open session details (chat + agent actions)",
+            "expectedUiLabels": [
+              "Session ID"
+            ]
+          },
+          {
+            "id": "ex3-t3-s4b",
+            "action": "If unprocessed, note processing notice at top of screen",
+            "expectedUiLabels": []
+          }
+        ]
+      }
+    ]
+  }
+}

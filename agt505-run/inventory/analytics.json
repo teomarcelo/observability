@@ -1,0 +1,274 @@
+{
+  "surface": "analytics",
+  "agentType": "Service Agent",
+  "title": "Service Agent Analytics / Agent Analytics",
+  "filters": [
+    "Agent",
+    "Timeframe",
+    "Channel",
+    "Modality"
+  ],
+  "timeframeDefault": "Last 30 Days",
+  "topTabs": [
+    "Overview",
+    "Performance Insights"
+  ],
+  "viewModes": [
+    "Metric Card",
+    "Table View"
+  ],
+  "granularity": [
+    "Day"
+  ],
+  "metricCategories": [
+    "Effectiveness",
+    "Usage",
+    "Quality",
+    "Health",
+    "Trust",
+    "Voice",
+    "Custom Scorers"
+  ],
+  "effectivenessMetrics": [
+    "Success Rate",
+    "Engagement Rate",
+    "Abandon Rate",
+    "Escalation Rate",
+    "Deflection Rate"
+  ],
+  "sections": [
+    "Agent Performance",
+    "Aggregated Effectiveness Metrics",
+    "Session Outcome"
+  ],
+  "emptyStates": [
+    "Try removing or adjusting filters.",
+    "Task Resolution metric is not enabled",
+    "Enable Einstein Feedback"
+  ],
+  "chrome": [
+    "Analytics Settings",
+    "Agent Analytics Help",
+    "Refresh"
+  ],
+  "navSiblings": [
+    "Analytics",
+    "Sessions & Intents",
+    "Alerts"
+  ],
+  "egDiffs": [
+    "EG says Agent Effectiveness and Quality tabs; org shows Overview + Performance Insights with category pills Effectiveness/Usage/Quality/Health/Trust/Voice/Custom Scorers",
+    "EG says Abandonment Rate; org shows Abandon Rate",
+    "EG Performance Overview cards include Avg. Time to Deflection; not visible in current empty Overview dump"
+  ],
+  "clickables": [
+    {
+      "id": "analytics-00",
+      "surface": "analytics",
+      "label": "Agent",
+      "location": "filter",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "filter-agent"
+    },
+    {
+      "id": "analytics-01",
+      "surface": "analytics",
+      "label": "Timeframe",
+      "location": "filter",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "filter-timeframe"
+    },
+    {
+      "id": "analytics-02",
+      "surface": "analytics",
+      "label": "Channel",
+      "location": "filter",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "filter-channel"
+    },
+    {
+      "id": "analytics-03",
+      "surface": "analytics",
+      "label": "Modality",
+      "location": "filter",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "filter-modality"
+    },
+    {
+      "id": "analytics-04",
+      "surface": "analytics",
+      "label": "Overview",
+      "location": "tab",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "tab-overview"
+    },
+    {
+      "id": "analytics-05",
+      "surface": "analytics",
+      "label": "Performance Insights",
+      "location": "tab",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "tab-performance-insights"
+    },
+    {
+      "id": "analytics-06",
+      "surface": "analytics",
+      "label": "Metric Card",
+      "location": "toggle",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "view-metric-card"
+    },
+    {
+      "id": "analytics-07",
+      "surface": "analytics",
+      "label": "Table View",
+      "location": "toggle",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "view-table"
+    },
+    {
+      "id": "analytics-08",
+      "surface": "analytics",
+      "label": "Effectiveness",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-effectiveness"
+    },
+    {
+      "id": "analytics-09",
+      "surface": "analytics",
+      "label": "Usage",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-usage"
+    },
+    {
+      "id": "analytics-10",
+      "surface": "analytics",
+      "label": "Quality",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-quality"
+    },
+    {
+      "id": "analytics-11",
+      "surface": "analytics",
+      "label": "Health",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-health"
+    },
+    {
+      "id": "analytics-12",
+      "surface": "analytics",
+      "label": "Trust",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-trust"
+    },
+    {
+      "id": "analytics-13",
+      "surface": "analytics",
+      "label": "Voice",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-voice"
+    },
+    {
+      "id": "analytics-14",
+      "surface": "analytics",
+      "label": "Custom Scorers",
+      "location": "category",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "cat-custom-scorers"
+    },
+    {
+      "id": "analytics-15",
+      "surface": "analytics",
+      "label": "Success Rate",
+      "location": "metric",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "metric-success"
+    },
+    {
+      "id": "analytics-16",
+      "surface": "analytics",
+      "label": "Engagement Rate",
+      "location": "metric",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "metric-engagement"
+    },
+    {
+      "id": "analytics-17",
+      "surface": "analytics",
+      "label": "Abandon Rate",
+      "location": "metric",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "metric-abandon"
+    },
+    {
+      "id": "analytics-18",
+      "surface": "analytics",
+      "label": "Escalation Rate",
+      "location": "metric",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "metric-escalation"
+    },
+    {
+      "id": "analytics-19",
+      "surface": "analytics",
+      "label": "Deflection Rate",
+      "location": "metric",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "metric-deflection"
+    },
+    {
+      "id": "analytics-20",
+      "surface": "analytics",
+      "label": "Agent Performance",
+      "location": "section",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "section-agent-performance"
+    },
+    {
+      "id": "analytics-21",
+      "surface": "analytics",
+      "label": "Aggregated Effectiveness Metrics",
+      "location": "section",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "section-aggregated-effectiveness"
+    },
+    {
+      "id": "analytics-22",
+      "surface": "analytics",
+      "label": "Session Outcome",
+      "location": "section",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "session-outcome"
+    },
+    {
+      "id": "analytics-23",
+      "surface": "analytics",
+      "label": "Analytics Settings",
+      "location": "chrome",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "settings"
+    },
+    {
+      "id": "analytics-24",
+      "surface": "analytics",
+      "label": "Agent Analytics Help",
+      "location": "chrome",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "help"
+    },
+    {
+      "id": "analytics-25",
+      "surface": "analytics",
+      "label": "Agent Type / Service Agent",
+      "location": "filter",
+      "screenshot": "screenshots/analytics-overview.png",
+      "modalKeyNeeded": "agent-type"
+    }
+  ]
+}

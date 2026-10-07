@@ -1,0 +1,34 @@
+{
+  "surface": "nav",
+  "observeOptimize": [
+    "Analytics",
+    "Sessions & Intents",
+    "Alerts"
+  ],
+  "build": [
+    "Agents",
+    "Tests",
+    "Grids",
+    "Prompt Templates",
+    "Data",
+    "AI Models",
+    "Agentforce DX"
+  ],
+  "missingVsOldApp": [
+    "Scorers removed from Observe nav to match org"
+  ],
+  "clickables": [
+    {
+      "id": "nav-01",
+      "label": "Analytics"
+    },
+    {
+      "id": "nav-02",
+      "label": "Sessions & Intents"
+    },
+    {
+      "id": "nav-03",
+      "label": "Alerts"
+    }
+  ]
+}

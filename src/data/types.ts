@@ -15,7 +15,8 @@ export type InnerTab =
   | 'quality'
   | 'health'
   | 'trust'
-  | 'voice';
+  | 'voice'
+  | 'custom-scorers';
 
 export type PerfBreakdown = 'subagents' | 'intents' | 'actions';
 export type ViewMode = 'cards' | 'table';
