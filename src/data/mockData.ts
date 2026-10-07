@@ -202,9 +202,10 @@ export function computeMetric(sel: Selection, def: MetricDef): ComputedMetric {
   const tf = sel.timeframe.replace('Last ', 'prior ');
   const favor = good ? 'favorable' : 'unfavorable';
   const shown = Math.abs(deltaMag);
+  const sign = up ? '+' : '-';
   const delta = def.format === 'int'
-    ? `${up ? '+' : '-'}${Math.round(shown)} (${favor}) vs. ${tf}`
-    : `${up ? '+' : ''}${shown.toFixed(1)}${unit} (${favor}) vs. ${tf}`;
+    ? `${sign}${Math.round(shown)} (${favor}) vs. ${tf}`
+    : `${sign}${shown.toFixed(1)}${unit} (${favor}) vs. ${tf}`;
   return { def, value: fmt(raw, def.format), raw, delta, deltaType: good ? 'good' : 'bad' };
 }
 
