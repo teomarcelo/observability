@@ -65,3 +65,7 @@
 - Applied high-priority recommendations from org-trailsignup/recommended-app-updates.md
 - Grids in Build nav; Trust dash cards; Voice Agent Talk Ratio; Health RAG latency dashes; Custom Scorers empty copy; Trailsignup-shaped mock bases; Sessions chrome (saved views / Evaluations)
 - Redeployed af-observability
+
+## Wave 2 inventory follow-up
+- Wired remaining master-checklist modal gaps (settings, session drill, sessions toolbar, insights EG note)
+- Redeployed af-observability

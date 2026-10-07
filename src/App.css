@@ -123,6 +123,22 @@ button { font-family: inherit; cursor: pointer; }
   padding: 10px 14px; font-size: 12px; color: #3e3e3c; line-height: 1.45;
 }
 .sessions-banner:hover { border-color: var(--brand); color: var(--brand); }
+.filter-by.linkish {
+  background: none; border: none; padding: 0; font: inherit; font-weight: 600; color: #3e3e3c; cursor: pointer;
+}
+.filter-by.linkish:hover { color: var(--brand); text-decoration: underline; }
+.table-toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px 12px; }
+.data-table tr.selected-row { background: #eef4ff; }
+.session-drill {
+  margin-top: 12px; padding: 12px 14px; border-top: 1px solid var(--border);
+  background: #fafbfc;
+}
+.session-drill-head { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.session-drill-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.outcome-section {
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}
+.outcome-hint { font-size: 12px; color: var(--muted); margin: 6px 0 10px; max-width: 720px; }
 .info-dot { background: none; border: none; color: var(--brand); font-size: 15px; }
 
 /* Small circled-i affordance placed next to functional controls. */

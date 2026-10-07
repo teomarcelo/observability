@@ -19,6 +19,9 @@ export function Header({ appTab, onOpenModal }: Props) {
           <span className="header-title">Agentforce Studio</span>
         </button>
         <button className="app-tab" onClick={() => onOpenModal('hdr-app-tab')}>{appTab}<span className="app-tab-caret">&#9662;</span></button>
+        <button className="header-btn" onClick={() => onOpenModal('hdr-show-nav-menu')} aria-label="Show Navigation Menu">
+          Show Navigation Menu
+        </button>
       </div>
       <div className="header-search" onClick={() => onOpenModal('hdr-search')} role="button" tabIndex={0}
         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') onOpenModal('hdr-search') }} aria-label="Global Search">

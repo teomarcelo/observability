@@ -290,6 +290,8 @@ export const SESSION_COLUMNS = [
   'Initial Agent Responses',
   'Subagents',
   'Actions',
+  'Sources',
+  'Errors',
 ];
 
 export const unprocessedSessions: SessionRow[] = [

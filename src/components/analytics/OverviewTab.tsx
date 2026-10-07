@@ -144,6 +144,19 @@ function CardsView({ nav, sel, onOpenModal }: Props) {
           <MetricChart sel={sel} metric={selectedDef} granularity={granularity} onOpenModal={onOpenModal} />
         )}
       </div>
+
+      {innerTab === 'effectiveness' && (
+        <div className="outcome-section">
+          <button type="button" className="heading-btn section-title" onClick={() => onOpenModal('session-outcome-section')}>
+            Session Outcome
+            <InfoDot modalKey="session-outcome-section" onOpenModal={onOpenModal} label="Session Outcome" />
+          </button>
+          <p className="outcome-hint">Outcome mix for the filtered population (Abandoned, Deflected, Escalated, and related buckets in the live org).</p>
+          <button type="button" className="link-btn" onClick={() => onOpenModal('task-resolution-disabled')}>
+            Task Resolution metric is not enabled
+          </button>
+        </div>
+      )}
     </div>
   )
 }

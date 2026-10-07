@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { Nav } from '../../hooks/useNavigation'
+import type { SessionRow } from '../../data/types'
 import {
   AGENT_FILTER_OPTIONS, TIMEFRAME_OPTIONS, CHANNEL_OPTIONS, MODALITY_OPTIONS,
   SESSION_COLUMNS, processedSessions, unprocessedSessions,
@@ -20,11 +22,28 @@ const COL_MODAL: Record<string, string> = {
   'Initial Agent Responses': 'col-initial-agent-responses',
   'Subagents': 'col-subagents',
   'Actions': 'col-actions',
+  'Sources': 'col-sources',
+  'Errors': 'col-errors',
 }
+
+const DRILL_ACTIONS: { label: string; modal: string }[] = [
+  { label: 'Session Overview', modal: 'session-overview' },
+  { label: 'Session Log', modal: 'session-log' },
+  { label: 'Session Flow', modal: 'session-flow' },
+  { label: 'Agent message / trace', modal: 'session-trace' },
+  { label: 'Number of Interactions', modal: 'session-num-interactions' },
+  { label: 'Average Interaction Duration', modal: 'session-avg-interaction-duration' },
+  { label: 'Previous / Next Session', modal: 'session-prev-next' },
+  { label: 'Evaluations / Submit Feedback', modal: 'session-submit-feedback' },
+  { label: 'Agent Manager Feedback', modal: 'session-agent-manager-feedback' },
+  { label: 'Processing banner', modal: 'session-drill-processing' },
+  { label: 'Learn More', modal: 'session-drill-learn-more' },
+]
 
 export function SessionsPage({ nav, onOpenModal }: Props) {
   const { sessionTab, setSessionTab } = nav
   const rows = sessionTab === 'processed' ? processedSessions : unprocessedSessions
+  const [selected, setSelected] = useState<SessionRow | null>(null)
 
   return (
     <div className="sessions-page">
@@ -36,14 +55,18 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
         </div>
         <div className="page-head-actions">
           <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>Default View</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>Select saved view</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>Pin this view as your default</button>
           <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>New Saved View</button>
+          <button className="help-btn" onClick={() => onOpenModal('sessions-saved-view')}>More view actions</button>
           <button className="help-btn" onClick={() => onOpenModal('sessions-evaluations')}>Evaluations</button>
+          <button className="help-btn" onClick={() => onOpenModal('insights-absent')}>Insights (EG note)</button>
           <button className="help-btn" onClick={() => onOpenModal('sessions-help')}>&#128218; Sessions &amp; Intents Help</button>
         </div>
       </div>
 
       <div className="filter-bar">
-        <span className="filter-by">Filter by:</span>
+        <button type="button" className="filter-by linkish" onClick={() => onOpenModal('filter-by')}>Filter by:</button>
         <Field label="Agent" modal="filter-agent" value={nav.agent} options={AGENT_FILTER_OPTIONS} onChange={nav.setAgent} onOpenModal={onOpenModal} />
         <Field label="Timeframe" modal="filter-timeframe" value={nav.timeframe} options={TIMEFRAME_OPTIONS} onChange={nav.setTimeframe} onOpenModal={onOpenModal} />
         <Field label="Channel" modal="filter-channel" value={nav.channel} options={CHANNEL_OPTIONS} onChange={nav.setChannel} onOpenModal={onOpenModal} />
@@ -68,6 +91,14 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
           </button>
         )}
 
+        <div className="table-toolbar">
+          <button type="button" className="help-btn" onClick={() => onOpenModal('sessions-search')}>Search this table</button>
+          <button type="button" className="help-btn" onClick={() => onOpenModal('sessions-refresh')}>Refresh</button>
+          <button type="button" className="help-btn" onClick={() => onOpenModal('sessions-select-fields')}>Select Fields to Display</button>
+          <button type="button" className="help-btn" onClick={() => onOpenModal('sessions-filter-btn')}>Filter</button>
+          <button type="button" className="help-btn" onClick={() => onOpenModal('sessions-download-csv')}>Download CSV</button>
+        </div>
+
         <table className="data-table">
           <thead>
             <tr>
@@ -79,7 +110,14 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
           </thead>
           <tbody>
             {rows.map(r => (
-              <tr key={r.id} onClick={() => onOpenModal(sessionTab === 'processed' ? 'sessions-processed' : 'sessions-unprocessed')}>
+              <tr
+                key={r.id}
+                className={selected?.id === r.id ? 'selected-row' : undefined}
+                onClick={() => {
+                  setSelected(r)
+                  onOpenModal('session-overview')
+                }}
+              >
                 <td className="chk"><input type="checkbox" aria-label={`Select ${r.id}`} onClick={e => e.stopPropagation()} /></td>
                 <td className="mono">{r.id}</td>
                 <td>{r.timestamp}</td>
@@ -89,10 +127,27 @@ export function SessionsPage({ nav, onOpenModal }: Props) {
                 <td>--</td>
                 <td>--</td>
                 <td>--</td>
+                <td>--</td>
+                <td>--</td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {selected && (
+          <div className="session-drill">
+            <div className="session-drill-head">
+              Session detail: <span className="mono">{selected.id}</span>
+            </div>
+            <div className="session-drill-actions">
+              {DRILL_ACTIONS.map(a => (
+                <button key={a.modal} type="button" className="help-btn" onClick={() => onOpenModal(a.modal)}>
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

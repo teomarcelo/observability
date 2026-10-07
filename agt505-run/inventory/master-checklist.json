@@ -1,15 +1,1306 @@
 {
-  "orgObserveNav": [
-    "Analytics",
-    "Sessions & Intents",
-    "Alerts"
+  "capturedAt": "2026-10-07",
+  "org": "agt5052224com.lightning.force.com",
+  "counts": {
+    "analytics": 57,
+    "insights": 4,
+    "sessions": 44,
+    "nav": 19
+  },
+  "totals": {
+    "exists": 124,
+    "add": 0
+  },
+  "egVsOrgLabelDiffs": [
+    {
+      "eg": "Optimization (section) + Insights",
+      "org": "Observe & Optimize with Analytics / Sessions & Intents / Alerts (no Insights nav)"
+    },
+    {
+      "eg": "Agent Effectiveness (tab)",
+      "org": "Effectiveness"
+    },
+    {
+      "eg": "Performance Overview",
+      "org": "Agent Performance (Service) / Agent Performance Overview (Employee)"
+    },
+    {
+      "eg": "Agent Usage Overview",
+      "org": "Aggregated Usage Metrics"
+    },
+    {
+      "eg": "Abandonment Rate",
+      "org": "Abandon Rate"
+    },
+    {
+      "eg": "Avg. Time to Deflection",
+      "org": "Not shown among Effectiveness pills (Deflection/Escalation/Abandon/Engagement/Success)"
+    },
+    {
+      "eg": "Total/Engaged/Deflected/Escalated/Abandoned Sessions + Avg. Time to Escalation",
+      "org": "Rate-based Effectiveness cards; session counts live under Usage (Unique Sessions etc.)"
+    },
+    {
+      "eg": "Quality Overview / Data Explorer",
+      "org": "Aggregated Quality Metrics (+ Average Quality Score)"
+    },
+    {
+      "eg": "Select an Agent (Insights)",
+      "org": "N/A \u2014 Insights page absent; Agent filter on Analytics/Sessions"
+    },
+    {
+      "eg": "Scorers as Observe sibling (teaching app)",
+      "org": "No Scorers sidebar item; Custom Scorers is Analytics inner tab"
+    },
+    {
+      "eg": "Sessions & Intent (singular in one EG step)",
+      "org": "Sessions & Intents"
+    },
+    {
+      "eg": "Initial User Message (singular)",
+      "org": "Initial User Messages (plural column)"
+    }
   ],
-  "analyticsParity": "Overview + Performance Insights; category pills include Custom Scorers; Abandon Rate naming matches org",
-  "sessionsParity": "Columns extended; processing banner added; mock unprocessed rows include Ex2-style prompts",
-  "egHighlightsForPdf": [
-    "EG Ex3 Task 2 Optimization \u2192 Insights is not a separate Observe nav item in this org; Insights messaging appears on Sessions & Intents / Analytics Performance Insights",
-    "Observe nav is Analytics, Sessions & Intents, Alerts (no Scorers)",
-    "EG Agent Effectiveness / Quality top tabs \u2192 org Overview categories + Performance Insights",
-    "EG Abandonment Rate \u2192 org Abandon Rate"
+  "items": [
+    {
+      "id": "an-agent-type",
+      "surface": "analytics",
+      "orgLabel": "Agent Type",
+      "location": "Service Agent Analytics header combobox (Employee Agent | Service Agent)",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "agent-type",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-settings",
+      "surface": "analytics",
+      "orgLabel": "Analytics Settings",
+      "location": "Header gear button next to Agent Analytics Help",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "analytics-settings",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-help",
+      "surface": "analytics",
+      "orgLabel": "Agent Analytics Help",
+      "location": "Header help button",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "agent-analytics-help",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-filter-by",
+      "surface": "analytics",
+      "orgLabel": "Filter by:",
+      "location": "Filter bar above Overview / Performance Insights",
+      "screenshot": "agt505-run/screenshots/analytics-02-filters.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "filter-by",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-filter-agent",
+      "surface": "analytics",
+      "orgLabel": "Agent",
+      "location": "Filter by \u2192 Agent (default All)",
+      "screenshot": "agt505-run/screenshots/analytics-filter-agent.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "filter-agent",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-filter-timeframe",
+      "surface": "analytics",
+      "orgLabel": "Timeframe",
+      "location": "Filter by \u2192 Timeframe (default Last 30 Days)",
+      "screenshot": "agt505-run/screenshots/analytics-filter-timeframe.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "filter-timeframe",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-filter-channel",
+      "surface": "analytics",
+      "orgLabel": "Channel",
+      "location": "Filter by \u2192 Channel (default All)",
+      "screenshot": "agt505-run/screenshots/analytics-filter-channel.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "filter-channel",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-filter-modality",
+      "surface": "analytics",
+      "orgLabel": "Modality",
+      "location": "Filter by \u2192 Modality (default All; Service Agent only)",
+      "screenshot": "agt505-run/screenshots/analytics-filter-modality.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "filter-modality",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-tab-overview",
+      "surface": "analytics",
+      "orgLabel": "Overview",
+      "location": "Primary dashboard tab",
+      "screenshot": "agt505-run/screenshots/analytics-07-back-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-overview",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-tab-perf",
+      "surface": "analytics",
+      "orgLabel": "Performance Insights",
+      "location": "Primary dashboard tab next to Overview",
+      "screenshot": "agt505-run/screenshots/analytics-06-performance-insights.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "tab-performance-insights",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agent-perf",
+      "surface": "analytics",
+      "orgLabel": "Agent Performance",
+      "location": "Overview section heading (Service Agent); Employee uses 'Agent Performance Overview'",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "tab-overview",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-granularity-day",
+      "surface": "analytics",
+      "orgLabel": "Day",
+      "location": "Agent Performance \u2192 Open Parameter granularity control",
+      "screenshot": "agt505-run/screenshots/analytics-05-granularity.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "granularity",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-view-metric-card",
+      "surface": "analytics",
+      "orgLabel": "Metric Card",
+      "location": "View toggle (Service); Employee label is 'Metric Cards'",
+      "screenshot": "agt505-run/screenshots/analytics-04-metric-card.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "view-cards",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-view-table",
+      "surface": "analytics",
+      "orgLabel": "Table View",
+      "location": "View toggle next to Metric Card",
+      "screenshot": "agt505-run/screenshots/analytics-03-table-view.png",
+      "suggestedReplicaPath": "src/components/analytics/TableView.tsx",
+      "modalKey": "view-table",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-effectiveness",
+      "surface": "analytics",
+      "orgLabel": "Effectiveness",
+      "location": "Overview inner metric category tab",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-effectiveness",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-usage",
+      "surface": "analytics",
+      "orgLabel": "Usage",
+      "location": "Overview inner metric category tab",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-usage",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-quality",
+      "surface": "analytics",
+      "orgLabel": "Quality",
+      "location": "Overview inner metric category tab",
+      "screenshot": "agt505-run/screenshots/analytics-tab-quality.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-quality",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-health",
+      "surface": "analytics",
+      "orgLabel": "Health",
+      "location": "Overview inner metric category tab",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-health",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-trust",
+      "surface": "analytics",
+      "orgLabel": "Trust",
+      "location": "Overview inner metric category tab (disabled empty state without Einstein Feedback)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-trust.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-trust",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-voice",
+      "surface": "analytics",
+      "orgLabel": "Voice",
+      "location": "Overview inner metric category tab (Service Agent)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-voice.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-voice",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-inner-custom-scorers",
+      "surface": "analytics",
+      "orgLabel": "Custom Scorers",
+      "location": "Overview inner metric category tab (empty: 'Your custom scorers will appear here')",
+      "screenshot": "agt505-run/screenshots/analytics-tab-custom-scorers.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-custom-scorers",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agg-effectiveness",
+      "surface": "analytics",
+      "orgLabel": "Aggregated Effectiveness Metrics",
+      "location": "Effectiveness tab panel heading",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-effectiveness",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-deflection",
+      "surface": "analytics",
+      "orgLabel": "Deflection Rate",
+      "location": "Effectiveness metric card + pill toggle",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "deflection",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-escalation",
+      "surface": "analytics",
+      "orgLabel": "Escalation Rate",
+      "location": "Effectiveness metric card + pill toggle",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "escalation",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-abandon",
+      "surface": "analytics",
+      "orgLabel": "Abandon Rate",
+      "location": "Effectiveness metric card + pill toggle (EG says Abandonment Rate)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "abandon",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-engagement",
+      "surface": "analytics",
+      "orgLabel": "Engagement Rate",
+      "location": "Effectiveness metric card + pill toggle",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "engagement",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-success",
+      "surface": "analytics",
+      "orgLabel": "Success Rate",
+      "location": "Effectiveness metric card + pill toggle",
+      "screenshot": "agt505-run/screenshots/analytics-tab-effectiveness-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "success",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-session-outcome",
+      "surface": "analytics",
+      "orgLabel": "Session Outcome",
+      "location": "Overview chart/region below effectiveness cards",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "session-outcome-section",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-task-resolution-disabled",
+      "surface": "analytics",
+      "orgLabel": "Task Resolution metric is not enabled",
+      "location": "Overview empty state requiring Einstein Feedback",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "task-resolution-disabled",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-enable-einstein-feedback",
+      "surface": "analytics",
+      "orgLabel": "Enable Einstein Feedback",
+      "location": "Link/button on Task Resolution / Trust disabled states",
+      "screenshot": "agt505-run/screenshots/analytics-tab-trust.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "trust-disabled",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agg-usage",
+      "surface": "analytics",
+      "orgLabel": "Aggregated Usage Metrics",
+      "location": "Usage tab panel heading",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-usage",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-unique-sessions",
+      "surface": "analytics",
+      "orgLabel": "Unique Sessions",
+      "location": "Usage metric card + pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "unique-sessions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-unique-interactions",
+      "surface": "analytics",
+      "orgLabel": "Unique Interactions",
+      "location": "Usage metric card + pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "unique-interactions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-unique-users",
+      "surface": "analytics",
+      "orgLabel": "Unique Users",
+      "location": "Usage metric pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "unique-users",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-avg-interactions",
+      "surface": "analytics",
+      "orgLabel": "Average Interactions Per Session",
+      "location": "Usage metric pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-usage.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "avg-interactions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agg-quality",
+      "surface": "analytics",
+      "orgLabel": "Aggregated Quality Metrics",
+      "location": "Quality tab panel (EG: Quality Overview / Data Explorer)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-quality.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-quality",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-avg-quality",
+      "surface": "analytics",
+      "orgLabel": "Average Quality Score",
+      "location": "Quality metric (shown truncated as Average Quality\u2026)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-quality.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "avg-quality",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agg-health",
+      "surface": "analytics",
+      "orgLabel": "Aggregated Health",
+      "location": "Health tab panel heading",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-health",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-error-rate",
+      "surface": "analytics",
+      "orgLabel": "Error Rate",
+      "location": "Health metric card + pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "error-rate",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-session-duration",
+      "surface": "analytics",
+      "orgLabel": "Session Duration",
+      "location": "Health metric pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "session-duration",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-agent-interaction-duration",
+      "surface": "analytics",
+      "orgLabel": "Agent Interaction Duration",
+      "location": "Health metric pill (seconds)",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "agent-interaction-duration",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-agent-response-rate",
+      "surface": "analytics",
+      "orgLabel": "Agent Response Rate",
+      "location": "Health metric pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-health.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "agent-response-rate",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-trust-disabled",
+      "surface": "analytics",
+      "orgLabel": "Trust Metrics are not enabled",
+      "location": "Trust tab empty state",
+      "screenshot": "agt505-run/screenshots/analytics-tab-trust.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "trust-disabled",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-section-agg-voice",
+      "surface": "analytics",
+      "orgLabel": "Aggregated Voice Metrics",
+      "location": "Voice tab panel heading",
+      "screenshot": "agt505-run/screenshots/analytics-tab-voice.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-voice",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-interruption",
+      "surface": "analytics",
+      "orgLabel": "Interruption Rate",
+      "location": "Voice metric card + pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-voice.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "interruption",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-metric-agent-talk-ratio",
+      "surface": "analytics",
+      "orgLabel": "Agent Talk Ratio",
+      "location": "Voice metric card + pill",
+      "screenshot": "agt505-run/screenshots/analytics-tab-voice-detail.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "voice-agent-talk-ratio",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-custom-scorers-empty",
+      "surface": "analytics",
+      "orgLabel": "Your custom scorers will appear here",
+      "location": "Custom Scorers empty state copy",
+      "screenshot": "agt505-run/screenshots/analytics-tab-custom-scorers.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "custom-scorers-empty",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-breakdowns",
+      "surface": "analytics",
+      "orgLabel": "Breakdowns",
+      "location": "Performance Insights section heading",
+      "screenshot": "agt505-run/screenshots/analytics-06-performance-insights.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-breakdowns",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-subagents",
+      "surface": "analytics",
+      "orgLabel": "Subagents",
+      "location": "Performance Insights breakdown pill",
+      "screenshot": "agt505-run/screenshots/analytics-perf-subagents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-subagents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-intents",
+      "surface": "analytics",
+      "orgLabel": "Intents",
+      "location": "Performance Insights breakdown pill",
+      "screenshot": "agt505-run/screenshots/analytics-perf-intents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-intents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-actions",
+      "surface": "analytics",
+      "orgLabel": "Actions",
+      "location": "Performance Insights breakdown pill",
+      "screenshot": "agt505-run/screenshots/analytics-perf-actions.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-actions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-explore-subagents",
+      "surface": "analytics",
+      "orgLabel": "Explore Subagents by Metric",
+      "location": "Performance Insights \u2192 Subagents card",
+      "screenshot": "agt505-run/screenshots/analytics-perf-subagents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-subagents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-explore-intents",
+      "surface": "analytics",
+      "orgLabel": "Explore Intents by Metric",
+      "location": "Performance Insights \u2192 Intents card",
+      "screenshot": "agt505-run/screenshots/analytics-perf-intents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-intents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-select-subagent",
+      "surface": "analytics",
+      "orgLabel": "Select Subagent",
+      "location": "Performance Insights dropdown (default All)",
+      "screenshot": "agt505-run/screenshots/analytics-perf-subagents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-select-item",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-select-intent",
+      "surface": "analytics",
+      "orgLabel": "Select Intent",
+      "location": "Performance Insights \u2192 Intents dropdown (default All)",
+      "screenshot": "agt505-run/screenshots/analytics-perf-intents.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-select-item",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-perf-select-metric",
+      "surface": "analytics",
+      "orgLabel": "Select Metric",
+      "location": "Performance Insights dropdown (default Average Quality Score)",
+      "screenshot": "agt505-run/screenshots/analytics-06-performance-insights.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "perf-select-metric",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "an-employee-user-satisfaction",
+      "surface": "analytics",
+      "orgLabel": "User Satisfaction",
+      "location": "Employee Agent Analytics inner tab (not on Service)",
+      "screenshot": "agt505-run/screenshots/analytics-00b-service-confirm.png",
+      "suggestedReplicaPath": "src/components/analytics/OverviewTab.tsx",
+      "modalKey": "tab-user-satisfaction",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "in-missing-nav",
+      "surface": "insights",
+      "orgLabel": "Insights (EG Optimization \u2192 Insights)",
+      "location": "Not in Observe & Optimize sidebar; URL probes fall back to Agents",
+      "screenshot": "agt505-run/screenshots/insights-probe-insights.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "insights-absent",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "in-proxy-perf-insights",
+      "surface": "insights",
+      "orgLabel": "Performance Insights",
+      "location": "Analytics primary tab (closest live-org stand-in for EG Insights)",
+      "screenshot": "agt505-run/screenshots/analytics-06-performance-insights.png",
+      "suggestedReplicaPath": "src/components/analytics/PerformanceInsightsTab.tsx",
+      "modalKey": "tab-performance-insights",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "in-proxy-sessions-processing",
+      "surface": "insights",
+      "orgLabel": "Processing latest sessions / Insights aren't ready yet",
+      "location": "Sessions & Intents \u2192 Processed Sessions empty state",
+      "screenshot": "agt505-run/screenshots/sessions-02-processed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-processed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "in-app-launcher-search",
+      "surface": "insights",
+      "orgLabel": "App Launcher search: Insights",
+      "location": "No matching Agentforce Studio Insights app/item",
+      "screenshot": "agt505-run/screenshots/nav-02-app-launcher-insights.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "insights-absent",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-page-title",
+      "surface": "sessions",
+      "orgLabel": "Sessions & Intents",
+      "location": "Page title / saved view heading",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-page",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-default-view",
+      "surface": "sessions",
+      "orgLabel": "Default View",
+      "location": "Above Sessions & Intents heading",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-saved-view",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-select-saved-view",
+      "surface": "sessions",
+      "orgLabel": "Select saved view",
+      "location": "Heading dropdown control",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-saved-view",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-pin-default",
+      "surface": "sessions",
+      "orgLabel": "Pin this view as your default",
+      "location": "Next to saved view selector",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-saved-view",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-new-saved-view",
+      "surface": "sessions",
+      "orgLabel": "New Saved View",
+      "location": "Top-right actions",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-saved-view",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-more-view-actions",
+      "surface": "sessions",
+      "orgLabel": "More view actions",
+      "location": "Top-right actions",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-saved-view",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-help",
+      "surface": "sessions",
+      "orgLabel": "Sessions & Intents Help",
+      "location": "Top-right help button",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-help",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-filter-agent",
+      "surface": "sessions",
+      "orgLabel": "Agent",
+      "location": "Filter by \u2192 Agent (observed: Authoring agent)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "filter-agent",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-filter-timeframe",
+      "surface": "sessions",
+      "orgLabel": "Timeframe",
+      "location": "Filter by \u2192 Timeframe (default Last 7 Days)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "filter-timeframe",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-filter-channel",
+      "surface": "sessions",
+      "orgLabel": "Channel",
+      "location": "Filter by \u2192 Channel (All)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "filter-channel",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-filter-modality",
+      "surface": "sessions",
+      "orgLabel": "Modality",
+      "location": "Filter by \u2192 Modality (All)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "filter-modality",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-tab-processed",
+      "surface": "sessions",
+      "orgLabel": "Processed Sessions",
+      "location": "Primary tab (default); processing empty state",
+      "screenshot": "agt505-run/screenshots/sessions-02-processed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-processed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-processed-empty",
+      "surface": "sessions",
+      "orgLabel": "Processing latest sessions",
+      "location": "Processed Sessions empty state heading",
+      "screenshot": "agt505-run/screenshots/sessions-02-processed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-processed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-processed-empty-body",
+      "surface": "sessions",
+      "orgLabel": "Insights aren't ready yet for your latest sessions. Raw data is available now in the Unprocessed Sessions tab.",
+      "location": "Processed Sessions empty state body",
+      "screenshot": "agt505-run/screenshots/sessions-02-processed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-processed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-tab-unprocessed",
+      "surface": "sessions",
+      "orgLabel": "Unprocessed Sessions",
+      "location": "Primary tab",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-unprocessed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-total-unprocessed",
+      "surface": "sessions",
+      "orgLabel": "Total of 1 unprocessed sessions",
+      "location": "Unprocessed table toolbar count",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-unprocessed",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-search",
+      "surface": "sessions",
+      "orgLabel": "Search this table",
+      "location": "Unprocessed table toolbar",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-search",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-refresh",
+      "surface": "sessions",
+      "orgLabel": "Refresh",
+      "location": "Unprocessed table toolbar",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-refresh",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-select-fields",
+      "surface": "sessions",
+      "orgLabel": "Select Fields to Display",
+      "location": "Unprocessed table toolbar \u2192 manage columns modal",
+      "screenshot": "agt505-run/screenshots/sessions-05-select-fields.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-select-fields",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-filter-btn",
+      "surface": "sessions",
+      "orgLabel": "Filter",
+      "location": "Unprocessed table toolbar",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-filter-btn",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-download-csv",
+      "surface": "sessions",
+      "orgLabel": "Download the visible columns and session transcripts as a CSV.",
+      "location": "Unprocessed table toolbar download control",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "sessions-download-csv",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-session-id",
+      "surface": "sessions",
+      "orgLabel": "Session ID",
+      "location": "Table column (clickable drill-in)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-session-id",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-timestamp",
+      "surface": "sessions",
+      "orgLabel": "Timestamp",
+      "location": "Table column",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-timestamp",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-session-duration",
+      "surface": "sessions",
+      "orgLabel": "Session Duration",
+      "location": "Table column",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-session-duration",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-session-outcome",
+      "surface": "sessions",
+      "orgLabel": "Session Outcome",
+      "location": "Table column (value Not set on unprocessed)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-session-outcome",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-initial-user-messages",
+      "surface": "sessions",
+      "orgLabel": "Initial User Messages",
+      "location": "Table column (EG/replica often singular Messages)",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-initial-messages",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-initial-agent-responses",
+      "surface": "sessions",
+      "orgLabel": "Initial Agent Responses",
+      "location": "Table column",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-initial-agent-responses",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-subagents",
+      "surface": "sessions",
+      "orgLabel": "Subagents",
+      "location": "Table column",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-subagents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-actions",
+      "surface": "sessions",
+      "orgLabel": "Actions",
+      "location": "Table column",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-actions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-extra-sources",
+      "surface": "sessions",
+      "orgLabel": "Sources",
+      "location": "Select Fields to Display optional column (data-fieldname Sources_Count)",
+      "screenshot": "agt505-run/screenshots/sessions-05-select-fields.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-sources",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-col-extra-errors",
+      "surface": "sessions",
+      "orgLabel": "Errors",
+      "location": "Select Fields to Display optional column (data-fieldname Errors_Per_Session)",
+      "screenshot": "agt505-run/screenshots/sessions-05-select-fields.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-errors",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-processing-banner",
+      "surface": "sessions",
+      "orgLabel": "Session processing in progress. Intent insights usually populate within a few hours\u2026",
+      "location": "Session drill-in alert banner",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-drill-processing",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-learn-more",
+      "surface": "sessions",
+      "orgLabel": "Learn More",
+      "location": "Session drill-in banner \u2192 help.salesforce.com generative_ai_optimize_use",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-drill-learn-more",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-session-log",
+      "surface": "sessions",
+      "orgLabel": "Session Log",
+      "location": "Session drill-in left pane (chat transcript)",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-log",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-prev-next",
+      "surface": "sessions",
+      "orgLabel": "Previous Session / Next Session",
+      "location": "Session drill-in pager (N out of M)",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-prev-next",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-session-overview",
+      "surface": "sessions",
+      "orgLabel": "Session Overview",
+      "location": "Session drill-in right pane",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-overview",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-copy-session-id",
+      "surface": "sessions",
+      "orgLabel": "Copy Session ID",
+      "location": "Session Overview header",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "col-session-id",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-session-flow",
+      "surface": "sessions",
+      "orgLabel": "Session Flow",
+      "location": "Session Overview (processing placeholder)",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-flow",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-channel",
+      "surface": "sessions",
+      "orgLabel": "Channel",
+      "location": "Session Overview metadata (observed LightningDesktopCopilot)",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "filter-channel",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-num-interactions",
+      "surface": "sessions",
+      "orgLabel": "Number of Interactions",
+      "location": "Session Overview metadata",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-num-interactions",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-avg-interaction-duration",
+      "surface": "sessions",
+      "orgLabel": "Average Interaction Duration",
+      "location": "Session Overview metadata + Help",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-avg-interaction-duration",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-evaluations",
+      "surface": "sessions",
+      "orgLabel": "Evaluations / Submit Feedback",
+      "location": "Session Overview evaluations block",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-submit-feedback",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-agent-manager-feedback",
+      "surface": "sessions",
+      "orgLabel": "Agent Manager Feedback",
+      "location": "Session Overview \u2192 Add feedback\u2026",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-agent-manager-feedback",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "se-drill-trace",
+      "surface": "sessions",
+      "orgLabel": "Agent message / trace",
+      "location": "Click agent response in Session Log to view trace",
+      "screenshot": "agt505-run/screenshots/sessions-03-drill-in.png",
+      "suggestedReplicaPath": "src/components/sessions/SessionsPage.tsx",
+      "modalKey": "session-trace",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-app-launcher",
+      "surface": "nav",
+      "orgLabel": "App Launcher",
+      "location": "Global app header",
+      "screenshot": "agt505-run/screenshots/nav-02-app-launcher-insights.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "hdr-app-launcher",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-brand",
+      "surface": "nav",
+      "orgLabel": "Agentforce Studio",
+      "location": "App heading",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "hdr-brand",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-show-nav-menu",
+      "surface": "nav",
+      "orgLabel": "Show Navigation Menu",
+      "location": "Global nav (only Agentforce Studio menuitem observed)",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "hdr-show-nav-menu",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-group",
+      "surface": "nav",
+      "orgLabel": "Build",
+      "location": "Left sidebar section heading",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "sidebar-build-group",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-agents",
+      "surface": "nav",
+      "orgLabel": "Agents",
+      "location": "Build sidebar",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-agents",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-tests",
+      "surface": "nav",
+      "orgLabel": "Tests",
+      "location": "Build sidebar",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-tests",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-grids",
+      "surface": "nav",
+      "orgLabel": "Grids",
+      "location": "Build sidebar (badge: New)",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-grids",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-prompts",
+      "surface": "nav",
+      "orgLabel": "Prompt Templates",
+      "location": "Build sidebar (opens in new tab)",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-prompts",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-data",
+      "surface": "nav",
+      "orgLabel": "Data",
+      "location": "Build sidebar (expandable)",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-data",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-models",
+      "surface": "nav",
+      "orgLabel": "AI Models",
+      "location": "Build sidebar",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-models",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-build-dx",
+      "surface": "nav",
+      "orgLabel": "Agentforce DX",
+      "location": "Build sidebar",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "build-dx",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-observe-group",
+      "surface": "nav",
+      "orgLabel": "Observe & Optimize",
+      "location": "Left sidebar section heading (EG called this Optimization)",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "sidebar-observe-group",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-observe-analytics",
+      "surface": "nav",
+      "orgLabel": "Analytics",
+      "location": "Observe & Optimize \u2192 c__nav=analytics",
+      "screenshot": "agt505-run/screenshots/analytics-00-service-overview.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "agent-analytics-help",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-observe-sessions",
+      "surface": "nav",
+      "orgLabel": "Sessions & Intents",
+      "location": "Observe & Optimize \u2192 c__nav=optimizationMoments",
+      "screenshot": "agt505-run/screenshots/sessions-01-unprocessed.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "sessions-page",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-observe-alerts",
+      "surface": "nav",
+      "orgLabel": "Alerts",
+      "location": "Observe & Optimize \u2192 c__nav=alerts",
+      "screenshot": "agt505-run/screenshots/nav-01-alerts.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "alerts-page",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-alerts-empty",
+      "surface": "nav",
+      "orgLabel": "Alerts haven't been set up.",
+      "location": "Alerts empty state + configuration requirements link \u2192 EinsteinFeedbackSetup",
+      "screenshot": "agt505-run/screenshots/nav-01-alerts.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "alerts-config",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-collapse",
+      "surface": "nav",
+      "orgLabel": "Collapse",
+      "location": "Bottom of left sidebar",
+      "screenshot": "agt505-run/screenshots/nav-00-sidebar-observe.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "sidebar-collapse",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-missing-scorers",
+      "surface": "nav",
+      "orgLabel": "Scorers (absent as nav sibling)",
+      "location": "Not in Observe & Optimize; Custom Scorers is Analytics inner tab only",
+      "screenshot": "agt505-run/screenshots/analytics-tab-custom-scorers.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "scorers-page",
+      "modalKeyStatus": "exists"
+    },
+    {
+      "id": "nav-missing-insights",
+      "surface": "nav",
+      "orgLabel": "Insights (absent as nav sibling)",
+      "location": "EG Optimization \u2192 Insights not present; see insights.json",
+      "screenshot": "agt505-run/screenshots/insights-probe-insights.png",
+      "suggestedReplicaPath": "src/components/layout/Sidebar.tsx",
+      "modalKey": "insights-absent",
+      "modalKeyStatus": "exists"
+    }
   ]
 }

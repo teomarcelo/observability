@@ -45,13 +45,18 @@ export function AnalyticsPage({ nav, onOpenModal }: Props) {
             />
           </div>
         </div>
-        <button className="help-btn" onClick={() => onOpenModal('agent-analytics-help')}>
-          &#128218; Agent Analytics Help
-        </button>
+        <div className="page-head-actions">
+          <button className="help-btn" onClick={() => onOpenModal('analytics-settings')} aria-label="Analytics Settings">
+            &#9881; Analytics Settings
+          </button>
+          <button className="help-btn" onClick={() => onOpenModal('agent-analytics-help')}>
+            &#128218; Agent Analytics Help
+          </button>
+        </div>
       </div>
 
       <div className="filter-bar">
-        <span className="filter-by">Filter by:</span>
+        <button type="button" className="filter-by linkish" onClick={() => onOpenModal('filter-by')}>Filter by:</button>
         <Field label="Agent" modal="filter-agent" value={nav.agent} options={AGENT_FILTER_OPTIONS} onChange={nav.setAgent} onOpenModal={onOpenModal} />
         <Field label="Timeframe" modal="filter-timeframe" value={nav.timeframe} options={TIMEFRAME_OPTIONS} onChange={nav.setTimeframe} onOpenModal={onOpenModal} />
         <Field label="Channel" modal="filter-channel" value={nav.channel} options={CHANNEL_OPTIONS} onChange={nav.setChannel} onOpenModal={onOpenModal} />
